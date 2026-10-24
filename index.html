@@ -1,0 +1,1241 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d14">
+  <meta name="description" content="Интерактивное дерево проекта emode1k">
+  <title>emode1k — дерево проекта</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090d14;
+      --panel: #101722;
+      --border: #263244;
+      --text: #e8edf5;
+      --muted: #8996a8;
+      --accent: #70d6b1;
+      --danger: #ff8290;
+      --line: #50647b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 50% 10%, #12202a 0, transparent 48%),
+        var(--bg);
+      color: var(--text);
+      font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input, textarea { font: inherit; }
+    button { color: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      min-height: 68px;
+      padding: 12px clamp(14px, 3vw, 34px);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      border-bottom: 1px solid #ffffff10;
+      background: #090d14ef;
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 750;
+      letter-spacing: .02em;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      display: inline-grid;
+      width: 27px;
+      height: 27px;
+      margin-right: 8px;
+      place-items: center;
+      border: 1px solid #70d6b16b;
+      border-radius: 8px;
+      color: var(--accent);
+      background: #70d6b113;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 9px;
+      margin-left: auto;
+    }
+
+    input, textarea, .button {
+      color: var(--text);
+      background: #111925;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    input, textarea { padding: 10px 12px; }
+
+    input:focus, textarea:focus, button:focus-visible, a:focus-visible {
+      outline: 2px solid #70d6b199;
+      outline-offset: 2px;
+    }
+
+    .search {
+      width: min(28vw, 300px);
+      min-width: 150px;
+      transition: border-color .2s, box-shadow .2s, width .25s;
+    }
+
+    .search:focus {
+      width: min(34vw, 360px);
+      border-color: #70d6b177;
+      box-shadow: 0 0 0 4px #70d6b111;
+    }
+
+    .button {
+      min-height: 40px;
+      padding: 9px 13px;
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease,
+        background .18s ease, box-shadow .18s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      border-color: #70d6b177;
+      background: #17232d;
+    }
+
+    .button:active { transform: scale(.98); }
+
+    .button-primary {
+      border-color: #70d6b15c;
+      color: #c9f5e4;
+      background: #70d6b117;
+    }
+
+    .button-danger {
+      border-color: #8a465177;
+      color: #ffc1c8;
+    }
+
+    .contact-wrap { position: relative; }
+
+    .contact-menu {
+      position: absolute;
+      top: calc(100% + 9px);
+      right: 0;
+      z-index: 20;
+      width: 210px;
+      padding: 6px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #111925;
+      box-shadow: 0 16px 45px #0008;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transform-origin: top right;
+      transition: opacity .16s ease, transform .16s ease;
+    }
+
+    .contact-menu.hidden {
+      display: block !important;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px) scale(.98);
+    }
+
+    .contact-menu a {
+      display: block;
+      padding: 10px 11px;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      transition: background .16s, color .16s;
+    }
+
+    .contact-menu a:hover {
+      color: #c9f5e4;
+      background: #70d6b114;
+    }
+
+    main {
+      width: min(1500px, 100%);
+      margin: 0 auto;
+      padding: 28px clamp(14px, 3vw, 34px) 54px;
+    }
+
+    .heading-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(25px, 4vw, 38px);
+      line-height: 1.15;
+      letter-spacing: -.035em;
+    }
+
+    .subheading {
+      max-width: 680px;
+      margin: 10px 0 0;
+      color: var(--muted);
+    }
+
+    .graph-meta {
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .graph-shell {
+      position: relative;
+      min-height: 440px;
+      height: min(66vh, 760px);
+      overflow: auto;
+      border: 1px solid #263244;
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 50% 45%, #15212a 0, #0c121b 50%, #0a0f17 100%);
+      box-shadow: 0 22px 75px #0003, inset 0 1px #ffffff08;
+      scrollbar-color: #344354 #0c121b;
+    }
+
+    .graph-shell::before {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      content: "";
+      opacity: .25;
+      background-image: radial-gradient(#8090a022 .8px, transparent .8px);
+      background-size: 20px 20px;
+    }
+
+    svg.graph-svg {
+      position: relative;
+      z-index: 1;
+      display: block;
+      min-width: 100%;
+      overflow: visible;
+    }
+
+    .edge {
+      fill: none;
+      stroke: var(--line);
+      stroke-width: 1.7;
+      stroke-opacity: .82;
+      animation: line-appear .55s ease both;
+    }
+
+    .node {
+      cursor: pointer;
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: node-appear .42s cubic-bezier(.2,.75,.25,1) forwards;
+    }
+
+    .node rect {
+      fill: #131d29;
+      stroke: #34465a;
+      stroke-width: 1.2;
+      transition: fill .2s, stroke .2s, filter .2s;
+    }
+
+    .node.root rect {
+      fill: #15332f;
+      stroke: #54c69d;
+    }
+
+    .node:hover rect, .node.selected rect {
+      fill: #1a2b35;
+      stroke: #78dfb7;
+      filter: drop-shadow(0 0 9px #70d6b132);
+    }
+
+    .node text {
+      fill: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    .node .dot { fill: var(--accent); }
+
+    .node .expand-indicator {
+      fill: #9aabbf;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .empty-state {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(250px, .8fr) minmax(300px, 1.2fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .card {
+      min-width: 0;
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: linear-gradient(145deg, #121a26, #0f1620);
+      box-shadow: 0 10px 32px #0002;
+      animation: card-appear .35s ease both;
+    }
+
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      letter-spacing: -.01em;
+    }
+
+    .muted { color: var(--muted); }
+
+    .details {
+      min-height: 55px;
+      color: #b4bfce;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .form-grid { display: grid; gap: 9px; }
+
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .status {
+      min-height: 1.4em;
+      margin: 9px 0 0;
+      color: #9be0b2;
+      font-size: 13px;
+    }
+
+    .error { color: #ffabb3; }
+    .hidden { display: none !important; }
+
+    .notice {
+      margin: 10px 0;
+      padding: 11px 12px;
+      border: 1px solid #705d2c;
+      border-radius: 9px;
+      color: #f3dda2;
+      background: #382f191c;
+      font-size: 13px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      background: #0009;
+      backdrop-filter: blur(4px);
+      animation: fade-in .18s ease both;
+    }
+
+    .modal {
+      width: min(100%, 420px);
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: #111925;
+      box-shadow: 0 24px 80px #0009;
+      animation: modal-in .22s cubic-bezier(.2,.75,.25,1) both;
+    }
+
+    .modal h2 { margin-top: 0; }
+
+    .splash {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 15px;
+      background:
+        radial-gradient(ellipse at center, #321016 0, #100b10 48%, #08090d 100%);
+      opacity: 1;
+      visibility: visible;
+      transition: opacity .7s ease, visibility .7s ease;
+    }
+
+    .splash.finished {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .splash-art {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+    }
+
+    .ascii-title {
+      width: max-content;
+      max-width: 94vw;
+      overflow: hidden;
+      margin: 0;
+      color: transparent;
+      background: linear-gradient(
+        90deg,
+        #591010 0%,
+        #ff2525 20%,
+        #fff0f0 48%,
+        #ff2525 70%,
+        #591010 100%
+      );
+      background-size: 250% 100%;
+      background-position: 0% 50%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      font: 800 clamp(7px, 1.55vw, 18px)/1.12 "Courier New", monospace;
+      white-space: pre;
+      text-shadow: 0 0 14px #ff171766;
+      animation: ascii-flow 5s linear forwards;
+    }
+
+    .stickman {
+      width: clamp(120px, 22vw, 190px);
+      height: auto;
+      overflow: visible;
+    }
+
+    .wall {
+      fill: none;
+      stroke: #545b67;
+      stroke-width: 3;
+    }
+
+    .person {
+      fill: none;
+      stroke: #aab0ba;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .face {
+      fill: none;
+      stroke: #aab0ba;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    .cigarette {
+      stroke: #dedede;
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    .smoke {
+      fill: none;
+      stroke: #89919b;
+      stroke-width: 2;
+      stroke-linecap: round;
+      opacity: .7;
+      animation: smoke-rise 2.3s ease-in-out infinite;
+    }
+
+    .smoke-two { animation-delay: .8s; }
+
+    .splash-caption {
+      color: #ff9b9b;
+      font-size: 12px;
+      letter-spacing: .32em;
+      animation: caption-blink .8s steps(2, start) infinite;
+    }
+
+    @keyframes line-appear {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes node-appear {
+      from { opacity: 0; scale: .94; translate: 0 5px; }
+      to { opacity: 1; scale: 1; translate: 0 0; }
+    }
+
+    @keyframes card-appear {
+      from { opacity: 0; translate: 0 7px; }
+      to { opacity: 1; translate: 0 0; }
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes modal-in {
+      from { opacity: 0; transform: translateY(8px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes ascii-flow {
+      from { background-position: 0% 50%; }
+      to { background-position: 100% 50%; }
+    }
+
+    @keyframes smoke-rise {
+      0% { opacity: 0; transform: translate(0, 5px); }
+      35% { opacity: .7; }
+      100% { opacity: 0; transform: translate(5px, -18px); }
+    }
+
+    @keyframes caption-blink {
+      to { opacity: .35; }
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .top-actions {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+
+      .search, .search:focus { width: 100%; }
+
+      .contact-wrap { margin-left: auto; }
+
+      .heading-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .content-grid { grid-template-columns: 1fr; }
+
+      .graph-shell {
+        height: 58vh;
+        min-height: 340px;
+      }
+
+      .ascii-title {
+        font-size: clamp(5px, 1.55vw, 12px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="splash" class="splash" aria-label="Загрузка сайта">
+    <div class="splash-art">
+      <pre class="ascii-title" aria-label="EMODE1K">
+ _____ __  __  ___  ____  _____ _  __
+| ____|  \/  |/ _ \|  _ \| ____| |/ /
+|  _| | |\/| | | | | | | |  _| | ' /
+| |___| |  | | |_| | |_| | |___| . \
+|_____|_|  |_|\___/|____/|_____|_|\_\
+      </pre>
+
+      <svg class="stickman" viewBox="0 0 190 230" role="img"
+           aria-label="Грустный стикман курит, прислонившись к стене">
+        <path class="wall" d="M145 14V215"></path>
+        <circle class="person" cx="105" cy="70" r="17"></circle>
+        <path class="person" d="M101 88L91 139L117 145"></path>
+        <path class="person" d="M96 103L70 127L58 119"></path>
+        <path class="person" d="M98 104L120 117L132 112"></path>
+        <path class="person" d="M91 139L76 179L99 183"></path>
+        <path class="person" d="M117 145L128 179L145 179"></path>
+        <path class="cigarette" d="M55 117L45 113"></path>
+        <path class="smoke" d="M42 109C31 101 44 96 35 89"></path>
+        <path class="smoke smoke-two" d="M48 106C58 99 46 94 54 87"></path>
+        <path class="face" d="M99 67L104 67M111 67L116 67M103 78Q108 74 113 78"></path>
+      </svg>
+    </div>
+
+    <div class="splash-caption">ЗАГРУЗКА ПРОЕКТА</div>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="emode1k — главная">
+      <span class="brand-mark">e</span>emode1k
+    </a>
+
+    <div class="top-actions">
+      <input id="search" class="search" type="search"
+             placeholder="Поиск по дереву…" aria-label="Поиск по дереву">
+
+      <div class="contact-wrap">
+        <button id="contactButton" class="button" type="button"
+                aria-expanded="false" aria-controls="contactMenu">
+          Связь с автором
+        </button>
+
+        <nav id="contactMenu" class="contact-menu hidden" aria-label="Профили автора">
+          <a href="https://discord.gg/CWDxSzTxn" target="_blank" rel="noopener noreferrer">
+            Discord — emode1k
+          </a>
+          <a href="https://t.me/emode1k" target="_blank" rel="noopener noreferrer">
+            Telegram — emode1k
+          </a>
+          <a href="https://github.com/emode1k" target="_blank" rel="noopener noreferrer">
+            GitHub — emode1k
+          </a>
+        </nav>
+      </div>
+
+      <button id="adminButton" class="button button-primary" type="button">
+        Админ-панель
+      </button>
+
+      <button id="logoutButton" class="button hidden" type="button">
+        Выйти
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="heading-row">
+      <div>
+        <p class="eyebrow">Личный проект · интерактивная карта</p>
+        <h1>Дерево проекта</h1>
+        <p class="subheading">
+          Нажимай на узлы с дочерними ветками, чтобы раскрывать и сворачивать дерево.
+        </p>
+      </div>
+      <div id="graphMeta" class="graph-meta"></div>
+    </div>
+
+    <div id="graph" class="graph-shell" aria-label="Граф проекта"></div>
+
+    <div class="content-grid">
+      <section class="card">
+        <h2 id="detailsTitle">Информация об узле</h2>
+        <div id="details" class="details">Выбери узел на графе.</div>
+
+        <div id="adminNodeActions" class="button-row hidden">
+          <button id="editNodeButton" class="button" type="button">Изменить</button>
+          <button id="deleteNodeButton" class="button button-danger" type="button">
+            Удалить ветку
+          </button>
+        </div>
+      </section>
+
+      <section id="adminPanel" class="card hidden">
+        <h2 id="formTitle">Добавить узел</h2>
+        <p class="muted">Новый узел станет дочерним для выбранного узла.</p>
+
+        <form id="nodeForm" class="form-grid">
+          <input id="nodeLabel" maxlength="80" required placeholder="Название">
+          <textarea id="nodeInfo" maxlength="2000" placeholder="Описание"></textarea>
+
+          <div class="button-row">
+            <button id="saveNodeButton" class="button button-primary" type="submit">
+              Добавить
+            </button>
+            <button id="cancelEditButton" class="button hidden" type="button">
+              Отмена
+            </button>
+          </div>
+        </form>
+
+        <p id="adminStatus" class="status" role="status"></p>
+      </section>
+    </div>
+  </main>
+
+  <div id="loginDialog" class="modal-backdrop hidden"
+       role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="modal">
+      <h2 id="loginTitle">Вход в админ-панель</h2>
+      <p class="notice">
+        Демоверсия: пароль находится в коде страницы и не защищает сайт от посетителей.
+      </p>
+
+      <form id="loginForm">
+        <input id="passwordInput" type="password" autocomplete="current-password"
+               placeholder="Пароль" required>
+
+        <div class="button-row">
+          <button class="button button-primary" type="submit">Войти</button>
+          <button id="closeLoginButton" class="button" type="button">Отмена</button>
+        </div>
+
+        <p id="loginStatus" class="status error" role="status"></p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_PASSWORD = "251063dsA";
+    const STORAGE_KEY = "emode1k-tree-v5";
+
+    const defaultData = [
+      {
+        id: "emode1k",
+        parent: null,
+        label: "emode1k",
+        info: "Главный узел проекта."
+      },
+      {
+        id: "about",
+        parent: "emode1k",
+        label: "О проекте",
+        info: "Описание проекта и его идея."
+      },
+      {
+        id: "goals",
+        parent: "emode1k",
+        label: "Цели",
+        info: "Основные цели и задачи проекта."
+      },
+      {
+        id: "projects",
+        parent: "emode1k",
+        label: "Проекты",
+        info: "Отдельные проекты и направления."
+      },
+      {
+        id: "links",
+        parent: "emode1k",
+        label: "Ссылки",
+        info: "Публичные ресурсы проекта."
+      },
+      {
+        id: "project-one",
+        parent: "projects",
+        label: "Первый проект",
+        info: "Пример узла третьего уровня. Нажми на «Проекты», чтобы раскрыть его."
+      },
+      {
+        id: "project-one-details",
+        parent: "project-one",
+        label: "Подробности",
+        info: "Пример узла четвёртого уровня. Нажми на «Первый проект», чтобы открыть его."
+      }
+    ];
+
+    const $ = id => document.getElementById(id);
+    const copy = value => JSON.parse(JSON.stringify(value));
+
+    function validTree(items) {
+      if (!Array.isArray(items) || items.length === 0) return false;
+
+      const ids = new Set(items.map(item => item && item.id));
+      if (ids.size !== items.length || !ids.has("emode1k")) return false;
+
+      if (items.some(item =>
+        !item ||
+        typeof item.id !== "string" ||
+        typeof item.label !== "string" ||
+        (item.parent !== null && typeof item.parent !== "string")
+      )) return false;
+
+      const root = items.find(item => item.id === "emode1k");
+      if (root.parent !== null) return false;
+
+      if (items.some(item => item.id !== "emode1k" && !ids.has(item.parent))) {
+        return false;
+      }
+
+      for (const item of items) {
+        const visited = new Set();
+        let current = item;
+
+        while (current && current.parent !== null) {
+          if (visited.has(current.id)) return false;
+          visited.add(current.id);
+          current = items.find(candidate => candidate.id === current.parent);
+        }
+
+        if (!current) return false;
+      }
+
+      return true;
+    }
+
+    function loadTree() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        return validTree(saved) ? saved : copy(defaultData);
+      } catch {
+        return copy(defaultData);
+      }
+    }
+
+    let data = loadTree();
+    let selectedId = "emode1k";
+    let isAdmin = false;
+    let editingId = null;
+    let query = "";
+    const expandedNodes = new Set();
+
+    function saveTree() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    function childrenOf(id) {
+      return data.filter(node => node.parent === id);
+    }
+
+    function descendantIds(id) {
+      const result = new Set([id]);
+
+      function walk(parentId) {
+        childrenOf(parentId).forEach(child => {
+          if (!result.has(child.id)) {
+            result.add(child.id);
+            walk(child.id);
+          }
+        });
+      }
+
+      walk(id);
+      return result;
+    }
+
+    function nodeDepth(node, byId) {
+      let depth = 0;
+      let current = node;
+      const visited = new Set();
+
+      while (current.parent && byId.has(current.parent) && !visited.has(current.id)) {
+        visited.add(current.id);
+        depth++;
+        current = byId.get(current.parent);
+      }
+
+      return depth;
+    }
+
+    function isVisibleByExpansion(node, byId) {
+      let current = node;
+
+      while (current.parent && byId.has(current.parent)) {
+        const parent = byId.get(current.parent);
+        const parentDepth = nodeDepth(parent, byId);
+
+        if (parentDepth >= 2 && !expandedNodes.has(parent.id)) {
+          return false;
+        }
+
+        current = parent;
+      }
+
+      return true;
+    }
+
+    function getVisibleNodes(byId) {
+      const normallyVisible = data.filter(node => isVisibleByExpansion(node, byId));
+
+      if (!query) return normallyVisible;
+
+      const result = new Map();
+
+      data.forEach(node => {
+        const matches = `${node.label} ${node.info || ""}`
+          .toLowerCase()
+          .includes(query.toLowerCase());
+
+        if (!matches) return;
+
+        result.set(node.id, node);
+
+        let current = node;
+        while (current.parent && byId.has(current.parent)) {
+          current = byId.get(current.parent);
+          result.set(current.id, current);
+        }
+      });
+
+      return [...result.values()];
+    }
+
+    function draw() {
+      const host = $("graph");
+      const byId = new Map(data.map(node => [node.id, node]));
+      const visible = getVisibleNodes(byId);
+
+      $("graphMeta").textContent = `${visible.length} / ${data.length} узлов`;
+
+      if (visible.length === 0) {
+        host.innerHTML = '<div class="empty-state">По запросу ничего не найдено.</div>';
+        return;
+      }
+
+      const levels = [];
+
+      visible.forEach(node => {
+        const depth = nodeDepth(node, byId);
+        if (!levels[depth]) levels[depth] = [];
+        levels[depth].push(node);
+      });
+
+      const maxWidth = Math.max(...levels.map(level => (level || []).length));
+      const width = Math.max(850, maxWidth * 245);
+      const height = Math.max(420, levels.length * 148 + 55);
+      const positions = new Map();
+
+      levels.forEach((level, depth) => {
+        if (!level) return;
+
+        const gap = width / (level.length + 1);
+
+        level.forEach((node, index) => {
+          positions.set(node.id, {
+            x: gap * (index + 1) - 92,
+            y: 28 + depth * 148
+          });
+        });
+      });
+
+      let edges = "";
+
+      visible.forEach(node => {
+        const child = positions.get(node.id);
+        const parent = positions.get(node.parent);
+
+        if (!child || !parent) return;
+
+        const startX = parent.x + 92;
+        const startY = parent.y + 58;
+        const endX = child.x + 92;
+        const endY = child.y;
+        const middleY = startY + (endY - startY) * .52;
+
+        const path = `M ${startX} ${startY}
+          C ${startX} ${middleY}, ${endX} ${middleY}, ${endX} ${endY}`;
+
+        edges += `<path class="edge" d="${path}"></path>`;
+      });
+
+      let nodes = "";
+
+      visible.forEach((node, index) => {
+        const point = positions.get(node.id);
+        const label = node.label.length > 24
+          ? node.label.slice(0, 23) + "…"
+          : node.label;
+        const hasChildren = childrenOf(node.id).length > 0;
+        const depth = nodeDepth(node, byId);
+        const canExpand = depth >= 2 && hasChildren;
+        const expanded = expandedNodes.has(node.id);
+        const indicator = canExpand ? expanded ? "−" : "+" : "";
+        const delay = Math.min(index * 35, 350);
+
+        nodes += `
+          <g class="node ${node.id === "emode1k" ? "root" : ""} ${selectedId === node.id ? "selected" : ""}"
+             data-id="${escapeHtml(node.id)}"
+             transform="translate(${point.x},${point.y})"
+             tabindex="0"
+             role="button"
+             aria-label="${escapeHtml(node.label)}"
+             style="animation-delay:${delay}ms">
+            <rect width="184" height="58" rx="12"></rect>
+            <circle class="dot" cx="16" cy="29" r="3"></circle>
+            <text x="96" y="34" text-anchor="middle">${escapeHtml(label)}</text>
+            <text class="expand-indicator" x="169" y="19" text-anchor="middle">${indicator}</text>
+          </g>`;
+      });
+
+      host.innerHTML = `
+        <svg class="graph-svg" width="${width}" height="${height}"
+             viewBox="0 0 ${width} ${height}" aria-label="Дерево проекта">
+          ${edges}
+          ${nodes}
+        </svg>`;
+
+      host.querySelectorAll(".node").forEach(element => {
+        const activate = () => handleNodeClick(element.dataset.id);
+
+        element.addEventListener("click", activate);
+        element.addEventListener("keydown", event => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            activate();
+          }
+        });
+      });
+    }
+
+    function handleNodeClick(id) {
+      const node = data.find(item => item.id === id);
+      if (!node) return;
+
+      const byId = new Map(data.map(item => [item.id, item]));
+      const depth = nodeDepth(node, byId);
+      const hasChildren = childrenOf(node.id).length > 0;
+
+      if (depth >= 2 && hasChildren) {
+        if (expandedNodes.has(node.id)) {
+          expandedNodes.delete(node.id);
+          descendantIds(node.id).forEach(childId => expandedNodes.delete(childId));
+        } else {
+          expandedNodes.add(node.id);
+        }
+      }
+
+      selectNode(id);
+    }
+
+    function selectNode(id) {
+      const node = data.find(item => item.id === id);
+      if (!node) return;
+
+      selectedId = id;
+      $("detailsTitle").textContent = node.label;
+      $("details").textContent = node.info || "Описание не добавлено.";
+      $("adminNodeActions").classList.toggle(
+        "hidden",
+        !isAdmin || id === "emode1k"
+      );
+
+      draw();
+    }
+
+    function setAdmin(enabled) {
+      isAdmin = enabled;
+      $("adminPanel").classList.toggle("hidden", !enabled);
+      $("adminButton").classList.toggle("hidden", enabled);
+      $("logoutButton").classList.toggle("hidden", !enabled);
+      $("adminNodeActions").classList.toggle(
+        "hidden",
+        !enabled || selectedId === "emode1k"
+      );
+
+      $("adminStatus").textContent = enabled
+        ? "Режим редактирования включён. Данные хранятся в этом браузере."
+        : "";
+
+      draw();
+    }
+
+    function resetForm() {
+      editingId = null;
+      $("nodeForm").reset();
+      $("formTitle").textContent = "Добавить узел";
+      $("saveNodeButton").textContent = "Добавить";
+      $("cancelEditButton").classList.add("hidden");
+    }
+
+    $("contactButton").addEventListener("click", event => {
+      event.stopPropagation();
+
+      const menu = $("contactMenu");
+      const shouldOpen = menu.classList.contains("hidden");
+
+      menu.classList.toggle("hidden", !shouldOpen);
+      $("contactButton").setAttribute("aria-expanded", String(shouldOpen));
+    });
+
+    document.addEventListener("click", event => {
+      if (!event.target.closest(".contact-wrap")) {
+        $("contactMenu").classList.add("hidden");
+        $("contactButton").setAttribute("aria-expanded", "false");
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        $("contactMenu").classList.add("hidden");
+        $("contactButton").setAttribute("aria-expanded", "false");
+        $("loginDialog").classList.add("hidden");
+      }
+    });
+
+    $("search").addEventListener("input", event => {
+      query = event.target.value.trim();
+      draw();
+    });
+
+    $("adminButton").addEventListener("click", () => {
+      $("loginDialog").classList.remove("hidden");
+      $("passwordInput").focus();
+    });
+
+    $("closeLoginButton").addEventListener("click", () => {
+      $("loginDialog").classList.add("hidden");
+      $("loginForm").reset();
+      $("loginStatus").textContent = "";
+    });
+
+    $("loginForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      if ($("passwordInput").value === ADMIN_PASSWORD) {
+        $("loginDialog").classList.add("hidden");
+        $("loginForm").reset();
+        $("loginStatus").textContent = "";
+        setAdmin(true);
+      } else {
+        $("loginStatus").textContent = "Неверный пароль.";
+      }
+    });
+
+    $("logoutButton").addEventListener("click", () => {
+      setAdmin(false);
+      resetForm();
+    });
+
+    $("nodeForm").addEventListener("submit", event => {
+      event.preventDefault();
+      if (!isAdmin) return;
+
+      const label = $("nodeLabel").value.trim();
+      const info = $("nodeInfo").value.trim();
+
+      if (!label) {
+        $("adminStatus").textContent = "Укажи название узла.";
+        return;
+      }
+
+      if (editingId) {
+        const node = data.find(item => item.id === editingId);
+        if (!node) return;
+
+        node.label = label;
+        node.info = info;
+        saveTree();
+        resetForm();
+        $("adminStatus").textContent = "Изменения сохранены.";
+        selectNode(node.id);
+        return;
+      }
+
+      const parentId = data.some(item => item.id === selectedId)
+        ? selectedId
+        : "emode1k";
+
+      const newNode = {
+        id: "node-" + (
+          window.crypto && window.crypto.randomUUID
+            ? window.crypto.randomUUID()
+            : Date.now() + "-" + Math.random().toString(16).slice(2)
+        ),
+        parent: parentId,
+        label,
+        info
+      };
+
+      data.push(newNode);
+      saveTree();
+      $("nodeForm").reset();
+      $("adminStatus").textContent = "Узел добавлен.";
+      selectNode(newNode.id);
+    });
+
+    $("editNodeButton").addEventListener("click", () => {
+      if (!isAdmin || !selectedId || selectedId === "emode1k") return;
+
+      const node = data.find(item => item.id === selectedId);
+      if (!node) return;
+
+      editingId = node.id;
+      $("nodeLabel").value = node.label;
+      $("nodeInfo").value = node.info || "";
+      $("formTitle").textContent = "Редактировать узел";
+      $("saveNodeButton").textContent = "Сохранить";
+      $("cancelEditButton").classList.remove("hidden");
+      $("nodeLabel").focus();
+    });
+
+    $("cancelEditButton").addEventListener("click", resetForm);
+
+    $("deleteNodeButton").addEventListener("click", () => {
+      if (!isAdmin || !selectedId || selectedId === "emode1k") return;
+
+      const node = data.find(item => item.id === selectedId);
+      if (!node) return;
+
+      const idsToDelete = descendantIds(node.id);
+      const confirmed = confirm(
+        `Удалить «${node.label}» и все вложенные узлы: ${idsToDelete.size}?`
+      );
+
+      if (!confirmed) return;
+
+      data = data.filter(item => !idsToDelete.has(item.id));
+      idsToDelete.forEach(id => expandedNodes.delete(id));
+      saveTree();
+      resetForm();
+      $("adminStatus").textContent = "Ветка удалена.";
+      selectNode("emode1k");
+    });
+
+    // Анимация надписи длится 5 секунд.
+    // Заставка начинает исчезать через 4,3 секунды и скрывается за 0,7 секунды.
+    window.setTimeout(() => {
+      $("splash").classList.add("finished");
+    }, 4300);
+
+    draw();
+    selectNode("emode1k");
+  </script>
+</body>
+</html>
