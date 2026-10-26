@@ -3,19 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090d14">
+  <meta name="theme-color" content="#0b0a0d">
+  <meta name="description" content="Интерактивное дерево проекта emode1k">
   <title>emode1k — дерево проекта</title>
 
   <style>
     :root {
       color-scheme: dark;
-      --bg: #090d14;
-      --panel: #101722;
-      --border: #263244;
-      --text: #e8edf5;
-      --muted: #8996a8;
-      --accent: #70d6b1;
-      --line: #50647b;
+      --bg: #0b0a0d;
+      --panel: #141216;
+      --panel-2: #1b171c;
+      --border: #332b35;
+      --text: #eee8ed;
+      --muted: #a69ba6;
+      --accent: #e1c86b;
+      --accent-glow: #e1c86b55;
+      --danger: #ff7b87;
+      --line: #62566a;
+      --purple: #9c74ac;
     }
 
     * { box-sizing: border-box; }
@@ -23,9 +28,12 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background: radial-gradient(ellipse at 50% 10%, #12202a 0, transparent 48%), var(--bg);
       color: var(--text);
-      font: 15px/1.55 system-ui, sans-serif;
+      background:
+        radial-gradient(ellipse at 50% 4%, #261b27 0, transparent 48%),
+        var(--bg);
+      font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     button, input, textarea { font: inherit; }
@@ -34,21 +42,23 @@
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 20;
+      min-height: 68px;
       padding: 12px clamp(14px, 3vw, 34px);
       display: flex;
       align-items: center;
-      gap: 14px;
-      border-bottom: 1px solid #ffffff10;
-      background: #090d14ef;
+      gap: 18px;
+      border-bottom: 1px solid #ffffff12;
+      background: #0b0a0dee;
       backdrop-filter: blur(16px);
     }
 
     .brand {
       color: var(--text);
-      font-weight: 750;
-      white-space: nowrap;
+      font-weight: 800;
+      letter-spacing: .04em;
       text-decoration: none;
+      white-space: nowrap;
     }
 
     .brand-mark {
@@ -57,10 +67,10 @@
       height: 27px;
       margin-right: 8px;
       place-items: center;
-      border: 1px solid #70d6b16b;
+      border: 1px solid #e1c86b77;
       border-radius: 8px;
       color: var(--accent);
-      background: #70d6b113;
+      background: #e1c86b12;
     }
 
     .top-actions {
@@ -73,7 +83,7 @@
 
     input, textarea, .button {
       color: var(--text);
-      background: #111925;
+      background: var(--panel-2);
       border: 1px solid var(--border);
       border-radius: 10px;
     }
@@ -81,7 +91,7 @@
     input, textarea { padding: 10px 12px; }
 
     input:focus, textarea:focus, button:focus-visible, a:focus-visible {
-      outline: 2px solid #70d6b199;
+      outline: 2px solid #e1c86b99;
       outline-offset: 2px;
     }
 
@@ -94,22 +104,25 @@
       min-height: 40px;
       padding: 9px 13px;
       cursor: pointer;
-      transition: transform .18s, border-color .18s, background .18s;
+      transition: transform .18s ease, border-color .18s ease,
+        background .18s ease;
     }
 
     .button:hover {
       transform: translateY(-1px);
-      border-color: #70d6b177;
-      background: #17232d;
+      border-color: #e1c86b88;
+      background: #292229;
     }
 
-    .primary {
-      border-color: #70d6b15c;
-      color: #c9f5e4;
-      background: #70d6b117;
+    .button:active { transform: scale(.98); }
+
+    .button-primary {
+      border-color: #e1c86b66;
+      color: #f3e7ad;
+      background: #e1c86b14;
     }
 
-    .danger {
+    .button-danger {
       border-color: #8a465177;
       color: #ffc1c8;
     }
@@ -118,16 +131,16 @@
 
     .contact-menu {
       position: absolute;
-      top: calc(100% + 8px);
+      top: calc(100% + 9px);
       right: 0;
-      z-index: 20;
+      z-index: 30;
       width: 210px;
       padding: 6px;
       border: 1px solid var(--border);
       border-radius: 12px;
-      background: #111925;
-      box-shadow: 0 16px 45px #0008;
-      transition: opacity .16s, transform .16s;
+      background: var(--panel);
+      box-shadow: 0 16px 45px #0009;
+      transition: opacity .16s ease, transform .16s ease;
     }
 
     .contact-menu.hidden {
@@ -139,13 +152,16 @@
 
     .contact-menu a {
       display: block;
-      padding: 10px;
+      padding: 10px 11px;
       border-radius: 8px;
       color: var(--text);
       text-decoration: none;
     }
 
-    .contact-menu a:hover { background: #70d6b114; }
+    .contact-menu a:hover {
+      color: #f3e7ad;
+      background: #e1c86b12;
+    }
 
     main {
       width: min(1500px, 100%);
@@ -174,9 +190,22 @@
       margin: 0;
       font-size: clamp(25px, 4vw, 38px);
       line-height: 1.15;
+      letter-spacing: -.035em;
     }
 
-    .subheading, .muted { color: var(--muted); }
+    .subheading {
+      max-width: 720px;
+      margin: 10px 0 0;
+      color: var(--muted);
+    }
+
+    .graph-tools {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
 
     .graph-meta {
       color: var(--muted);
@@ -186,21 +215,53 @@
 
     .graph-shell {
       position: relative;
-      min-height: 420px;
+      min-height: 440px;
       height: min(66vh, 760px);
-      overflow: auto;
-      border: 1px solid #263244;
+      overflow: hidden;
+      border: 1px solid #332b35;
       border-radius: 16px;
-      background: radial-gradient(circle at 50% 45%, #15212a, #0a0f17 75%);
+      background:
+        radial-gradient(circle at 50% 45%, #211923 0, #100e14 55%, #0d0b10 100%);
+      box-shadow: 0 22px 75px #0004, inset 0 1px #ffffff08;
+      cursor: grab;
+      touch-action: none;
     }
 
-    svg { position: relative; display: block; min-width: 100%; }
+    .graph-shell.dragging { cursor: grabbing; }
+
+    .graph-shell::before {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      content: "";
+      opacity: .28;
+      background-image: radial-gradient(#b4a4b722 .8px, transparent .8px);
+      background-size: 22px 22px;
+    }
+
+    svg.graph-svg {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      user-select: none;
+    }
+
+    .graph-content {
+      transform-origin: 0 0;
+      transition: transform .15s ease-out;
+    }
+
+    .graph-content.no-transition { transition: none; }
 
     .edge {
       fill: none;
       stroke: var(--line);
-      stroke-width: 1.7;
-      animation: fade .4s ease both;
+      stroke-width: 1.8;
+      stroke-opacity: .8;
     }
 
     .node {
@@ -208,21 +269,25 @@
       opacity: 0;
       transform-box: fill-box;
       transform-origin: center;
-      animation: appear .35s ease forwards;
+      animation: node-appear .38s cubic-bezier(.2,.75,.25,1) forwards;
     }
 
     .node rect {
-      fill: #131d29;
-      stroke: #34465a;
-      stroke-width: 1.2;
+      fill: #19151c;
+      stroke: #4b3e50;
+      stroke-width: 1.3;
       transition: fill .2s, stroke .2s, filter .2s;
     }
 
-    .node.root rect { fill: #15332f; stroke: #54c69d; }
+    .node.root rect {
+      fill: #2e281b;
+      stroke: #d2b95d;
+    }
+
     .node:hover rect, .node.selected rect {
-      fill: #1a2b35;
-      stroke: #78dfb7;
-      filter: drop-shadow(0 0 9px #70d6b132);
+      fill: #28202a;
+      stroke: var(--accent);
+      filter: drop-shadow(0 0 9px var(--accent-glow));
     }
 
     .node text {
@@ -233,11 +298,12 @@
     }
 
     .node .dot { fill: var(--accent); }
-    .node .indicator { fill: #9aabbf; font-size: 12px; }
+    .node .expand-indicator { fill: #d4c99e; font-size: 12px; }
 
-    .empty {
+    .empty-state {
       position: absolute;
       inset: 0;
+      z-index: 2;
       display: grid;
       place-items: center;
       padding: 24px;
@@ -245,7 +311,7 @@
       text-align: center;
     }
 
-    .grid {
+    .content-grid {
       display: grid;
       grid-template-columns: minmax(250px, .8fr) minmax(300px, 1.2fr);
       gap: 14px;
@@ -257,20 +323,27 @@
       padding: 18px;
       border: 1px solid var(--border);
       border-radius: 14px;
-      background: linear-gradient(145deg, #121a26, #0f1620);
+      background: linear-gradient(145deg, #171319, #110f14);
+      box-shadow: 0 10px 32px #0003;
     }
 
     .card h2 { margin: 0 0 10px; font-size: 15px; }
+    .muted { color: var(--muted); }
 
     .details {
       min-height: 55px;
-      color: #b4bfce;
+      color: #c0b6c1;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
 
     .form-grid { display: grid; gap: 9px; }
-    textarea { width: 100%; min-height: 100px; resize: vertical; }
+
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      resize: vertical;
+    }
 
     .button-row {
       display: flex;
@@ -282,30 +355,33 @@
     .status {
       min-height: 1.4em;
       margin: 9px 0 0;
-      color: #9be0b2;
+      color: #b8d5aa;
       font-size: 13px;
+      overflow-wrap: anywhere;
     }
 
     .error { color: #ffabb3; }
     .hidden { display: none !important; }
 
     .notice {
-      padding: 10px 12px;
+      margin: 10px 0;
+      padding: 11px 12px;
       border: 1px solid #705d2c;
       border-radius: 9px;
       color: #f3dda2;
+      background: #382f191c;
       font-size: 13px;
     }
 
-    .backdrop {
+    .modal-backdrop {
       position: fixed;
       inset: 0;
-      z-index: 30;
+      z-index: 40;
       display: grid;
       place-items: center;
       padding: 16px;
-      background: #0009;
-      backdrop-filter: blur(4px);
+      background: #000b;
+      backdrop-filter: blur(5px);
     }
 
     .modal {
@@ -313,8 +389,11 @@
       padding: 20px;
       border: 1px solid var(--border);
       border-radius: 15px;
-      background: #111925;
+      background: #171319;
+      box-shadow: 0 24px 80px #0009;
     }
+
+    .modal h2 { margin-top: 0; }
 
     .splash {
       position: fixed;
@@ -324,87 +403,228 @@
       align-content: center;
       justify-items: center;
       gap: 15px;
-      background: radial-gradient(ellipse at center, #321016, #08090d 72%);
-      transition: opacity .7s, visibility .7s;
+      background: radial-gradient(ellipse at center, #321016, #08090d 70%);
+      transition: opacity .7s ease, visibility .7s ease;
     }
 
-    .splash.done {
+    .splash.finished {
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
     }
 
-    .ascii {
+    .splash-art {
+      display: grid;
+      justify-items: center;
+      gap: 8px;
+    }
+
+    .ascii-title {
       width: max-content;
       max-width: 94vw;
       overflow: hidden;
       margin: 0;
       color: transparent;
-      background: linear-gradient(90deg, #591010, #ff2525, #fff0f0, #ff2525, #591010);
+      background: linear-gradient(
+        90deg, #591010, #ff2525 20%, #fff0f0 48%, #ff2525 70%, #591010
+      );
       background-size: 250% 100%;
+      background-position: 0 50%;
       background-clip: text;
       -webkit-background-clip: text;
-      font: 800 clamp(6px, 1.5vw, 16px)/1.12 "Courier New", monospace;
+      font: 800 clamp(7px, 1.55vw, 18px)/1.12 "Courier New", monospace;
       white-space: pre;
       text-shadow: 0 0 14px #ff171766;
-      animation: flow 5s linear forwards;
+      animation: ascii-flow 5s linear forwards;
     }
 
-    .stickman { width: clamp(120px, 22vw, 190px); }
-    .wall { fill: none; stroke: #545b67; stroke-width: 3; }
-    .person {
+    .person-art {
+      width: clamp(170px, 27vw, 250px);
+      height: auto;
+      overflow: visible;
+      filter: drop-shadow(0 10px 22px #000b);
+    }
+
+    .wall { fill: none; stroke: #655d68; stroke-width: 4; }
+    .floor { fill: none; stroke: #4a424b; stroke-width: 2; }
+    .wall-mark { fill: none; stroke: #3d3640; stroke-width: 1.5; }
+
+    .hair-back {
+      fill: #111014;
+      stroke: #554853;
+      stroke-width: 1.5;
+    }
+
+    .skin {
+      fill: url(#skinGradient);
+      stroke: #c0a69c;
+      stroke-width: 1.4;
+    }
+
+    .hair {
+      fill: #17131a;
+      stroke: #665465;
+      stroke-width: 1.7;
+      stroke-linejoin: round;
+    }
+
+    .hair-highlight {
       fill: none;
-      stroke: #aab0ba;
-      stroke-width: 4;
+      stroke: #756174;
+      stroke-width: 1.5;
+      opacity: .72;
+      stroke-linecap: round;
+    }
+
+    .face-line {
+      fill: none;
+      stroke: #493a3d;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+    }
+
+    .eye { fill: #21191e; }
+    .brow { stroke: #30252b; stroke-width: 2.5; stroke-linecap: round; }
+    .neck { fill: #987c72; stroke: #c0a69c; stroke-width: 1; }
+
+    .jacket {
+      fill: url(#jacketGradient);
+      stroke: #e3c85d;
+      stroke-width: 2;
+      stroke-linejoin: round;
+    }
+
+    .jacket-dark {
+      fill: #222129;
+      stroke: #777079;
+      stroke-width: 1.5;
+      stroke-linejoin: round;
+    }
+
+    .jacket-detail {
+      fill: none;
+      stroke: #f0d978;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+    }
+
+    .jacket-seam {
+      fill: none;
+      stroke: #665c57;
+      stroke-width: 1.3;
+      stroke-linecap: round;
+    }
+
+    .arm {
+      fill: none;
+      stroke: #d5b94f;
+      stroke-width: 13;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
-    .face {
+
+    .arm-shadow {
       fill: none;
-      stroke: #aab0ba;
+      stroke: #7c672b;
       stroke-width: 2;
       stroke-linecap: round;
     }
+
+    .hand {
+      fill: #a78478;
+      stroke: #d5b3a5;
+      stroke-width: 1.3;
+      stroke-linejoin: round;
+    }
+
+    .pants {
+      fill: url(#pantsGradient);
+      stroke: #77717b;
+      stroke-width: 1.8;
+      stroke-linejoin: round;
+    }
+
+    .pants-fold {
+      fill: none;
+      stroke: #77717b;
+      stroke-width: 1.4;
+      stroke-linecap: round;
+    }
+
+    .shoe {
+      fill: #17151a;
+      stroke: #938b94;
+      stroke-width: 1.7;
+      stroke-linejoin: round;
+    }
+
+    .shoe-sole {
+      fill: none;
+      stroke: #b8adb5;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
     .cigarette {
-      stroke: #dedede;
+      stroke: #e4ddd4;
       stroke-width: 3;
       stroke-linecap: round;
     }
+
+    .cigarette-glow {
+      stroke: #ff634f;
+      stroke-width: 3;
+      filter: drop-shadow(0 0 4px #ff382d);
+    }
+
     .smoke {
       fill: none;
-      stroke: #89919b;
+      stroke: #aaa4ae;
       stroke-width: 2;
-      animation: smoke 2.3s ease-in-out infinite;
+      stroke-linecap: round;
+      opacity: .65;
+      animation: smoke-rise 2.5s ease-in-out infinite;
     }
-    .smoke.two { animation-delay: .8s; }
-    .caption {
+
+    .smoke-two { animation-delay: .9s; }
+
+    .splash-caption {
       color: #ff9b9b;
       font-size: 12px;
       letter-spacing: .32em;
+      animation: caption-blink .8s steps(2, start) infinite;
     }
 
-    @keyframes flow {
+    @keyframes node-appear {
+      from { opacity: 0; scale: .96; translate: 0 5px; }
+      to { opacity: 1; scale: 1; translate: 0 0; }
+    }
+
+    @keyframes ascii-flow {
       from { background-position: 0 50%; }
       to { background-position: 100% 50%; }
     }
-    @keyframes smoke {
+
+    @keyframes smoke-rise {
       0% { opacity: 0; transform: translate(0, 5px); }
-      35% { opacity: .7; }
-      100% { opacity: 0; transform: translate(5px, -18px); }
+      35% { opacity: .65; }
+      100% { opacity: 0; transform: translate(5px, -19px); }
     }
-    @keyframes appear {
-      from { opacity: 0; scale: .95; translate: 0 5px; }
-      to { opacity: 1; scale: 1; translate: 0 0; }
+
+    @keyframes caption-blink {
+      to { opacity: .35; }
     }
-    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
     @media (max-width: 760px) {
-      .topbar, .top-actions { flex-wrap: wrap; }
-      .top-actions { width: 100%; }
-      .search { width: 100%; }
+      .topbar { flex-wrap: wrap; gap: 10px; }
+      .top-actions { width: 100%; flex-wrap: wrap; }
+      .search, .search:focus { width: 100%; }
+      .contact-wrap { margin-left: auto; }
       .heading-row { align-items: flex-start; flex-direction: column; }
-      .grid { grid-template-columns: 1fr; }
+      .graph-tools { justify-content: flex-start; }
+      .content-grid { grid-template-columns: 1fr; }
       .graph-shell { height: 58vh; min-height: 340px; }
+      .ascii-title { font-size: clamp(5px, 1.55vw, 12px); }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -419,8 +639,8 @@
 
 <body>
   <div id="splash" class="splash" aria-label="Загрузка сайта">
-    <div>
-      <pre class="ascii" aria-label="EMODE1K">
+    <div class="splash-art">
+      <pre class="ascii-title" aria-label="EMODE1K">
  _____ __  __  ___  ____  _____ _  __
 | ____|  \/  |/ _ \|  _ \| ____| |/ /
 |  _| | |\/| | | | | | | |  _| | ' /
@@ -428,39 +648,172 @@
 |_____|_|  |_|\___/|____/|_____|_|\_\
       </pre>
 
-      <svg class="stickman" viewBox="0 0 190 230" role="img"
-           aria-label="Стикман прислонился к стене">
-        <path class="wall" d="M145 14V215"></path>
-        <circle class="person" cx="105" cy="70" r="17"></circle>
-        <path class="person" d="M101 88L91 139L117 145"></path>
-        <path class="person" d="M96 103L70 127L58 119"></path>
-        <path class="person" d="M98 104L120 117L132 112"></path>
-        <path class="person" d="M91 139L76 179L99 183"></path>
-        <path class="person" d="M117 145L128 179L145 179"></path>
-        <path class="cigarette" d="M55 117L45 113"></path>
-        <path class="smoke" d="M42 109C31 101 44 96 35 89"></path>
-        <path class="smoke two" d="M48 106C58 99 46 94 54 87"></path>
-        <path class="face" d="M99 67L104 67M111 67L116 67M103 78Q108 74 113 78"></path>
+      <svg class="person-art" viewBox="0 0 280 340" role="img"
+           aria-label="Человек в жёлтой футуристической куртке отдыхает у стены">
+        <defs>
+          <linearGradient id="jacketGradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#f3dc71"></stop>
+            <stop offset=".55" stop-color="#c4a943"></stop>
+            <stop offset="1" stop-color="#78632b"></stop>
+          </linearGradient>
+          <linearGradient id="pantsGradient" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#34313a"></stop>
+            <stop offset="1" stop-color="#19171d"></stop>
+          </linearGradient>
+          <linearGradient id="skinGradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#c5a69a"></stop>
+            <stop offset="1" stop-color="#80685f"></stop>
+          </linearGradient>
+        </defs>
+
+        <path class="wall" d="M224 16V310"></path>
+        <path class="wall-mark" d="M214 56H224M214 143H224M214 229H224"></path>
+        <path class="floor" d="M29 310H256"></path>
+
+        <!-- Волосы с длинной боковой чёлкой -->
+        <path class="hair-back" d="M108 76
+          C91 57 96 30 117 20
+          C137 8 166 19 174 40
+          C181 58 174 87 165 105
+          L115 105 Z"></path>
+
+        <!-- Лицо, повёрнутое немного вниз -->
+        <path class="skin" d="M115 50
+          C121 34 145 30 160 42
+          C171 51 170 68 164 83
+          L154 102
+          C147 115 132 117 121 106
+          L111 91
+          C105 78 107 62 115 50 Z"></path>
+
+        <!-- Причёска закрывает часть лба -->
+        <path class="hair" d="M107 64
+          C100 43 108 23 128 16
+          C151 8 174 24 178 45
+          C181 59 174 73 165 81
+          C166 66 161 54 154 48
+          C148 62 139 70 127 75
+          C123 65 123 57 124 49
+          C119 61 114 70 109 77 Z"></path>
+
+        <path class="hair-highlight" d="M119 34C131 21 151 20 163 31"></path>
+        <path class="hair-highlight" d="M111 47C113 37 118 31 124 27"></path>
+
+        <!-- Уставшее выражение лица -->
+        <path class="brow" d="M126 67L137 65"></path>
+        <path class="brow" d="M149 64L158 66"></path>
+        <ellipse class="eye" cx="132" cy="73" rx="3.2" ry="2"></ellipse>
+        <ellipse class="eye" cx="153" cy="72" rx="3" ry="1.8"></ellipse>
+        <path class="face-line" d="M142 73L139 84L144 85"></path>
+        <path class="face-line" d="M137 96Q145 92 152 96"></path>
+        <path class="face-line" d="M113 70Q108 75 114 81"></path>
+
+        <!-- Шея и куртка -->
+        <path class="neck" d="M124 104L121 121L151 126L156 103"></path>
+
+        <path class="jacket" d="M119 117
+          C105 121 95 133 91 151
+          L78 199
+          C75 209 83 216 92 211
+          L105 183
+          L101 232
+          C119 243 162 244 182 229
+          L173 175
+          L193 209
+          C198 217 208 212 205 204
+          L184 150
+          C177 133 162 122 151 119
+          L139 137 Z"></path>
+
+        <!-- Внутренняя тёмная одежда -->
+        <path class="jacket-dark" d="M126 121L139 137L152 122L160 151L144 167L121 151Z"></path>
+
+        <!-- Воротник, застёжка и нашивки -->
+        <path class="jacket-detail" d="M119 119L139 137L128 156L108 131"></path>
+        <path class="jacket-detail" d="M151 119L139 137L151 155L164 129"></path>
+        <path class="jacket-detail" d="M139 137L145 224"></path>
+        <path class="jacket-seam" d="M104 166L123 171M157 170L176 164"></path>
+        <path class="jacket-detail" d="M108 187L121 190L116 201L104 198Z"></path>
+        <path class="jacket-detail" d="M157 190L174 187"></path>
+        <path class="jacket-seam" d="M126 210L136 213M151 215L164 212"></path>
+
+        <!-- Рука согнута у лица -->
+        <path class="arm" d="M183 145C194 157 195 172 185 181L163 161L154 142"></path>
+        <path class="arm-shadow" d="M187 151C192 163 189 171 182 176"></path>
+        <path class="hand" d="M155 145
+          C150 140 148 133 151 129
+          L156 126L161 133L165 127L169 132
+          L167 140L163 148Z"></path>
+
+        <!-- Сигарета -->
+        <path class="cigarette" d="M153 132L139 127"></path>
+        <path class="cigarette-glow" d="M140 127L137 126"></path>
+        <path class="smoke" d="M136 123C126 116 139 108 130 98"></path>
+        <path class="smoke smoke-two" d="M144 122C154 113 141 105 151 96"></path>
+
+        <!-- Расслабленная поза и наклон корпуса у стены -->
+        <path class="pants" d="M102 231
+          C122 241 161 240 182 228
+          L184 258
+          C183 273 191 284 204 296
+          L192 307
+          C172 301 155 286 147 270
+          L136 250
+          L122 273
+          L120 300
+          L101 301
+          L99 271
+          C97 257 99 242 102 231 Z"></path>
+
+        <path class="pants-fold" d="M110 249L127 256M160 248L177 241"></path>
+        <path class="pants-fold" d="M105 272L120 276M151 273L167 288"></path>
+        <path class="pants-fold" d="M104 288L118 291"></path>
+
+        <!-- Согнутая нога упирается в стену -->
+        <path class="shoe" d="M99 294
+          L120 294L125 303
+          C130 308 126 315 117 316
+          L84 316C81 311 86 301 99 294Z"></path>
+        <path class="shoe" d="M190 296
+          L205 290L215 298L236 302
+          C241 308 236 313 228 313
+          L196 311Z"></path>
+        <path class="shoe-sole" d="M86 311L124 311M200 308L237 308"></path>
       </svg>
     </div>
-    <div class="caption">ЗАГРУЗКА ПРОЕКТА</div>
+
+    <div class="splash-caption">ЗАГРУЗКА ПРОЕКТА</div>
   </div>
 
   <header class="topbar">
-    <a class="brand" href="#"><span class="brand-mark">e</span>emode1k</a>
+    <a class="brand" href="#">
+      <span class="brand-mark">e</span>emode1k
+    </a>
+
     <div class="top-actions">
-      <input id="search" class="search" type="search" placeholder="Поиск по дереву…">
+      <input id="search" class="search" type="search"
+             placeholder="Поиск по дереву…" aria-label="Поиск по дереву">
+
       <div class="contact-wrap">
-        <button id="contactButton" class="button" type="button" aria-expanded="false">
+        <button id="contactButton" class="button" type="button"
+                aria-expanded="false" aria-controls="contactMenu">
           Связь с автором
         </button>
-        <nav id="contactMenu" class="contact-menu hidden">
-          <a href="https://discord.gg/CWDxSzTxn" target="_blank" rel="noopener noreferrer">Discord — emode1k</a>
-          <a href="https://t.me/emode1k" target="_blank" rel="noopener noreferrer">Telegram — emode1k</a>
-          <a href="https://github.com/emode1k" target="_blank" rel="noopener noreferrer">GitHub — emode1k</a>
+
+        <nav id="contactMenu" class="contact-menu hidden" aria-label="Профили автора">
+          <a href="https://discord.gg/CWDxSzTxn" target="_blank" rel="noopener noreferrer">
+            Discord — emode1k
+          </a>
+          <a href="https://t.me/emode1k" target="_blank" rel="noopener noreferrer">
+            Telegram — emode1k
+          </a>
+          <a href="https://github.com/emode1k" target="_blank" rel="noopener noreferrer">
+            GitHub — emode1k
+          </a>
         </nav>
       </div>
-      <button id="loginButton" class="button primary" type="button">Войти</button>
+
+      <button id="adminButton" class="button button-primary" type="button">Войти</button>
       <button id="logoutButton" class="button hidden" type="button">Выйти</button>
     </div>
   </header>
@@ -468,52 +821,77 @@
   <main>
     <div class="heading-row">
       <div>
-        <p class="eyebrow">Личный проект · интерактивная карта</p>
-        <h1>Дерево проекта</h1>
-        <p class="subheading">Нажимай на узлы с дочерними ветками, чтобы раскрывать дерево.</p>
+        <p class="eyebrow">Интерактивная карта проекта</p>
+        <h1>Дерево emode1k</h1>
+        <p class="subheading">
+          Перетаскивай пустое место, чтобы двигать граф. Колесо мыши меняет масштаб.
+          Узлы третьего уровня и глубже раскрываются нажатием.
+        </p>
       </div>
-      <div id="graphMeta" class="graph-meta"></div>
+
+      <div class="graph-tools">
+        <span id="graphMeta" class="graph-meta"></span>
+        <button id="resetViewButton" class="button" type="button">Сбросить вид</button>
+      </div>
     </div>
 
-    <div id="graph" class="graph-shell" aria-label="Граф проекта"></div>
+    <div id="graph" class="graph-shell" aria-label="Перемещаемый граф проекта"></div>
 
-    <div class="grid">
+    <div class="content-grid">
       <section class="card">
         <h2 id="detailsTitle">Информация об узле</h2>
         <div id="details" class="details">Загрузка дерева…</div>
-        <div id="nodeActions" class="button-row hidden">
-          <button id="editButton" class="button" type="button">Изменить</button>
-          <button id="deleteButton" class="button danger" type="button">Удалить ветку</button>
+
+        <div id="adminNodeActions" class="button-row hidden">
+          <button id="editNodeButton" class="button" type="button">Изменить</button>
+          <button id="deleteNodeButton" class="button button-danger" type="button">
+            Удалить ветку
+          </button>
         </div>
       </section>
 
       <section id="adminPanel" class="card hidden">
         <h2 id="formTitle">Добавить узел</h2>
-        <p class="muted">Новый узел добавится внутрь выбранного узла.</p>
+        <p class="muted">Новый узел станет дочерним для выбранного узла.</p>
+
         <form id="nodeForm" class="form-grid">
           <input id="nodeLabel" maxlength="80" required placeholder="Название">
           <textarea id="nodeInfo" maxlength="2000" placeholder="Описание"></textarea>
+
           <div class="button-row">
-            <button id="saveButton" class="button primary" type="submit">Добавить</button>
-            <button id="cancelButton" class="button hidden" type="button">Отмена</button>
+            <button id="saveNodeButton" class="button button-primary" type="submit">
+              Добавить
+            </button>
+            <button id="cancelEditButton" class="button hidden" type="button">
+              Отмена
+            </button>
           </div>
         </form>
-        <p id="status" class="status" role="status"></p>
+
+        <p id="adminStatus" class="status" role="status"></p>
       </section>
     </div>
   </main>
 
-  <div id="loginDialog" class="backdrop hidden" role="dialog" aria-modal="true">
+  <div id="loginDialog" class="modal-backdrop hidden"
+       role="dialog" aria-modal="true" aria-labelledby="loginTitle">
     <div class="modal">
-      <h2>Вход администратора</h2>
-      <p class="notice">Введи почту и пароль пользователя, созданного в Supabase Authentication.</p>
+      <h2 id="loginTitle">Вход администратора</h2>
+      <p class="notice">
+        Вход выполняется через Supabase Auth. Пароль хранится в Supabase, а не в этом файле.
+      </p>
+
       <form id="loginForm" class="form-grid">
-        <input id="emailInput" type="email" autocomplete="username" placeholder="Почта" required>
-        <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Пароль" required>
+        <input id="emailInput" type="email" autocomplete="username"
+               placeholder="Почта администратора" required>
+        <input id="passwordInput" type="password" autocomplete="current-password"
+               placeholder="Пароль Supabase" required>
+
         <div class="button-row">
-          <button class="button primary" type="submit">Войти</button>
-          <button id="closeLogin" class="button" type="button">Отмена</button>
+          <button class="button button-primary" type="submit">Войти</button>
+          <button id="closeLoginButton" class="button" type="button">Отмена</button>
         </div>
+
         <p id="loginStatus" class="status error" role="status"></p>
       </form>
     </div>
@@ -522,8 +900,11 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = "https://ajydliryxxhqetfwefya.supabase.co";
-    const SUPABASE_PUBLIC_KEY = "sb_publishable_itE-NyvxMgqHsbqn3Dp4sQ_2uZPoiUZ";
+    const SUPABASE_PUBLIC_KEY =
+      "sb_publishable_itE-NyvxMgqHsbqn3Dp4sQ_2uZPoiUZ";
+    const TABLE_NAME = "nodes";
 
+    const $ = id => document.getElementById(id);
     const supabaseClient = window.supabase.createClient(
       SUPABASE_URL,
       SUPABASE_PUBLIC_KEY
@@ -531,80 +912,103 @@
 
     let data = [];
     let selectedId = "emode1k";
+    let isAdmin = false;
     let editingId = null;
     let query = "";
-    let isAdmin = false;
-    const expandedNodes = new Set();
+    let loading = false;
 
-    const $ = id => document.getElementById(id);
+    const expandedNodes = new Set();
+    const view = { x: 0, y: 0, scale: 1 };
+    let dragState = null;
 
     function escapeHtml(value) {
       return String(value).replace(/[&<>"']/g, char => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
       })[char]);
     }
 
-    function childrenOf(id) {
-      return data.filter(node => node.parent_id === id);
+    function fromDatabase(row) {
+      return {
+        id: row.id,
+        parent: row.parent_id,
+        label: row.label,
+        info: row.info || ""
+      };
     }
 
-    function descendantsOf(id) {
-      const ids = new Set([id]);
+    function childrenOf(id) {
+      return data.filter(node => node.parent === id);
+    }
 
-      function walk(parentId) {
+    function descendantIds(id) {
+      const result = new Set([id]);
+
+      function visit(parentId) {
         childrenOf(parentId).forEach(child => {
-          if (!ids.has(child.id)) {
-            ids.add(child.id);
-            walk(child.id);
+          if (!result.has(child.id)) {
+            result.add(child.id);
+            visit(child.id);
           }
         });
       }
 
-      walk(id);
-      return ids;
+      visit(id);
+      return result;
     }
 
-    function depthOf(node, byId) {
+    function nodeDepth(node, byId) {
       let depth = 0;
       let current = node;
       const visited = new Set();
 
-      while (current.parent_id && byId.has(current.parent_id) && !visited.has(current.id)) {
+      while (current.parent && byId.has(current.parent) && !visited.has(current.id)) {
         visited.add(current.id);
         depth++;
-        current = byId.get(current.parent_id);
+        current = byId.get(current.parent);
       }
 
       return depth;
     }
 
-    function isVisible(node, byId) {
+    function isVisibleByExpansion(node, byId) {
       let current = node;
 
-      while (current.parent_id && byId.has(current.parent_id)) {
-        const parent = byId.get(current.parent_id);
-        if (depthOf(parent, byId) >= 2 && !expandedNodes.has(parent.id)) return false;
+      while (current.parent && byId.has(current.parent)) {
+        const parent = byId.get(current.parent);
+
+        if (nodeDepth(parent, byId) >= 2 && !expandedNodes.has(parent.id)) {
+          return false;
+        }
+
         current = parent;
       }
 
       return true;
     }
 
-    function getVisibleNodes(byId) {
-      if (!query) return data.filter(node => isVisible(node, byId));
+    function visibleNodes(byId) {
+      if (!query) {
+        return data.filter(node => isVisibleByExpansion(node, byId));
+      }
 
       const result = new Map();
 
       data.forEach(node => {
-        if (!(node.label + " " + (node.info || "")).toLowerCase().includes(query.toLowerCase())) {
-          return;
-        }
+        const matches = `${node.label} ${node.info || ""}`
+          .toLowerCase()
+          .includes(query.toLowerCase());
+
+        if (!matches) return;
 
         result.set(node.id, node);
-        let current = node;
 
-        while (current.parent_id && byId.has(current.parent_id)) {
-          current = byId.get(current.parent_id);
+        let current = node;
+        while (current.parent && byId.has(current.parent)) {
+          current = byId.get(current.parent);
           result.set(current.id, current);
         }
       });
@@ -612,27 +1016,80 @@
       return [...result.values()];
     }
 
+    async function loadTree() {
+      loading = true;
+      $("details").textContent = "Загружаю дерево из Supabase…";
+      draw();
+
+      const { data: rows, error } = await supabaseClient
+        .from(TABLE_NAME)
+        .select("id,parent_id,label,info")
+        .order("label");
+
+      loading = false;
+
+      if (error) {
+        data = [];
+        $("detailsTitle").textContent = "Ошибка загрузки";
+        $("details").textContent =
+          "Проверь таблицу nodes, публичный ключ и политику чтения. " + error.message;
+        draw();
+        return;
+      }
+
+      data = (rows || []).map(fromDatabase);
+
+      if (!data.some(node => node.id === "emode1k")) {
+        $("detailsTitle").textContent = "Таблица пока пустая";
+        $("details").textContent =
+          "Добавь корневой узел emode1k через SQL Editor в Supabase.";
+        draw();
+        return;
+      }
+
+      if (!data.some(node => node.id === selectedId)) selectedId = "emode1k";
+      selectNode(selectedId);
+    }
+
+    function applyView() {
+      const group = document.getElementById("graphContent");
+      if (!group) return;
+      group.setAttribute(
+        "transform",
+        `translate(${view.x} ${view.y}) scale(${view.scale})`
+      );
+    }
+
     function draw() {
       const host = $("graph");
+
+      if (loading) {
+        host.innerHTML = '<div class="empty-state">Загрузка дерева из облака…</div>';
+        $("graphMeta").textContent = "";
+        return;
+      }
+
       const byId = new Map(data.map(node => [node.id, node]));
-      const visible = getVisibleNodes(byId);
+      const visible = visibleNodes(byId);
 
       $("graphMeta").textContent = `${visible.length} / ${data.length} узлов`;
 
       if (!visible.length) {
-        host.innerHTML = '<div class="empty">Дерево пустое или ничего не найдено.</div>';
+        host.innerHTML = '<div class="empty-state">Дерево пусто или ничего не найдено.</div>';
         return;
       }
 
       const levels = [];
+
       visible.forEach(node => {
-        const depth = depthOf(node, byId);
-        (levels[depth] ||= []).push(node);
+        const depth = nodeDepth(node, byId);
+        if (!levels[depth]) levels[depth] = [];
+        levels[depth].push(node);
       });
 
       const widest = Math.max(...levels.map(level => (level || []).length));
-      const width = Math.max(850, widest * 245);
-      const height = Math.max(420, levels.length * 148 + 55);
+      const width = Math.max(900, widest * 250);
+      const height = Math.max(480, levels.length * 150 + 70);
       const positions = new Map();
 
       levels.forEach((level, depth) => {
@@ -641,35 +1098,42 @@
 
         level.forEach((node, index) => {
           positions.set(node.id, {
-            x: gap * (index + 1) - 92,
-            y: 28 + depth * 148
+            x: gap * (index + 1) - 94,
+            y: 30 + depth * 150
           });
         });
       });
 
       let edges = "";
+
       visible.forEach(node => {
         const child = positions.get(node.id);
-        const parent = positions.get(node.parent_id);
+        const parent = positions.get(node.parent);
         if (!child || !parent) return;
 
-        const x1 = parent.x + 92;
-        const y1 = parent.y + 58;
-        const x2 = child.x + 92;
-        const y2 = child.y;
-        const curveY = y1 + (y2 - y1) * .52;
+        const startX = parent.x + 94;
+        const startY = parent.y + 60;
+        const endX = child.x + 94;
+        const endY = child.y;
+        const midY = startY + (endY - startY) * .52;
 
-        edges += `<path class="edge" d="M ${x1} ${y1} C ${x1} ${curveY}, ${x2} ${curveY}, ${x2} ${y2}"></path>`;
+        edges += `<path class="edge"
+          d="M ${startX} ${startY} C ${startX} ${midY}, ${endX} ${midY}, ${endX} ${endY}"></path>`;
       });
 
       let nodes = "";
+
       visible.forEach((node, index) => {
         const point = positions.get(node.id);
-        const depth = depthOf(node, byId);
+        const label = node.label.length > 24
+          ? node.label.slice(0, 23) + "…"
+          : node.label;
+        const depth = nodeDepth(node, byId);
         const hasChildren = childrenOf(node.id).length > 0;
         const canExpand = depth >= 2 && hasChildren;
-        const indicator = canExpand ? expandedNodes.has(node.id) ? "−" : "+" : "";
-        const label = node.label.length > 24 ? node.label.slice(0, 23) + "…" : node.label;
+        const indicator = canExpand
+          ? expandedNodes.has(node.id) ? "−" : "+"
+          : "";
 
         nodes += `
           <g class="node ${node.id === "emode1k" ? "root" : ""} ${selectedId === node.id ? "selected" : ""}"
@@ -678,17 +1142,33 @@
              tabindex="0" role="button"
              aria-label="${escapeHtml(node.label)}"
              style="animation-delay:${Math.min(index * 30, 300)}ms">
-            <rect width="184" height="58" rx="12"></rect>
-            <circle class="dot" cx="16" cy="29" r="3"></circle>
-            <text x="96" y="34" text-anchor="middle">${escapeHtml(label)}</text>
-            <text class="indicator" x="169" y="19" text-anchor="middle">${indicator}</text>
+            <rect width="188" height="60" rx="12"></rect>
+            <circle class="dot" cx="16" cy="30" r="3"></circle>
+            <text x="98" y="35" text-anchor="middle">${escapeHtml(label)}</text>
+            <text class="expand-indicator" x="173" y="20" text-anchor="middle">${indicator}</text>
           </g>`;
       });
 
-      host.innerHTML = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${edges}${nodes}</svg>`;
+      host.innerHTML = `
+        <svg class="graph-svg" aria-label="Дерево проекта">
+          <g id="graphContent">
+            ${edges}
+            ${nodes}
+          </g>
+        </svg>`;
+
+      const svg = host.querySelector("svg");
+      svg.setAttribute("viewBox", `0 0 ${host.clientWidth} ${host.clientHeight}`);
+
+      const group = document.getElementById("graphContent");
+      group.setAttribute(
+        "transform",
+        `translate(${view.x} ${view.y}) scale(${view.scale})`
+      );
 
       host.querySelectorAll(".node").forEach(element => {
-        const activate = () => selectOrExpand(element.dataset.id);
+        const activate = () => handleNodeClick(element.dataset.id);
+
         element.addEventListener("click", activate);
         element.addEventListener("keydown", event => {
           if (event.key === "Enter" || event.key === " ") {
@@ -697,44 +1177,328 @@
           }
         });
       });
+
+      fitViewIfNeeded(width, height, host.clientWidth, host.clientHeight);
     }
 
-    function selectOrExpand(id) {
+    let hasInitialFit = false;
+
+    function fitViewIfNeeded(contentWidth, contentHeight, viewportWidth, viewportHeight) {
+      if (hasInitialFit) return;
+      hasInitialFit = true;
+
+      const scale = Math.min(
+        1,
+        (viewportWidth - 50) / contentWidth,
+        (viewportHeight - 50) / contentHeight
+      );
+
+      view.scale = Math.max(.45, scale);
+      view.x = Math.max(20, (viewportWidth - contentWidth * view.scale) / 2);
+      view.y = Math.max(20, (viewportHeight - contentHeight * view.scale) / 2);
+      applyView();
+    }
+
+    function handleNodeClick(id) {
       const node = data.find(item => item.id === id);
       if (!node) return;
 
       const byId = new Map(data.map(item => [item.id, item]));
-      if (depthOf(node, byId) >= 2 && childrenOf(node.id).length) {
+      const depth = nodeDepth(node, byId);
+
+      if (depth >= 2 && childrenOf(node.id).length > 0) {
         if (expandedNodes.has(node.id)) {
           expandedNodes.delete(node.id);
-          descendantsOf(node.id).forEach(childId => expandedNodes.delete(childId));
+          descendantIds(node.id).forEach(childId => expandedNodes.delete(childId));
         } else {
           expandedNodes.add(node.id);
         }
       }
 
+      selectNode(id);
+    }
+
+    function selectNode(id) {
+      const node = data.find(item => item.id === id);
+      if (!node) return;
+
       selectedId = id;
       $("detailsTitle").textContent = node.label;
       $("details").textContent = node.info || "Описание не добавлено.";
-      updateAdminControls();
+      $("adminNodeActions").classList.toggle(
+        "hidden",
+        !isAdmin || id === "emode1k"
+      );
       draw();
     }
 
-    function updateAdminControls() {
-      $("loginButton").classList.toggle("hidden", isAdmin);
-      $("logoutButton").classList.toggle("hidden", !isAdmin);
-      $("adminPanel").classList.toggle("hidden", !isAdmin);
-      $("nodeActions").classList.toggle("hidden", !isAdmin || selectedId === "emode1k");
+    function setAdmin(enabled) {
+      isAdmin = enabled;
+      $("adminPanel").classList.toggle("hidden", !enabled);
+      $("adminButton").classList.toggle("hidden", enabled);
+      $("logoutButton").classList.toggle("hidden", !enabled);
+      $("adminNodeActions").classList.toggle(
+        "hidden",
+        !enabled || selectedId === "emode1k"
+      );
+      draw();
     }
 
-    async function loadTree() {
-      $("details").textContent = "Загрузка дерева…";
+    function resetForm() {
+      editingId = null;
+      $("nodeForm").reset();
+      $("formTitle").textContent = "Добавить узел";
+      $("saveNodeButton").textContent = "Добавить";
+      $("cancelEditButton").classList.add("hidden");
+    }
 
-      const { data: rows, error } = await supabaseClient
-        .from("nodes")
-        .select("id,parent_id,label,info");
+    $("contactButton").addEventListener("click", event => {
+      event.stopPropagation();
+      const menu = $("contactMenu");
+      const open = menu.classList.contains("hidden");
+      menu.classList.toggle("hidden", !open);
+      $("contactButton").setAttribute("aria-expanded", String(open));
+    });
+
+    document.addEventListener("click", event => {
+      if (!event.target.closest(".contact-wrap")) {
+        $("contactMenu").classList.add("hidden");
+        $("contactButton").setAttribute("aria-expanded", "false");
+      }
+    });
+
+    $("search").addEventListener("input", event => {
+      query = event.target.value.trim();
+      hasInitialFit = false;
+      draw();
+    });
+
+    $("adminButton").addEventListener("click", async () => {
+      const { data: sessionData } = await supabaseClient.auth.getSession();
+
+      if (sessionData.session) {
+        setAdmin(true);
+        return;
+      }
+
+      $("loginDialog").classList.remove("hidden");
+      $("emailInput").focus();
+    });
+
+    $("closeLoginButton").addEventListener("click", () => {
+      $("loginDialog").classList.add("hidden");
+      $("loginForm").reset();
+      $("loginStatus").textContent = "";
+    });
+
+    $("loginForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      $("loginStatus").textContent = "Проверяю вход…";
+
+      const { error } = await supabaseClient.auth.signInWithPassword({
+        email: $("emailInput").value.trim(),
+        password: $("passwordInput").value
+      });
 
       if (error) {
-        $("details").textContent = "Не удалось загрузить дерево: " + error.message;
+        $("loginStatus").textContent = "Не удалось войти: " + error.message;
         return;
-     
+      }
+
+      $("loginDialog").classList.add("hidden");
+      $("loginForm").reset();
+      $("loginStatus").textContent = "";
+      setAdmin(true);
+    });
+
+    $("logoutButton").addEventListener("click", async () => {
+      const { error } = await supabaseClient.auth.signOut();
+
+      if (error) {
+        $("adminStatus").textContent = "Ошибка выхода: " + error.message;
+        return;
+      }
+
+      setAdmin(false);
+      resetForm();
+    });
+
+    supabaseClient.auth.onAuthStateChange((_event, session) => {
+      setAdmin(Boolean(session));
+    });
+
+    $("nodeForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!isAdmin) return;
+
+      const label = $("nodeLabel").value.trim();
+      const info = $("nodeInfo").value.trim();
+
+      if (!label) {
+        $("adminStatus").textContent = "Укажи название узла.";
+        return;
+      }
+
+      $("saveNodeButton").disabled = true;
+      $("adminStatus").textContent = "Сохраняю…";
+
+      let error;
+      let savedId = editingId;
+
+      if (editingId) {
+        const result = await supabaseClient
+          .from(TABLE_NAME)
+          .update({ label, info })
+          .eq("id", editingId);
+
+        error = result.error;
+      } else {
+        const parentId = data.some(item => item.id === selectedId)
+          ? selectedId
+          : "emode1k";
+
+        savedId = "node-" + crypto.randomUUID();
+
+        const result = await supabaseClient
+          .from(TABLE_NAME)
+          .insert({
+            id: savedId,
+            parent_id: parentId,
+            label,
+            info
+          });
+
+        error = result.error;
+      }
+
+      $("saveNodeButton").disabled = false;
+
+      if (error) {
+        $("adminStatus").textContent = "Ошибка сохранения: " + error.message;
+        return;
+      }
+
+      resetForm();
+      await loadTree();
+
+      if (savedId) selectNode(savedId);
+      $("adminStatus").textContent = "Изменения сохранены в Supabase.";
+    });
+
+    $("editNodeButton").addEventListener("click", () => {
+      if (!isAdmin || !selectedId || selectedId === "emode1k") return;
+
+      const node = data.find(item => item.id === selectedId);
+      if (!node) return;
+
+      editingId = node.id;
+      $("nodeLabel").value = node.label;
+      $("nodeInfo").value = node.info || "";
+      $("formTitle").textContent = "Редактировать узел";
+      $("saveNodeButton").textContent = "Сохранить";
+      $("cancelEditButton").classList.remove("hidden");
+      $("nodeLabel").focus();
+    });
+
+    $("cancelEditButton").addEventListener("click", resetForm);
+
+    $("deleteNodeButton").addEventListener("click", async () => {
+      if (!isAdmin || !selectedId || selectedId === "emode1k") return;
+
+      const node = data.find(item => item.id === selectedId);
+      if (!node) return;
+
+      if (!confirm(`Удалить «${node.label}» и все вложенные узлы?`)) return;
+
+      $("adminStatus").textContent = "Удаляю ветку…";
+
+      const { error } = await supabaseClient
+        .from(TABLE_NAME)
+        .delete()
+        .eq("id", node.id);
+
+      if (error) {
+        $("adminStatus").textContent = "Ошибка удаления: " + error.message;
+        return;
+      }
+
+      selectedId = "emode1k";
+      expandedNodes.clear();
+      await loadTree();
+      selectNode("emode1k");
+      $("adminStatus").textContent = "Ветка удалена из Supabase.";
+    });
+
+    // Перетаскивание пустой области перемещает граф.
+    $("graph").addEventListener("pointerdown", event => {
+      if (event.target.closest(".node")) return;
+      if (event.button !== 0) return;
+
+      dragState = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        viewX: view.x,
+        viewY: view.y
+      };
+
+      $("graph").classList.add("dragging");
+      $("graph").setPointerCapture(event.pointerId);
+    });
+
+    $("graph").addEventListener("pointermove", event => {
+      if (!dragState || event.pointerId !== dragState.pointerId) return;
+
+      view.x = dragState.viewX + event.clientX - dragState.startX;
+      view.y = dragState.viewY + event.clientY - dragState.startY;
+      applyView();
+    });
+
+    function finishDrag(event) {
+      if (!dragState || event.pointerId !== dragState.pointerId) return;
+      dragState = null;
+      $("graph").classList.remove("dragging");
+    }
+
+    $("graph").addEventListener("pointerup", finishDrag);
+    $("graph").addEventListener("pointercancel", finishDrag);
+
+    // Масштабирование колесом мыши вокруг позиции курсора.
+    $("graph").addEventListener("wheel", event => {
+      event.preventDefault();
+
+      const rect = $("graph").getBoundingClientRect();
+      const pointerX = event.clientX - rect.left;
+      const pointerY = event.clientY - rect.top;
+      const oldScale = view.scale;
+      const factor = event.deltaY < 0 ? 1.1 : .9;
+      const newScale = Math.max(.35, Math.min(2.2, oldScale * factor));
+
+      view.x = pointerX - (pointerX - view.x) * (newScale / oldScale);
+      view.y = pointerY - (pointerY - view.y) * (newScale / oldScale);
+      view.scale = newScale;
+
+      applyView();
+    }, { passive: false });
+
+    $("resetViewButton").addEventListener("click", () => {
+      view.x = 20;
+      view.y = 20;
+      view.scale = 1;
+      hasInitialFit = false;
+      draw();
+    });
+
+    window.addEventListener("resize", () => {
+      hasInitialFit = false;
+      draw();
+    });
+
+    window.setTimeout(() => {
+      $("splash").classList.add("finished");
+    }, 4300);
+
+    loadTree();
+  </script>
+</body>
+</html>
