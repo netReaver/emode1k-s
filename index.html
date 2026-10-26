@@ -20,7 +20,6 @@
       --accent-glow: #e1c86b55;
       --danger: #ff7b87;
       --line: #62566a;
-      --purple: #9c74ac;
     }
 
     * { box-sizing: border-box; }
@@ -115,6 +114,7 @@
     }
 
     .button:active { transform: scale(.98); }
+    .button:disabled { opacity: .55; cursor: wait; }
 
     .button-primary {
       border-color: #e1c86b66;
@@ -249,13 +249,6 @@
       overflow: visible;
       user-select: none;
     }
-
-    .graph-content {
-      transform-origin: 0 0;
-      transition: transform .15s ease-out;
-    }
-
-    .graph-content.no-transition { transition: none; }
 
     .edge {
       fill: none;
@@ -403,6 +396,7 @@
       align-content: center;
       justify-items: center;
       gap: 15px;
+      overflow: hidden;
       background: radial-gradient(ellipse at center, #321016, #08090d 70%);
       transition: opacity .7s ease, visibility .7s ease;
     }
@@ -438,104 +432,271 @@
       animation: ascii-flow 5s linear forwards;
     }
 
-    .person-art {
-      width: clamp(170px, 27vw, 250px);
+    .scene-art {
+      width: min(96vw, 760px);
       height: auto;
       overflow: visible;
-      filter: drop-shadow(0 10px 22px #000b);
+      filter: drop-shadow(0 12px 26px #000b);
     }
 
-    .wall { fill: none; stroke: #655d68; stroke-width: 4; }
-    .floor { fill: none; stroke: #4a424b; stroke-width: 2; }
-    .wall-mark { fill: none; stroke: #3d3640; stroke-width: 1.5; }
+    .ground {
+      fill: none;
+      stroke: #4a424b;
+      stroke-width: 2;
+    }
 
-    .hair-back {
-      fill: #111014;
-      stroke: #554853;
+    .car-shadow { fill: #0009; }
+
+    .car-body {
+      fill: url(#steelGradient);
+      stroke: #d7d8d4;
+      stroke-width: 2;
+      stroke-linejoin: round;
+    }
+
+    .car-hood, .car-roof {
+      fill: url(#steelGradient);
+      stroke: #e1e1dc;
       stroke-width: 1.5;
     }
 
-    .skin {
-      fill: url(#skinGradient);
-      stroke: #c0a69c;
-      stroke-width: 1.4;
+    .car-glass, .car-side-glass {
+      fill: url(#glassGradient);
+      stroke: #aeb2b6;
+      stroke-width: 1.5;
     }
 
-    .hair {
-      fill: #17131a;
-      stroke: #665465;
-      stroke-width: 1.7;
-      stroke-linejoin: round;
+    .car-glass-shine {
+      fill: none;
+      stroke: #a9b6c2;
+      stroke-width: 2;
+      opacity: .45;
+    }
+
+    .car-window-divider, .car-panel-line, .car-door-seam,
+    .car-detail {
+      fill: none;
+      stroke: #383c42;
+      stroke-width: 1.5;
+    }
+
+    .car-door {
+      fill: #8b9094;
+      fill-opacity: .25;
+      stroke: #34383e;
+      stroke-width: 1.6;
+    }
+
+    .car-handle {
+      stroke: #25282d;
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    .car-front {
+      fill: #6e7378;
+      stroke: #d3d4d0;
+      stroke-width: 1.5;
+    }
+
+    .car-grille {
+      fill: #191b20;
+      stroke: #aeb0ad;
+      stroke-width: 1;
+    }
+
+    .grille-line {
+      fill: none;
+      stroke: #767b80;
+      stroke-width: 1.3;
+    }
+
+    .bumper {
+      fill: none;
+      stroke: #c4c6c3;
+      stroke-width: 5;
+    }
+
+    .bumper-dark {
+      fill: none;
+      stroke: #33373d;
+      stroke-width: 2;
+    }
+
+    .taillight {
+      fill: #8b2632;
+      stroke: #d14c58;
+      stroke-width: 1;
+    }
+
+    .headlight {
+      fill: #ffeeb0;
+      stroke: #fff8d7;
+      stroke-width: 1;
+      filter: url(#headlightGlow);
+      animation: headlights 1.4s steps(2, end) infinite;
+    }
+
+    .headlight-right { animation-delay: .35s; }
+
+    .wheel-tire {
+      fill: #111;
+      stroke: #777;
+      stroke-width: 2;
+    }
+
+    .wheel-rim {
+      fill: #aeb1b2;
+      stroke: #e3e4e2;
+      stroke-width: 1.5;
+    }
+
+    .wheel-spokes {
+      fill: none;
+      stroke: #42464c;
+      stroke-width: 1.6;
+    }
+
+    .hair-back {
+      fill: #111014;
+      stroke: #514450;
+      stroke-width: 1.5;
+    }
+
+    .face {
+      fill: url(#skinGradient);
+      stroke: #d4b5a7;
+      stroke-width: 1.5;
+    }
+
+    .hair-white {
+      fill: #d7d4ce;
+      stroke: #f0ede6;
+      stroke-width: 1.5;
+    }
+
+    .hair-dark {
+      fill: #141218;
+      stroke: #574958;
+      stroke-width: 1.5;
+    }
+
+    .hair-strand-white {
+      fill: none;
+      stroke: #e6e1d9;
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    .hair-strand-dark {
+      fill: none;
+      stroke: #09080c;
+      stroke-width: 4;
+      stroke-linecap: round;
     }
 
     .hair-highlight {
       fill: none;
-      stroke: #756174;
+      stroke: #f0ece4;
       stroke-width: 1.5;
-      opacity: .72;
+      opacity: .65;
+    }
+
+    .brow {
+      fill: none;
+      stroke: #33272b;
+      stroke-width: 2.5;
       stroke-linecap: round;
     }
 
-    .face-line {
+    .eye { fill: #21191e; }
+
+    .nose, .mouth {
       fill: none;
       stroke: #493a3d;
       stroke-width: 1.6;
       stroke-linecap: round;
     }
 
-    .eye { fill: #21191e; }
-    .brow { stroke: #30252b; stroke-width: 2.5; stroke-linecap: round; }
-    .neck { fill: #987c72; stroke: #c0a69c; stroke-width: 1; }
+    .neck {
+      fill: #997b70;
+      stroke: #c0a69c;
+      stroke-width: 1;
+    }
 
     .jacket {
       fill: url(#jacketGradient);
-      stroke: #e3c85d;
+      stroke: #ead46d;
       stroke-width: 2;
       stroke-linejoin: round;
     }
 
-    .jacket-dark {
-      fill: #222129;
-      stroke: #777079;
+    .jacket-inner {
+      fill: url(#jacketDarkGradient);
+      stroke: #a38a43;
       stroke-width: 1.5;
-      stroke-linejoin: round;
     }
 
-    .jacket-detail {
+    .jacket-trim, .jacket-zipper {
       fill: none;
-      stroke: #f0d978;
-      stroke-width: 1.5;
+      stroke: #f0dc7d;
+      stroke-width: 1.8;
       stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     .jacket-seam {
       fill: none;
-      stroke: #665c57;
-      stroke-width: 1.3;
-      stroke-linecap: round;
-    }
-
-    .arm {
-      fill: none;
-      stroke: #d5b94f;
-      stroke-width: 13;
+      stroke: #78693e;
+      stroke-width: 1.5;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
 
-    .arm-shadow {
+    .sleeve {
       fill: none;
-      stroke: #7c672b;
+      stroke: #d3b84f;
+      stroke-width: 15;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sleeve-detail {
+      fill: none;
+      stroke: #806b2d;
       stroke-width: 2;
       stroke-linecap: round;
     }
 
     .hand {
-      fill: #a78478;
-      stroke: #d5b3a5;
-      stroke-width: 1.3;
+      fill: url(#skinGradient);
+      stroke: #d4b5a7;
+      stroke-width: 1.4;
       stroke-linejoin: round;
     }
+
+    .cigarette {
+      stroke: #e4ddd4;
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    .cigarette-tip {
+      stroke: #ff634f;
+      stroke-width: 3;
+      filter: drop-shadow(0 0 4px #ff382d);
+    }
+
+    .smoke {
+      fill: none;
+      stroke: #aaa4ae;
+      stroke-width: 2;
+      stroke-linecap: round;
+      opacity: .65;
+      animation: smoke-rise 2.5s ease-in-out infinite;
+    }
+
+    .smoke-second { animation-delay: .9s; }
 
     .pants {
       fill: url(#pantsGradient);
@@ -558,35 +719,12 @@
       stroke-linejoin: round;
     }
 
-    .shoe-sole {
+    .shoe-sole, .shoe-lace {
       fill: none;
       stroke: #b8adb5;
       stroke-width: 2;
       stroke-linecap: round;
     }
-
-    .cigarette {
-      stroke: #e4ddd4;
-      stroke-width: 3;
-      stroke-linecap: round;
-    }
-
-    .cigarette-glow {
-      stroke: #ff634f;
-      stroke-width: 3;
-      filter: drop-shadow(0 0 4px #ff382d);
-    }
-
-    .smoke {
-      fill: none;
-      stroke: #aaa4ae;
-      stroke-width: 2;
-      stroke-linecap: round;
-      opacity: .65;
-      animation: smoke-rise 2.5s ease-in-out infinite;
-    }
-
-    .smoke-two { animation-delay: .9s; }
 
     .splash-caption {
       color: #ff9b9b;
@@ -611,6 +749,17 @@
       100% { opacity: 0; transform: translate(5px, -19px); }
     }
 
+    @keyframes headlights {
+      0%, 45% {
+        opacity: .35;
+        filter: none;
+      }
+      50%, 100% {
+        opacity: 1;
+        filter: url(#headlightGlow);
+      }
+    }
+
     @keyframes caption-blink {
       to { opacity: .35; }
     }
@@ -618,7 +767,7 @@
     @media (max-width: 760px) {
       .topbar { flex-wrap: wrap; gap: 10px; }
       .top-actions { width: 100%; flex-wrap: wrap; }
-      .search, .search:focus { width: 100%; }
+      .search { width: 100%; }
       .contact-wrap { margin-left: auto; }
       .heading-row { align-items: flex-start; flex-direction: column; }
       .graph-tools { justify-content: flex-start; }
@@ -648,137 +797,247 @@
 |_____|_|  |_|\___/|____/|_____|_|\_\
       </pre>
 
-      <svg class="person-art" viewBox="0 0 280 340" role="img"
-           aria-label="Человек в жёлтой футуристической куртке отдыхает у стены">
+      <svg class="scene-art" viewBox="0 0 760 440" role="img"
+           aria-label="Человек в детализированной жёлтой куртке стоит рядом с DeLorean">
         <defs>
           <linearGradient id="jacketGradient" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#f3dc71"></stop>
-            <stop offset=".55" stop-color="#c4a943"></stop>
-            <stop offset="1" stop-color="#78632b"></stop>
+            <stop offset="0" stop-color="#e6cf65"></stop>
+            <stop offset=".45" stop-color="#bd9e3e"></stop>
+            <stop offset="1" stop-color="#665528"></stop>
           </linearGradient>
+
+          <linearGradient id="jacketDarkGradient" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#27252b"></stop>
+            <stop offset="1" stop-color="#111217"></stop>
+          </linearGradient>
+
           <linearGradient id="pantsGradient" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#34313a"></stop>
-            <stop offset="1" stop-color="#19171d"></stop>
+            <stop offset="0" stop-color="#35313a"></stop>
+            <stop offset="1" stop-color="#17161b"></stop>
           </linearGradient>
+
           <linearGradient id="skinGradient" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#c5a69a"></stop>
-            <stop offset="1" stop-color="#80685f"></stop>
+            <stop offset="0" stop-color="#c8aa9c"></stop>
+            <stop offset="1" stop-color="#80675f"></stop>
           </linearGradient>
+
+          <linearGradient id="steelGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#e2e3df"></stop>
+            <stop offset=".3" stop-color="#92969a"></stop>
+            <stop offset=".65" stop-color="#555b61"></stop>
+            <stop offset="1" stop-color="#272b30"></stop>
+          </linearGradient>
+
+          <linearGradient id="glassGradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#303945"></stop>
+            <stop offset=".55" stop-color="#10151d"></stop>
+            <stop offset="1" stop-color="#535963"></stop>
+          </linearGradient>
+
+          <filter id="headlightGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="5" result="blur"></feGaussianBlur>
+            <feMerge>
+              <feMergeNode in="blur"></feMergeNode>
+              <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+          </filter>
         </defs>
 
-        <path class="wall" d="M224 16V310"></path>
-        <path class="wall-mark" d="M214 56H224M214 143H224M214 229H224"></path>
-        <path class="floor" d="M29 310H256"></path>
+        <ellipse cx="395" cy="399" rx="335" ry="20" fill="#0009"></ellipse>
+        <path class="ground" d="M34 400H733"></path>
 
-        <!-- Волосы с длинной боковой чёлкой -->
-        <path class="hair-back" d="M108 76
-          C91 57 96 30 117 20
-          C137 8 166 19 174 40
-          C181 58 174 87 165 105
-          L115 105 Z"></path>
+        <!-- DeLorean под углом, передняя часть развёрнута к зрителю -->
+        <g class="delorean">
+          <path class="car-shadow" d="M361 319L556 273L716 317L508 378Z"></path>
 
-        <!-- Лицо, повёрнутое немного вниз -->
-        <path class="skin" d="M115 50
-          C121 34 145 30 160 42
-          C171 51 170 68 164 83
-          L154 102
-          C147 115 132 117 121 106
-          L111 91
-          C105 78 107 62 115 50 Z"></path>
+          <path class="car-body" d="
+            M374 302
+            L412 267
+            L489 238
+            L594 256
+            L680 290
+            L724 328
+            L706 352
+            L500 393
+            L361 348
+            Z"></path>
 
-        <!-- Причёска закрывает часть лба -->
-        <path class="hair" d="M107 64
-          C100 43 108 23 128 16
-          C151 8 174 24 178 45
-          C181 59 174 73 165 81
-          C166 66 161 54 154 48
-          C148 62 139 70 127 75
-          C123 65 123 57 124 49
-          C119 61 114 70 109 77 Z"></path>
+          <path class="car-hood" d="M489 252L585 268L665 300L568 307L453 281Z"></path>
+          <path class="car-panel-line" d="M453 281L568 307L568 364"></path>
+          <path class="car-panel-line" d="M568 307L665 300"></path>
+          <path class="car-panel-line" d="M462 290L565 316"></path>
 
-        <path class="hair-highlight" d="M119 34C131 21 151 20 163 31"></path>
-        <path class="hair-highlight" d="M111 47C113 37 118 31 124 27"></path>
+          <path class="car-glass" d="M412 267L453 246L514 231L574 247L594 256L489 238Z"></path>
+          <path class="car-roof" d="M453 246L477 225L534 220L574 247L514 231Z"></path>
+          <path class="car-glass-shine" d="M466 248L513 236L548 245"></path>
 
-        <!-- Уставшее выражение лица -->
-        <path class="brow" d="M126 67L137 65"></path>
-        <path class="brow" d="M149 64L158 66"></path>
-        <ellipse class="eye" cx="132" cy="73" rx="3.2" ry="2"></ellipse>
-        <ellipse class="eye" cx="153" cy="72" rx="3" ry="1.8"></ellipse>
-        <path class="face-line" d="M142 73L139 84L144 85"></path>
-        <path class="face-line" d="M137 96Q145 92 152 96"></path>
-        <path class="face-line" d="M113 70Q108 75 114 81"></path>
+          <path class="car-side-glass" d="M574 247L617 261L654 291L594 281Z"></path>
+          <path class="car-window-divider" d="M614 260L595 280"></path>
 
-        <!-- Шея и куртка -->
-        <path class="neck" d="M124 104L121 121L151 126L156 103"></path>
+          <!-- Дверь закрыта, добавлен отдельный контур -->
+          <path class="car-door" d="M568 307L594 281L654 291L665 342L596 361Z"></path>
+          <path class="car-door-seam" d="M594 281L596 361"></path>
+          <path class="car-handle" d="M617 307L638 303"></path>
 
-        <path class="jacket" d="M119 117
-          C105 121 95 133 91 151
-          L78 199
-          C75 209 83 216 92 211
-          L105 183
-          L101 232
-          C119 243 162 244 182 229
-          L173 175
-          L193 209
-          C198 217 208 212 205 204
-          L184 150
-          C177 133 162 122 151 119
-          L139 137 Z"></path>
+          <path class="car-front" d="M374 302L453 281L500 393L361 348Z"></path>
+          <path class="car-grille" d="M384 318L445 301L462 340L399 359Z"></path>
+          <path class="grille-line" d="M391 323L449 309M394 331L453 318M397 339L457 327M400 347L460 336"></path>
 
-        <!-- Внутренняя тёмная одежда -->
-        <path class="jacket-dark" d="M126 121L139 137L152 122L160 151L144 167L121 151Z"></path>
+          <path class="headlight headlight-left" d="M373 308L389 304L394 315L379 320Z"></path>
+          <path class="headlight headlight-right" d="M440 289L454 286L459 297L445 301Z"></path>
 
-        <!-- Воротник, застёжка и нашивки -->
-        <path class="jacket-detail" d="M119 119L139 137L128 156L108 131"></path>
-        <path class="jacket-detail" d="M151 119L139 137L151 155L164 129"></path>
-        <path class="jacket-detail" d="M139 137L145 224"></path>
-        <path class="jacket-seam" d="M104 166L123 171M157 170L176 164"></path>
-        <path class="jacket-detail" d="M108 187L121 190L116 201L104 198Z"></path>
-        <path class="jacket-detail" d="M157 190L174 187"></path>
-        <path class="jacket-seam" d="M126 210L136 213M151 215L164 212"></path>
+          <path class="bumper" d="M361 348L500 393L706 352L724 328"></path>
+          <path class="bumper-dark" d="M365 351L500 389L703 350"></path>
+          <path class="taillight" d="M687 296L705 304L710 319L693 314Z"></path>
 
-        <!-- Рука согнута у лица -->
-        <path class="arm" d="M183 145C194 157 195 172 185 181L163 161L154 142"></path>
-        <path class="arm-shadow" d="M187 151C192 163 189 171 182 176"></path>
-        <path class="hand" d="M155 145
-          C150 140 148 133 151 129
-          L156 126L161 133L165 127L169 132
-          L167 140L163 148Z"></path>
+          <g>
+            <ellipse class="wheel-tire" cx="417" cy="363" rx="20" ry="30" transform="rotate(-18 417 363)"></ellipse>
+            <ellipse class="wheel-rim" cx="417" cy="363" rx="10" ry="18" transform="rotate(-18 417 363)"></ellipse>
+            <path class="wheel-spokes" d="M416 347L418 379M408 354L426 372M426 352L408 374"></path>
+          </g>
 
-        <!-- Сигарета -->
-        <path class="cigarette" d="M153 132L139 127"></path>
-        <path class="cigarette-glow" d="M140 127L137 126"></path>
-        <path class="smoke" d="M136 123C126 116 139 108 130 98"></path>
-        <path class="smoke smoke-two" d="M144 122C154 113 141 105 151 96"></path>
+          <g>
+            <ellipse class="wheel-tire" cx="660" cy="344" rx="18" ry="27" transform="rotate(-17 660 344)"></ellipse>
+            <ellipse class="wheel-rim" cx="660" cy="344" rx="9" ry="16" transform="rotate(-17 660 344)"></ellipse>
+            <path class="wheel-spokes" d="M659 329L661 359M652 336L668 352M668 334L652 354"></path>
+          </g>
 
-        <!-- Расслабленная поза и наклон корпуса у стены -->
-        <path class="pants" d="M102 231
-          C122 241 161 240 182 228
-          L184 258
-          C183 273 191 284 204 296
-          L192 307
-          C172 301 155 286 147 270
-          L136 250
-          L122 273
-          L120 300
-          L101 301
-          L99 271
-          C97 257 99 242 102 231 Z"></path>
+          <path class="car-detail" d="M473 276L545 262M600 291L624 298"></path>
+          <path class="car-detail" d="M510 373L589 366M615 360L682 346"></path>
+        </g>
 
-        <path class="pants-fold" d="M110 249L127 256M160 248L177 241"></path>
-        <path class="pants-fold" d="M105 272L120 276M151 273L167 288"></path>
-        <path class="pants-fold" d="M104 288L118 291"></path>
+        <!-- Человек -->
+        <g class="person">
+          <!-- Затылок -->
+          <path class="hair-back" d="
+            M112 91
+            C97 69 101 38 123 23
+            C144 8 175 15 190 40
+            C205 65 195 96 181 120
+            L119 119Z"></path>
 
-        <!-- Согнутая нога упирается в стену -->
-        <path class="shoe" d="M99 294
-          L120 294L125 303
-          C130 308 126 315 117 316
-          L84 316C81 311 86 301 99 294Z"></path>
-        <path class="shoe" d="M190 296
-          L205 290L215 298L236 302
-          C241 308 236 313 228 313
-          L196 311Z"></path>
-        <path class="shoe-sole" d="M86 311L124 311M200 308L237 308"></path>
+          <!-- Лицо -->
+          <path class="face" d="
+            M123 52
+            C132 34 157 31 175 45
+            C190 56 188 79 178 97
+            L165 117
+            C157 129 142 129 130 118
+            L118 100
+            C112 84 114 66 123 52Z"></path>
+
+          <!-- Светлая половина шторок -->
+          <path class="hair-white" d="
+            M113 63
+            C107 39 124 17 148 15
+            C163 14 178 22 186 36
+            C169 32 157 40 149 54
+            C140 69 136 79 127 87
+            C126 70 131 55 137 44
+            C126 49 119 59 115 74Z"></path>
+
+          <!-- Тёмная растрёпанная половина -->
+          <path class="hair-dark" d="
+            M148 16
+            C170 12 189 28 194 48
+            C198 67 189 88 176 102
+            L171 82
+            C168 67 163 56 156 49
+            C153 64 148 76 139 86
+            L135 68
+            C137 48 142 30 148 16Z"></path>
+
+          <path class="hair-strand-white" d="M116 47L107 58L118 55"></path>
+          <path class="hair-strand-white" d="M124 31L116 43L128 39"></path>
+          <path class="hair-strand-dark" d="M171 29L187 40L175 41"></path>
+          <path class="hair-strand-dark" d="M185 55L198 65L184 65"></path>
+          <path class="hair-highlight" d="M121 38C130 26 140 22 149 22"></path>
+
+          <!-- Спокойное уставшее выражение -->
+          <path class="brow" d="M132 75L144 72M160 72L171 75"></path>
+          <ellipse class="eye" cx="139" cy="81" rx="3.2" ry="2"></ellipse>
+          <ellipse class="eye" cx="165" cy="81" rx="3.2" ry="2"></ellipse>
+          <path class="nose" d="M152 81L148 94L154 95"></path>
+          <path class="mouth" d="M144 106Q153 102 162 106"></path>
+
+          <path class="neck" d="M133 116L129 136L164 140L170 115"></path>
+
+          <!-- Куртка с тёмной внутренней панелью -->
+          <path class="jacket" d="
+            M125 133
+            C107 138 97 151 93 172
+            L81 225
+            C79 236 89 241 98 233
+            L111 202
+            L108 265
+            C132 277 174 275 196 259
+            L187 197
+            L209 229
+            C216 237 225 230 220 221
+            L195 164
+            C188 147 173 138 163 135
+            L147 152Z"></path>
+
+          <path class="jacket-inner" d="M134 136L147 152L163 136L175 165L153 185L127 161Z"></path>
+
+          <path class="jacket-trim" d="M125 134L147 152L134 171L111 147"></path>
+          <path class="jacket-trim" d="M163 136L147 152L163 173L180 146"></path>
+          <path class="jacket-zipper" d="M147 152L153 260"></path>
+          <path class="jacket-seam" d="M108 178L128 185M168 183L190 175"></path>
+          <path class="jacket-seam" d="M116 212L132 216L128 232L110 227Z"></path>
+          <path class="jacket-trim" d="M170 211L189 206M170 219L185 216"></path>
+          <path class="jacket-seam" d="M132 245L143 248M160 246L175 243"></path>
+
+          <!-- Согнутая рука и кисть у лица -->
+          <path class="sleeve" d="M194 158C209 174 206 189 191 199L169 175L161 152"></path>
+          <path class="sleeve-detail" d="M197 169C201 180 196 189 190 193"></path>
+          <path class="hand" d="
+            M163 157
+            C157 152 156 146 159 141
+            L164 138L169 145L174 139L178 144
+            L175 152L171 161Z"></path>
+
+          <!-- Сигарета и дым -->
+          <path class="cigarette" d="M162 144L147 139"></path>
+          <path class="cigarette-tip" d="M148 139L144 138"></path>
+          <path class="smoke" d="M142 135C132 127 146 119 136 109"></path>
+          <path class="smoke smoke-second" d="M151 134C162 124 148 116 158 105"></path>
+
+          <!-- Брюки и выпрямленная нога -->
+          <path class="pants" d="
+            M109 263
+            C132 274 171 272 196 257
+            L197 288
+            C194 303 184 317 177 331
+            L172 358
+            L151 358
+            L150 330
+            C151 314 159 298 163 287
+            L138 283
+            L132 313
+            L131 358
+            L109 358
+            L107 313
+            C105 293 106 277 109 263Z"></path>
+
+          <path class="pants-fold" d="M114 283L132 291M165 282L187 275"></path>
+          <path class="pants-fold" d="M112 310L129 314M157 312L176 319"></path>
+          <path class="pants-fold" d="M111 338L130 341M154 343L172 341"></path>
+
+          <!-- Обувь -->
+          <path class="shoe" d="
+            M109 351L131 351L136 363
+            C142 369 138 376 128 377
+            L89 377C87 370 95 360 109 351Z"></path>
+
+          <path class="shoe" d="
+            M151 351L172 351L179 361
+            L200 366C206 372 201 378 192 378
+            L153 375Z"></path>
+
+          <path class="shoe-sole" d="M94 371L136 371M157 372L201 372"></path>
+          <path class="shoe-lace" d="M109 361L125 366M111 366L127 361"></path>
+        </g>
       </svg>
     </div>
 
@@ -878,7 +1137,7 @@
     <div class="modal">
       <h2 id="loginTitle">Вход администратора</h2>
       <p class="notice">
-        Вход выполняется через Supabase Auth. Пароль хранится в Supabase, а не в этом файле.
+        Авторизация выполняется через Supabase Auth. Пароль в коде страницы не хранится.
       </p>
 
       <form id="loginForm" class="form-grid">
@@ -916,10 +1175,11 @@
     let editingId = null;
     let query = "";
     let loading = false;
+    let dragState = null;
+    let hasInitialFit = false;
 
     const expandedNodes = new Set();
     const view = { x: 0, y: 0, scale: 1 };
-    let dragState = null;
 
     function escapeHtml(value) {
       return String(value).replace(/[&<>"']/g, char => ({
@@ -990,7 +1250,7 @@
       return true;
     }
 
-    function visibleNodes(byId) {
+    function getVisibleNodes(byId) {
       if (!query) {
         return data.filter(node => isVisibleByExpansion(node, byId));
       }
@@ -1016,6 +1276,32 @@
       return [...result.values()];
     }
 
+    function applyView() {
+      const group = document.getElementById("graphContent");
+      if (!group) return;
+
+      group.setAttribute(
+        "transform",
+        `translate(${view.x} ${view.y}) scale(${view.scale})`
+      );
+    }
+
+    function fitViewIfNeeded(contentWidth, contentHeight, viewportWidth, viewportHeight) {
+      if (hasInitialFit) return;
+      hasInitialFit = true;
+
+      const scale = Math.min(
+        1,
+        (viewportWidth - 50) / contentWidth,
+        (viewportHeight - 50) / contentHeight
+      );
+
+      view.scale = Math.max(.4, scale);
+      view.x = Math.max(20, (viewportWidth - contentWidth * view.scale) / 2);
+      view.y = Math.max(20, (viewportHeight - contentHeight * view.scale) / 2);
+      applyView();
+    }
+
     async function loadTree() {
       loading = true;
       $("details").textContent = "Загружаю дерево из Supabase…";
@@ -1032,7 +1318,7 @@
         data = [];
         $("detailsTitle").textContent = "Ошибка загрузки";
         $("details").textContent =
-          "Проверь таблицу nodes, публичный ключ и политику чтения. " + error.message;
+          "Проверь таблицу nodes, ключ и политику чтения в Supabase. " + error.message;
         draw();
         return;
       }
@@ -1040,24 +1326,18 @@
       data = (rows || []).map(fromDatabase);
 
       if (!data.some(node => node.id === "emode1k")) {
-        $("detailsTitle").textContent = "Таблица пока пустая";
+        $("detailsTitle").textContent = "Корневой узел не найден";
         $("details").textContent =
-          "Добавь корневой узел emode1k через SQL Editor в Supabase.";
+          "Добавь в таблицу nodes корневую запись emode1k с parent_id равным null.";
         draw();
         return;
       }
 
-      if (!data.some(node => node.id === selectedId)) selectedId = "emode1k";
-      selectNode(selectedId);
-    }
+      if (!data.some(node => node.id === selectedId)) {
+        selectedId = "emode1k";
+      }
 
-    function applyView() {
-      const group = document.getElementById("graphContent");
-      if (!group) return;
-      group.setAttribute(
-        "transform",
-        `translate(${view.x} ${view.y}) scale(${view.scale})`
-      );
+      selectNode(selectedId);
     }
 
     function draw() {
@@ -1070,7 +1350,7 @@
       }
 
       const byId = new Map(data.map(node => [node.id, node]));
-      const visible = visibleNodes(byId);
+      const visible = getVisibleNodes(byId);
 
       $("graphMeta").textContent = `${visible.length} / ${data.length} узлов`;
 
@@ -1088,13 +1368,14 @@
       });
 
       const widest = Math.max(...levels.map(level => (level || []).length));
-      const width = Math.max(900, widest * 250);
-      const height = Math.max(480, levels.length * 150 + 70);
+      const contentWidth = Math.max(900, widest * 250);
+      const contentHeight = Math.max(480, levels.length * 150 + 70);
       const positions = new Map();
 
       levels.forEach((level, depth) => {
         if (!level) return;
-        const gap = width / (level.length + 1);
+
+        const gap = contentWidth / (level.length + 1);
 
         level.forEach((node, index) => {
           positions.set(node.id, {
@@ -1115,10 +1396,11 @@
         const startY = parent.y + 60;
         const endX = child.x + 94;
         const endY = child.y;
-        const midY = startY + (endY - startY) * .52;
+        const middleY = startY + (endY - startY) * .52;
 
         edges += `<path class="edge"
-          d="M ${startX} ${startY} C ${startX} ${midY}, ${endX} ${midY}, ${endX} ${endY}"></path>`;
+          d="M ${startX} ${startY}
+             C ${startX} ${middleY}, ${endX} ${middleY}, ${endX} ${endY}"></path>`;
       });
 
       let nodes = "";
@@ -1160,11 +1442,8 @@
       const svg = host.querySelector("svg");
       svg.setAttribute("viewBox", `0 0 ${host.clientWidth} ${host.clientHeight}`);
 
-      const group = document.getElementById("graphContent");
-      group.setAttribute(
-        "transform",
-        `translate(${view.x} ${view.y}) scale(${view.scale})`
-      );
+      applyView();
+      fitViewIfNeeded(contentWidth, contentHeight, host.clientWidth, host.clientHeight);
 
       host.querySelectorAll(".node").forEach(element => {
         const activate = () => handleNodeClick(element.dataset.id);
@@ -1177,26 +1456,6 @@
           }
         });
       });
-
-      fitViewIfNeeded(width, height, host.clientWidth, host.clientHeight);
-    }
-
-    let hasInitialFit = false;
-
-    function fitViewIfNeeded(contentWidth, contentHeight, viewportWidth, viewportHeight) {
-      if (hasInitialFit) return;
-      hasInitialFit = true;
-
-      const scale = Math.min(
-        1,
-        (viewportWidth - 50) / contentWidth,
-        (viewportHeight - 50) / contentHeight
-      );
-
-      view.scale = Math.max(.45, scale);
-      view.x = Math.max(20, (viewportWidth - contentWidth * view.scale) / 2);
-      view.y = Math.max(20, (viewportHeight - contentHeight * view.scale) / 2);
-      applyView();
     }
 
     function handleNodeClick(id) {
@@ -1267,6 +1526,14 @@
       }
     });
 
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        $("contactMenu").classList.add("hidden");
+        $("contactButton").setAttribute("aria-expanded", "false");
+        $("loginDialog").classList.add("hidden");
+      }
+    });
+
     $("search").addEventListener("input", event => {
       query = event.target.value.trim();
       hasInitialFit = false;
@@ -1274,9 +1541,13 @@
     });
 
     $("adminButton").addEventListener("click", async () => {
-      const { data: sessionData } = await supabaseClient.auth.getSession();
+      const { data: sessionData, error } = await supabaseClient.auth.getSession();
 
-      if (sessionData.session) {
+      if (error) {
+        $("loginStatus").textContent = error.message;
+      }
+
+      if (sessionData && sessionData.session) {
         setAdmin(true);
         return;
       }
@@ -1378,6 +1649,14 @@
         return;
       }
 
+      if (!editingId) {
+        const parent = data.find(item => item.id === selectedId);
+        if (parent) {
+          const parentDepth = nodeDepth(parent, new Map(data.map(item => [item.id, item])));
+          if (parentDepth >= 2) expandedNodes.add(parent.id);
+        }
+      }
+
       resetForm();
       await loadTree();
 
@@ -1422,17 +1701,16 @@
         return;
       }
 
+      descendantIds(node.id).forEach(id => expandedNodes.delete(id));
       selectedId = "emode1k";
-      expandedNodes.clear();
       await loadTree();
       selectNode("emode1k");
       $("adminStatus").textContent = "Ветка удалена из Supabase.";
     });
 
-    // Перетаскивание пустой области перемещает граф.
+    // Перетаскивание пустой области графа.
     $("graph").addEventListener("pointerdown", event => {
-      if (event.target.closest(".node")) return;
-      if (event.button !== 0) return;
+      if (event.target.closest(".node") || event.button !== 0) return;
 
       dragState = {
         pointerId: event.pointerId,
@@ -1463,21 +1741,20 @@
     $("graph").addEventListener("pointerup", finishDrag);
     $("graph").addEventListener("pointercancel", finishDrag);
 
-    // Масштабирование колесом мыши вокруг позиции курсора.
+    // Колесо мыши меняет масштаб около позиции указателя.
     $("graph").addEventListener("wheel", event => {
       event.preventDefault();
 
       const rect = $("graph").getBoundingClientRect();
-      const pointerX = event.clientX - rect.left;
-      const pointerY = event.clientY - rect.top;
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
       const oldScale = view.scale;
       const factor = event.deltaY < 0 ? 1.1 : .9;
       const newScale = Math.max(.35, Math.min(2.2, oldScale * factor));
 
-      view.x = pointerX - (pointerX - view.x) * (newScale / oldScale);
-      view.y = pointerY - (pointerY - view.y) * (newScale / oldScale);
+      view.x = x - (x - view.x) * newScale / oldScale;
+      view.y = y - (y - view.y) * newScale / oldScale;
       view.scale = newScale;
-
       applyView();
     }, { passive: false });
 
