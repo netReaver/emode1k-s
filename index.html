@@ -3,23 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b0a0d">
+  <meta name="theme-color" content="#050505">
   <meta name="description" content="Интерактивное дерево проекта emode1k">
   <title>emode1k — дерево проекта</title>
 
   <style>
     :root {
       color-scheme: dark;
-      --bg: #0b0a0d;
-      --panel: #141216;
-      --panel-2: #1b171c;
-      --border: #332b35;
+      --bg: #080709;
+      --panel: #141116;
+      --panel-2: #1c171e;
+      --border: #382b36;
       --text: #eee8ed;
       --muted: #a69ba6;
-      --accent: #e1c86b;
-      --accent-glow: #e1c86b55;
-      --danger: #ff7b87;
-      --line: #62566a;
+      --accent: #ff2638;
+      --accent-glow: #ff263855;
+      --danger: #ff8290;
+      --line: #66525f;
     }
 
     * { box-sizing: border-box; }
@@ -29,7 +29,7 @@
       min-height: 100vh;
       color: var(--text);
       background:
-        radial-gradient(ellipse at 50% 4%, #261b27 0, transparent 48%),
+        radial-gradient(ellipse at 50% 4%, #281118 0, transparent 48%),
         var(--bg);
       font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system,
         BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -48,7 +48,7 @@
       align-items: center;
       gap: 18px;
       border-bottom: 1px solid #ffffff12;
-      background: #0b0a0dee;
+      background: #080709ed;
       backdrop-filter: blur(16px);
     }
 
@@ -66,10 +66,10 @@
       height: 27px;
       margin-right: 8px;
       place-items: center;
-      border: 1px solid #e1c86b77;
+      border: 1px solid #ff263877;
       border-radius: 8px;
       color: var(--accent);
-      background: #e1c86b12;
+      background: #ff263812;
     }
 
     .top-actions {
@@ -90,7 +90,7 @@
     input, textarea { padding: 10px 12px; }
 
     input:focus, textarea:focus, button:focus-visible, a:focus-visible {
-      outline: 2px solid #e1c86b99;
+      outline: 2px solid #ff263899;
       outline-offset: 2px;
     }
 
@@ -109,17 +109,17 @@
 
     .button:hover {
       transform: translateY(-1px);
-      border-color: #e1c86b88;
-      background: #292229;
+      border-color: #ff263888;
+      background: #292027;
     }
 
     .button:active { transform: scale(.98); }
     .button:disabled { opacity: .55; cursor: wait; }
 
     .button-primary {
-      border-color: #e1c86b66;
-      color: #f3e7ad;
-      background: #e1c86b14;
+      border-color: #ff263866;
+      color: #ffc0c6;
+      background: #ff263814;
     }
 
     .button-danger {
@@ -159,8 +159,8 @@
     }
 
     .contact-menu a:hover {
-      color: #f3e7ad;
-      background: #e1c86b12;
+      color: #ffc0c6;
+      background: #ff263812;
     }
 
     main {
@@ -179,7 +179,7 @@
 
     .eyebrow {
       margin: 0 0 6px;
-      color: var(--accent);
+      color: #ff5360;
       font-size: 11px;
       font-weight: 750;
       letter-spacing: .16em;
@@ -218,10 +218,10 @@
       min-height: 440px;
       height: min(66vh, 760px);
       overflow: hidden;
-      border: 1px solid #332b35;
+      border: 1px solid #382b36;
       border-radius: 16px;
       background:
-        radial-gradient(circle at 50% 45%, #211923 0, #100e14 55%, #0d0b10 100%);
+        radial-gradient(circle at 50% 45%, #21151c 0, #100d12 55%, #0b090c 100%);
       box-shadow: 0 22px 75px #0004, inset 0 1px #ffffff08;
       cursor: grab;
       touch-action: none;
@@ -235,8 +235,8 @@
       z-index: 0;
       pointer-events: none;
       content: "";
-      opacity: .28;
-      background-image: radial-gradient(#b4a4b722 .8px, transparent .8px);
+      opacity: .24;
+      background-image: radial-gradient(#ba9eaa22 .8px, transparent .8px);
       background-size: 22px 22px;
     }
 
@@ -273,13 +273,13 @@
     }
 
     .node.root rect {
-      fill: #2e281b;
-      stroke: #d2b95d;
+      fill: #30151b;
+      stroke: #ed3948;
     }
 
     .node:hover rect, .node.selected rect {
-      fill: #28202a;
-      stroke: var(--accent);
+      fill: #2a1b22;
+      stroke: #ff5261;
       filter: drop-shadow(0 0 9px var(--accent-glow));
     }
 
@@ -290,8 +290,8 @@
       pointer-events: none;
     }
 
-    .node .dot { fill: var(--accent); }
-    .node .expand-indicator { fill: #d4c99e; font-size: 12px; }
+    .node .dot { fill: #ff4a57; }
+    .node .expand-indicator { fill: #f0a1a8; font-size: 12px; }
 
     .empty-state {
       position: absolute;
@@ -393,11 +393,9 @@
       inset: 0;
       z-index: 1000;
       display: grid;
-      align-content: center;
-      justify-items: center;
-      gap: 15px;
+      place-items: center;
       overflow: hidden;
-      background: radial-gradient(ellipse at center, #321016, #08090d 70%);
+      background: #030303;
       transition: opacity .7s ease, visibility .7s ease;
     }
 
@@ -407,330 +405,30 @@
       pointer-events: none;
     }
 
-    .splash-art {
+    .splash-content {
       display: grid;
       justify-items: center;
-      gap: 8px;
+      gap: 18px;
+      width: 100%;
+      padding: 20px;
     }
 
     .ascii-title {
-      width: max-content;
-      max-width: 94vw;
-      overflow: hidden;
       margin: 0;
-      color: transparent;
-      background: linear-gradient(
-        90deg, #591010, #ff2525 20%, #fff0f0 48%, #ff2525 70%, #591010
-      );
-      background-size: 250% 100%;
-      background-position: 0 50%;
-      background-clip: text;
-      -webkit-background-clip: text;
-      font: 800 clamp(7px, 1.55vw, 18px)/1.12 "Courier New", monospace;
+      max-width: 96vw;
+      overflow: hidden;
+      color: #ff2538;
+      font: 800 clamp(7px, 1.8vw, 19px)/1.12 "Courier New", monospace;
       white-space: pre;
-      text-shadow: 0 0 14px #ff171766;
-      animation: ascii-flow 5s linear forwards;
-    }
-
-    .scene-art {
-      width: min(96vw, 760px);
-      height: auto;
-      overflow: visible;
-      filter: drop-shadow(0 12px 26px #000b);
-    }
-
-    .ground {
-      fill: none;
-      stroke: #4a424b;
-      stroke-width: 2;
-    }
-
-    .car-shadow { fill: #0009; }
-
-    .car-body {
-      fill: url(#steelGradient);
-      stroke: #d7d8d4;
-      stroke-width: 2;
-      stroke-linejoin: round;
-    }
-
-    .car-hood, .car-roof {
-      fill: url(#steelGradient);
-      stroke: #e1e1dc;
-      stroke-width: 1.5;
-    }
-
-    .car-glass, .car-side-glass {
-      fill: url(#glassGradient);
-      stroke: #aeb2b6;
-      stroke-width: 1.5;
-    }
-
-    .car-glass-shine {
-      fill: none;
-      stroke: #a9b6c2;
-      stroke-width: 2;
-      opacity: .45;
-    }
-
-    .car-window-divider, .car-panel-line, .car-door-seam,
-    .car-detail {
-      fill: none;
-      stroke: #383c42;
-      stroke-width: 1.5;
-    }
-
-    .car-door {
-      fill: #8b9094;
-      fill-opacity: .25;
-      stroke: #34383e;
-      stroke-width: 1.6;
-    }
-
-    .car-handle {
-      stroke: #25282d;
-      stroke-width: 3;
-      stroke-linecap: round;
-    }
-
-    .car-front {
-      fill: #6e7378;
-      stroke: #d3d4d0;
-      stroke-width: 1.5;
-    }
-
-    .car-grille {
-      fill: #191b20;
-      stroke: #aeb0ad;
-      stroke-width: 1;
-    }
-
-    .grille-line {
-      fill: none;
-      stroke: #767b80;
-      stroke-width: 1.3;
-    }
-
-    .bumper {
-      fill: none;
-      stroke: #c4c6c3;
-      stroke-width: 5;
-    }
-
-    .bumper-dark {
-      fill: none;
-      stroke: #33373d;
-      stroke-width: 2;
-    }
-
-    .taillight {
-      fill: #8b2632;
-      stroke: #d14c58;
-      stroke-width: 1;
-    }
-
-    .headlight {
-      fill: #ffeeb0;
-      stroke: #fff8d7;
-      stroke-width: 1;
-      filter: url(#headlightGlow);
-      animation: headlights 1.4s steps(2, end) infinite;
-    }
-
-    .headlight-right { animation-delay: .35s; }
-
-    .wheel-tire {
-      fill: #111;
-      stroke: #777;
-      stroke-width: 2;
-    }
-
-    .wheel-rim {
-      fill: #aeb1b2;
-      stroke: #e3e4e2;
-      stroke-width: 1.5;
-    }
-
-    .wheel-spokes {
-      fill: none;
-      stroke: #42464c;
-      stroke-width: 1.6;
-    }
-
-    .hair-back {
-      fill: #111014;
-      stroke: #514450;
-      stroke-width: 1.5;
-    }
-
-    .face {
-      fill: url(#skinGradient);
-      stroke: #d4b5a7;
-      stroke-width: 1.5;
-    }
-
-    .hair-white {
-      fill: #d7d4ce;
-      stroke: #f0ede6;
-      stroke-width: 1.5;
-    }
-
-    .hair-dark {
-      fill: #141218;
-      stroke: #574958;
-      stroke-width: 1.5;
-    }
-
-    .hair-strand-white {
-      fill: none;
-      stroke: #e6e1d9;
-      stroke-width: 3;
-      stroke-linecap: round;
-    }
-
-    .hair-strand-dark {
-      fill: none;
-      stroke: #09080c;
-      stroke-width: 4;
-      stroke-linecap: round;
-    }
-
-    .hair-highlight {
-      fill: none;
-      stroke: #f0ece4;
-      stroke-width: 1.5;
-      opacity: .65;
-    }
-
-    .brow {
-      fill: none;
-      stroke: #33272b;
-      stroke-width: 2.5;
-      stroke-linecap: round;
-    }
-
-    .eye { fill: #21191e; }
-
-    .nose, .mouth {
-      fill: none;
-      stroke: #493a3d;
-      stroke-width: 1.6;
-      stroke-linecap: round;
-    }
-
-    .neck {
-      fill: #997b70;
-      stroke: #c0a69c;
-      stroke-width: 1;
-    }
-
-    .jacket {
-      fill: url(#jacketGradient);
-      stroke: #ead46d;
-      stroke-width: 2;
-      stroke-linejoin: round;
-    }
-
-    .jacket-inner {
-      fill: url(#jacketDarkGradient);
-      stroke: #a38a43;
-      stroke-width: 1.5;
-    }
-
-    .jacket-trim, .jacket-zipper {
-      fill: none;
-      stroke: #f0dc7d;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .jacket-seam {
-      fill: none;
-      stroke: #78693e;
-      stroke-width: 1.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .sleeve {
-      fill: none;
-      stroke: #d3b84f;
-      stroke-width: 15;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .sleeve-detail {
-      fill: none;
-      stroke: #806b2d;
-      stroke-width: 2;
-      stroke-linecap: round;
-    }
-
-    .hand {
-      fill: url(#skinGradient);
-      stroke: #d4b5a7;
-      stroke-width: 1.4;
-      stroke-linejoin: round;
-    }
-
-    .cigarette {
-      stroke: #e4ddd4;
-      stroke-width: 3;
-      stroke-linecap: round;
-    }
-
-    .cigarette-tip {
-      stroke: #ff634f;
-      stroke-width: 3;
-      filter: drop-shadow(0 0 4px #ff382d);
-    }
-
-    .smoke {
-      fill: none;
-      stroke: #aaa4ae;
-      stroke-width: 2;
-      stroke-linecap: round;
-      opacity: .65;
-      animation: smoke-rise 2.5s ease-in-out infinite;
-    }
-
-    .smoke-second { animation-delay: .9s; }
-
-    .pants {
-      fill: url(#pantsGradient);
-      stroke: #77717b;
-      stroke-width: 1.8;
-      stroke-linejoin: round;
-    }
-
-    .pants-fold {
-      fill: none;
-      stroke: #77717b;
-      stroke-width: 1.4;
-      stroke-linecap: round;
-    }
-
-    .shoe {
-      fill: #17151a;
-      stroke: #938b94;
-      stroke-width: 1.7;
-      stroke-linejoin: round;
-    }
-
-    .shoe-sole, .shoe-lace {
-      fill: none;
-      stroke: #b8adb5;
-      stroke-width: 2;
-      stroke-linecap: round;
+      text-shadow: 0 0 8px #ff1a2a88, 0 0 25px #d0001e66;
+      animation: red-flow 5s ease-in-out forwards;
     }
 
     .splash-caption {
-      color: #ff9b9b;
-      font-size: 12px;
-      letter-spacing: .32em;
-      animation: caption-blink .8s steps(2, start) infinite;
+      color: #b81f30;
+      font-size: 11px;
+      letter-spacing: .35em;
+      animation: caption-pulse 1.4s ease-in-out infinite alternate;
     }
 
     @keyframes node-appear {
@@ -738,30 +436,27 @@
       to { opacity: 1; scale: 1; translate: 0 0; }
     }
 
-    @keyframes ascii-flow {
-      from { background-position: 0 50%; }
-      to { background-position: 100% 50%; }
-    }
-
-    @keyframes smoke-rise {
-      0% { opacity: 0; transform: translate(0, 5px); }
-      35% { opacity: .65; }
-      100% { opacity: 0; transform: translate(5px, -19px); }
-    }
-
-    @keyframes headlights {
-      0%, 45% {
-        opacity: .35;
-        filter: none;
+    @keyframes red-flow {
+      0% {
+        color: #8f0615;
+        text-shadow: 0 0 4px #8f061566;
+        transform: translateX(-24px);
       }
-      50%, 100% {
-        opacity: 1;
-        filter: url(#headlightGlow);
+      50% {
+        color: #ff2638;
+        text-shadow: 0 0 10px #ff2638aa, 0 0 32px #c9002077;
+        transform: translateX(0);
+      }
+      100% {
+        color: #e51c30;
+        text-shadow: 0 0 8px #e51c3088, 0 0 24px #c9002066;
+        transform: translateX(24px);
       }
     }
 
-    @keyframes caption-blink {
-      to { opacity: .35; }
+    @keyframes caption-pulse {
+      from { opacity: .45; }
+      to { opacity: 1; }
     }
 
     @media (max-width: 760px) {
@@ -788,7 +483,7 @@
 
 <body>
   <div id="splash" class="splash" aria-label="Загрузка сайта">
-    <div class="splash-art">
+    <div class="splash-content">
       <pre class="ascii-title" aria-label="EMODE1K">
  _____ __  __  ___  ____  _____ _  __
 | ____|  \/  |/ _ \|  _ \| ____| |/ /
@@ -796,252 +491,8 @@
 | |___| |  | | |_| | |_| | |___| . \
 |_____|_|  |_|\___/|____/|_____|_|\_\
       </pre>
-
-      <svg class="scene-art" viewBox="0 0 760 440" role="img"
-           aria-label="Человек в детализированной жёлтой куртке стоит рядом с DeLorean">
-        <defs>
-          <linearGradient id="jacketGradient" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#e6cf65"></stop>
-            <stop offset=".45" stop-color="#bd9e3e"></stop>
-            <stop offset="1" stop-color="#665528"></stop>
-          </linearGradient>
-
-          <linearGradient id="jacketDarkGradient" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#27252b"></stop>
-            <stop offset="1" stop-color="#111217"></stop>
-          </linearGradient>
-
-          <linearGradient id="pantsGradient" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#35313a"></stop>
-            <stop offset="1" stop-color="#17161b"></stop>
-          </linearGradient>
-
-          <linearGradient id="skinGradient" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#c8aa9c"></stop>
-            <stop offset="1" stop-color="#80675f"></stop>
-          </linearGradient>
-
-          <linearGradient id="steelGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#e2e3df"></stop>
-            <stop offset=".3" stop-color="#92969a"></stop>
-            <stop offset=".65" stop-color="#555b61"></stop>
-            <stop offset="1" stop-color="#272b30"></stop>
-          </linearGradient>
-
-          <linearGradient id="glassGradient" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#303945"></stop>
-            <stop offset=".55" stop-color="#10151d"></stop>
-            <stop offset="1" stop-color="#535963"></stop>
-          </linearGradient>
-
-          <filter id="headlightGlow" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="5" result="blur"></feGaussianBlur>
-            <feMerge>
-              <feMergeNode in="blur"></feMergeNode>
-              <feMergeNode in="SourceGraphic"></feMergeNode>
-            </feMerge>
-          </filter>
-        </defs>
-
-        <ellipse cx="395" cy="399" rx="335" ry="20" fill="#0009"></ellipse>
-        <path class="ground" d="M34 400H733"></path>
-
-        <!-- DeLorean под углом, передняя часть развёрнута к зрителю -->
-        <g class="delorean">
-          <path class="car-shadow" d="M361 319L556 273L716 317L508 378Z"></path>
-
-          <path class="car-body" d="
-            M374 302
-            L412 267
-            L489 238
-            L594 256
-            L680 290
-            L724 328
-            L706 352
-            L500 393
-            L361 348
-            Z"></path>
-
-          <path class="car-hood" d="M489 252L585 268L665 300L568 307L453 281Z"></path>
-          <path class="car-panel-line" d="M453 281L568 307L568 364"></path>
-          <path class="car-panel-line" d="M568 307L665 300"></path>
-          <path class="car-panel-line" d="M462 290L565 316"></path>
-
-          <path class="car-glass" d="M412 267L453 246L514 231L574 247L594 256L489 238Z"></path>
-          <path class="car-roof" d="M453 246L477 225L534 220L574 247L514 231Z"></path>
-          <path class="car-glass-shine" d="M466 248L513 236L548 245"></path>
-
-          <path class="car-side-glass" d="M574 247L617 261L654 291L594 281Z"></path>
-          <path class="car-window-divider" d="M614 260L595 280"></path>
-
-          <!-- Дверь закрыта, добавлен отдельный контур -->
-          <path class="car-door" d="M568 307L594 281L654 291L665 342L596 361Z"></path>
-          <path class="car-door-seam" d="M594 281L596 361"></path>
-          <path class="car-handle" d="M617 307L638 303"></path>
-
-          <path class="car-front" d="M374 302L453 281L500 393L361 348Z"></path>
-          <path class="car-grille" d="M384 318L445 301L462 340L399 359Z"></path>
-          <path class="grille-line" d="M391 323L449 309M394 331L453 318M397 339L457 327M400 347L460 336"></path>
-
-          <path class="headlight headlight-left" d="M373 308L389 304L394 315L379 320Z"></path>
-          <path class="headlight headlight-right" d="M440 289L454 286L459 297L445 301Z"></path>
-
-          <path class="bumper" d="M361 348L500 393L706 352L724 328"></path>
-          <path class="bumper-dark" d="M365 351L500 389L703 350"></path>
-          <path class="taillight" d="M687 296L705 304L710 319L693 314Z"></path>
-
-          <g>
-            <ellipse class="wheel-tire" cx="417" cy="363" rx="20" ry="30" transform="rotate(-18 417 363)"></ellipse>
-            <ellipse class="wheel-rim" cx="417" cy="363" rx="10" ry="18" transform="rotate(-18 417 363)"></ellipse>
-            <path class="wheel-spokes" d="M416 347L418 379M408 354L426 372M426 352L408 374"></path>
-          </g>
-
-          <g>
-            <ellipse class="wheel-tire" cx="660" cy="344" rx="18" ry="27" transform="rotate(-17 660 344)"></ellipse>
-            <ellipse class="wheel-rim" cx="660" cy="344" rx="9" ry="16" transform="rotate(-17 660 344)"></ellipse>
-            <path class="wheel-spokes" d="M659 329L661 359M652 336L668 352M668 334L652 354"></path>
-          </g>
-
-          <path class="car-detail" d="M473 276L545 262M600 291L624 298"></path>
-          <path class="car-detail" d="M510 373L589 366M615 360L682 346"></path>
-        </g>
-
-        <!-- Человек -->
-        <g class="person">
-          <!-- Затылок -->
-          <path class="hair-back" d="
-            M112 91
-            C97 69 101 38 123 23
-            C144 8 175 15 190 40
-            C205 65 195 96 181 120
-            L119 119Z"></path>
-
-          <!-- Лицо -->
-          <path class="face" d="
-            M123 52
-            C132 34 157 31 175 45
-            C190 56 188 79 178 97
-            L165 117
-            C157 129 142 129 130 118
-            L118 100
-            C112 84 114 66 123 52Z"></path>
-
-          <!-- Светлая половина шторок -->
-          <path class="hair-white" d="
-            M113 63
-            C107 39 124 17 148 15
-            C163 14 178 22 186 36
-            C169 32 157 40 149 54
-            C140 69 136 79 127 87
-            C126 70 131 55 137 44
-            C126 49 119 59 115 74Z"></path>
-
-          <!-- Тёмная растрёпанная половина -->
-          <path class="hair-dark" d="
-            M148 16
-            C170 12 189 28 194 48
-            C198 67 189 88 176 102
-            L171 82
-            C168 67 163 56 156 49
-            C153 64 148 76 139 86
-            L135 68
-            C137 48 142 30 148 16Z"></path>
-
-          <path class="hair-strand-white" d="M116 47L107 58L118 55"></path>
-          <path class="hair-strand-white" d="M124 31L116 43L128 39"></path>
-          <path class="hair-strand-dark" d="M171 29L187 40L175 41"></path>
-          <path class="hair-strand-dark" d="M185 55L198 65L184 65"></path>
-          <path class="hair-highlight" d="M121 38C130 26 140 22 149 22"></path>
-
-          <!-- Спокойное уставшее выражение -->
-          <path class="brow" d="M132 75L144 72M160 72L171 75"></path>
-          <ellipse class="eye" cx="139" cy="81" rx="3.2" ry="2"></ellipse>
-          <ellipse class="eye" cx="165" cy="81" rx="3.2" ry="2"></ellipse>
-          <path class="nose" d="M152 81L148 94L154 95"></path>
-          <path class="mouth" d="M144 106Q153 102 162 106"></path>
-
-          <path class="neck" d="M133 116L129 136L164 140L170 115"></path>
-
-          <!-- Куртка с тёмной внутренней панелью -->
-          <path class="jacket" d="
-            M125 133
-            C107 138 97 151 93 172
-            L81 225
-            C79 236 89 241 98 233
-            L111 202
-            L108 265
-            C132 277 174 275 196 259
-            L187 197
-            L209 229
-            C216 237 225 230 220 221
-            L195 164
-            C188 147 173 138 163 135
-            L147 152Z"></path>
-
-          <path class="jacket-inner" d="M134 136L147 152L163 136L175 165L153 185L127 161Z"></path>
-
-          <path class="jacket-trim" d="M125 134L147 152L134 171L111 147"></path>
-          <path class="jacket-trim" d="M163 136L147 152L163 173L180 146"></path>
-          <path class="jacket-zipper" d="M147 152L153 260"></path>
-          <path class="jacket-seam" d="M108 178L128 185M168 183L190 175"></path>
-          <path class="jacket-seam" d="M116 212L132 216L128 232L110 227Z"></path>
-          <path class="jacket-trim" d="M170 211L189 206M170 219L185 216"></path>
-          <path class="jacket-seam" d="M132 245L143 248M160 246L175 243"></path>
-
-          <!-- Согнутая рука и кисть у лица -->
-          <path class="sleeve" d="M194 158C209 174 206 189 191 199L169 175L161 152"></path>
-          <path class="sleeve-detail" d="M197 169C201 180 196 189 190 193"></path>
-          <path class="hand" d="
-            M163 157
-            C157 152 156 146 159 141
-            L164 138L169 145L174 139L178 144
-            L175 152L171 161Z"></path>
-
-          <!-- Сигарета и дым -->
-          <path class="cigarette" d="M162 144L147 139"></path>
-          <path class="cigarette-tip" d="M148 139L144 138"></path>
-          <path class="smoke" d="M142 135C132 127 146 119 136 109"></path>
-          <path class="smoke smoke-second" d="M151 134C162 124 148 116 158 105"></path>
-
-          <!-- Брюки и выпрямленная нога -->
-          <path class="pants" d="
-            M109 263
-            C132 274 171 272 196 257
-            L197 288
-            C194 303 184 317 177 331
-            L172 358
-            L151 358
-            L150 330
-            C151 314 159 298 163 287
-            L138 283
-            L132 313
-            L131 358
-            L109 358
-            L107 313
-            C105 293 106 277 109 263Z"></path>
-
-          <path class="pants-fold" d="M114 283L132 291M165 282L187 275"></path>
-          <path class="pants-fold" d="M112 310L129 314M157 312L176 319"></path>
-          <path class="pants-fold" d="M111 338L130 341M154 343L172 341"></path>
-
-          <!-- Обувь -->
-          <path class="shoe" d="
-            M109 351L131 351L136 363
-            C142 369 138 376 128 377
-            L89 377C87 370 95 360 109 351Z"></path>
-
-          <path class="shoe" d="
-            M151 351L172 351L179 361
-            L200 366C206 372 201 378 192 378
-            L153 375Z"></path>
-
-          <path class="shoe-sole" d="M94 371L136 371M157 372L201 372"></path>
-          <path class="shoe-lace" d="M109 361L125 366M111 366L127 361"></path>
-        </g>
-      </svg>
+      <div class="splash-caption">ЗАГРУЗКА ПРОЕКТА</div>
     </div>
-
-    <div class="splash-caption">ЗАГРУЗКА ПРОЕКТА</div>
   </div>
 
   <header class="topbar">
@@ -1137,7 +588,7 @@
     <div class="modal">
       <h2 id="loginTitle">Вход администратора</h2>
       <p class="notice">
-        Авторизация выполняется через Supabase Auth. Пароль в коде страницы не хранится.
+        Вход выполняется через Supabase Auth. Пароль не хранится в HTML-файле.
       </p>
 
       <form id="loginForm" class="form-grid">
@@ -1159,8 +610,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = "https://ajydliryxxhqetfwefya.supabase.co";
-    const SUPABASE_PUBLIC_KEY =
-      "sb_publishable_itE-NyvxMgqHsbqn3Dp4sQ_2uZPoiUZ";
+    const SUPABASE_PUBLIC_KEY = "sb_publishable_itE-NyvxMgqHsbqn3Dp4sQ_2uZPoiUZ";
     const TABLE_NAME = "nodes";
 
     const $ = id => document.getElementById(id);
@@ -1286,60 +736,6 @@
       );
     }
 
-    function fitViewIfNeeded(contentWidth, contentHeight, viewportWidth, viewportHeight) {
-      if (hasInitialFit) return;
-      hasInitialFit = true;
-
-      const scale = Math.min(
-        1,
-        (viewportWidth - 50) / contentWidth,
-        (viewportHeight - 50) / contentHeight
-      );
-
-      view.scale = Math.max(.4, scale);
-      view.x = Math.max(20, (viewportWidth - contentWidth * view.scale) / 2);
-      view.y = Math.max(20, (viewportHeight - contentHeight * view.scale) / 2);
-      applyView();
-    }
-
-    async function loadTree() {
-      loading = true;
-      $("details").textContent = "Загружаю дерево из Supabase…";
-      draw();
-
-      const { data: rows, error } = await supabaseClient
-        .from(TABLE_NAME)
-        .select("id,parent_id,label,info")
-        .order("label");
-
-      loading = false;
-
-      if (error) {
-        data = [];
-        $("detailsTitle").textContent = "Ошибка загрузки";
-        $("details").textContent =
-          "Проверь таблицу nodes, ключ и политику чтения в Supabase. " + error.message;
-        draw();
-        return;
-      }
-
-      data = (rows || []).map(fromDatabase);
-
-      if (!data.some(node => node.id === "emode1k")) {
-        $("detailsTitle").textContent = "Корневой узел не найден";
-        $("details").textContent =
-          "Добавь в таблицу nodes корневую запись emode1k с parent_id равным null.";
-        draw();
-        return;
-      }
-
-      if (!data.some(node => node.id === selectedId)) {
-        selectedId = "emode1k";
-      }
-
-      selectNode(selectedId);
-    }
-
     function draw() {
       const host = $("graph");
 
@@ -1442,8 +838,25 @@
       const svg = host.querySelector("svg");
       svg.setAttribute("viewBox", `0 0 ${host.clientWidth} ${host.clientHeight}`);
 
-      applyView();
-      fitViewIfNeeded(contentWidth, contentHeight, host.clientWidth, host.clientHeight);
+      const group = document.getElementById("graphContent");
+
+      if (!hasInitialFit) {
+        const scale = Math.max(.4, Math.min(
+          1,
+          (host.clientWidth - 40) / contentWidth,
+          (host.clientHeight - 40) / contentHeight
+        ));
+
+        view.scale = scale;
+        view.x = Math.max(20, (host.clientWidth - contentWidth * scale) / 2);
+        view.y = Math.max(20, (host.clientHeight - contentHeight * scale) / 2);
+        hasInitialFit = true;
+      }
+
+      group.setAttribute(
+        "transform",
+        `translate(${view.x} ${view.y}) scale(${view.scale})`
+      );
 
       host.querySelectorAll(".node").forEach(element => {
         const activate = () => handleNodeClick(element.dataset.id);
@@ -1456,6 +869,41 @@
           }
         });
       });
+    }
+
+    async function loadTree() {
+      loading = true;
+      $("details").textContent = "Загружаю дерево из Supabase…";
+      draw();
+
+      const { data: rows, error } = await supabaseClient
+        .from(TABLE_NAME)
+        .select("id,parent_id,label,info")
+        .order("label");
+
+      loading = false;
+
+      if (error) {
+        data = [];
+        $("detailsTitle").textContent = "Ошибка загрузки";
+        $("details").textContent =
+          "Проверь таблицу nodes, ключ и политику чтения в Supabase. " + error.message;
+        draw();
+        return;
+      }
+
+      data = (rows || []).map(fromDatabase);
+
+      if (!data.some(node => node.id === "emode1k")) {
+        $("detailsTitle").textContent = "Корневой узел не найден";
+        $("details").textContent =
+          "Добавь запись emode1k в таблицу nodes с parent_id равным null.";
+        draw();
+        return;
+      }
+
+      if (!data.some(node => node.id === selectedId)) selectedId = "emode1k";
+      selectNode(selectedId);
     }
 
     function handleNodeClick(id) {
@@ -1649,15 +1097,8 @@
         return;
       }
 
-      if (!editingId) {
-        const parent = data.find(item => item.id === selectedId);
-        if (parent) {
-          const parentDepth = nodeDepth(parent, new Map(data.map(item => [item.id, item])));
-          if (parentDepth >= 2) expandedNodes.add(parent.id);
-        }
-      }
-
       resetForm();
+      hasInitialFit = false;
       await loadTree();
 
       if (savedId) selectNode(savedId);
@@ -1703,12 +1144,13 @@
 
       descendantIds(node.id).forEach(id => expandedNodes.delete(id));
       selectedId = "emode1k";
+      hasInitialFit = false;
       await loadTree();
       selectNode("emode1k");
       $("adminStatus").textContent = "Ветка удалена из Supabase.";
     });
 
-    // Перетаскивание пустой области графа.
+    // Перетаскивание пустой области двигает весь граф.
     $("graph").addEventListener("pointerdown", event => {
       if (event.target.closest(".node") || event.button !== 0) return;
 
@@ -1729,19 +1171,26 @@
 
       view.x = dragState.viewX + event.clientX - dragState.startX;
       view.y = dragState.viewY + event.clientY - dragState.startY;
-      applyView();
+
+      const group = document.getElementById("graphContent");
+      if (group) {
+        group.setAttribute(
+          "transform",
+          `translate(${view.x} ${view.y}) scale(${view.scale})`
+        );
+      }
     });
 
-    function finishDrag(event) {
+    function stopDragging(event) {
       if (!dragState || event.pointerId !== dragState.pointerId) return;
       dragState = null;
       $("graph").classList.remove("dragging");
     }
 
-    $("graph").addEventListener("pointerup", finishDrag);
-    $("graph").addEventListener("pointercancel", finishDrag);
+    $("graph").addEventListener("pointerup", stopDragging);
+    $("graph").addEventListener("pointercancel", stopDragging);
 
-    // Колесо мыши меняет масштаб около позиции указателя.
+    // Колесо мыши меняет масштаб около курсора.
     $("graph").addEventListener("wheel", event => {
       event.preventDefault();
 
@@ -1755,12 +1204,19 @@
       view.x = x - (x - view.x) * newScale / oldScale;
       view.y = y - (y - view.y) * newScale / oldScale;
       view.scale = newScale;
-      applyView();
+
+      const group = document.getElementById("graphContent");
+      if (group) {
+        group.setAttribute(
+          "transform",
+          `translate(${view.x} ${view.y}) scale(${view.scale})`
+        );
+      }
     }, { passive: false });
 
     $("resetViewButton").addEventListener("click", () => {
-      view.x = 20;
-      view.y = 20;
+      view.x = 0;
+      view.y = 0;
       view.scale = 1;
       hasInitialFit = false;
       draw();
