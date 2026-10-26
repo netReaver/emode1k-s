@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090d14">
-  <meta name="description" content="Интерактивное дерево проекта emode1k">
   <title>emode1k — дерево проекта</title>
 
   <style>
@@ -16,7 +15,6 @@
       --text: #e8edf5;
       --muted: #8996a8;
       --accent: #70d6b1;
-      --danger: #ff8290;
       --line: #50647b;
     }
 
@@ -25,12 +23,9 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background:
-        radial-gradient(ellipse at 50% 10%, #12202a 0, transparent 48%),
-        var(--bg);
+      background: radial-gradient(ellipse at 50% 10%, #12202a 0, transparent 48%), var(--bg);
       color: var(--text);
-      font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system,
-        BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font: 15px/1.55 system-ui, sans-serif;
     }
 
     button, input, textarea { font: inherit; }
@@ -40,11 +35,10 @@
       position: sticky;
       top: 0;
       z-index: 10;
-      min-height: 68px;
       padding: 12px clamp(14px, 3vw, 34px);
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 14px;
       border-bottom: 1px solid #ffffff10;
       background: #090d14ef;
       backdrop-filter: blur(16px);
@@ -52,9 +46,7 @@
 
     .brand {
       color: var(--text);
-      font-size: 16px;
       font-weight: 750;
-      letter-spacing: .02em;
       white-space: nowrap;
       text-decoration: none;
     }
@@ -75,7 +67,7 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 9px;
+      gap: 8px;
       margin-left: auto;
     }
 
@@ -96,21 +88,13 @@
     .search {
       width: min(28vw, 300px);
       min-width: 150px;
-      transition: border-color .2s, box-shadow .2s, width .25s;
-    }
-
-    .search:focus {
-      width: min(34vw, 360px);
-      border-color: #70d6b177;
-      box-shadow: 0 0 0 4px #70d6b111;
     }
 
     .button {
       min-height: 40px;
       padding: 9px 13px;
       cursor: pointer;
-      transition: transform .18s ease, border-color .18s ease,
-        background .18s ease, box-shadow .18s ease;
+      transition: transform .18s, border-color .18s, background .18s;
     }
 
     .button:hover {
@@ -119,15 +103,13 @@
       background: #17232d;
     }
 
-    .button:active { transform: scale(.98); }
-
-    .button-primary {
+    .primary {
       border-color: #70d6b15c;
       color: #c9f5e4;
       background: #70d6b117;
     }
 
-    .button-danger {
+    .danger {
       border-color: #8a465177;
       color: #ffc1c8;
     }
@@ -136,7 +118,7 @@
 
     .contact-menu {
       position: absolute;
-      top: calc(100% + 9px);
+      top: calc(100% + 8px);
       right: 0;
       z-index: 20;
       width: 210px;
@@ -145,10 +127,7 @@
       border-radius: 12px;
       background: #111925;
       box-shadow: 0 16px 45px #0008;
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      transform-origin: top right;
-      transition: opacity .16s ease, transform .16s ease;
+      transition: opacity .16s, transform .16s;
     }
 
     .contact-menu.hidden {
@@ -160,17 +139,13 @@
 
     .contact-menu a {
       display: block;
-      padding: 10px 11px;
+      padding: 10px;
       border-radius: 8px;
       color: var(--text);
       text-decoration: none;
-      transition: background .16s, color .16s;
     }
 
-    .contact-menu a:hover {
-      color: #c9f5e4;
-      background: #70d6b114;
-    }
+    .contact-menu a:hover { background: #70d6b114; }
 
     main {
       width: min(1500px, 100%);
@@ -199,14 +174,9 @@
       margin: 0;
       font-size: clamp(25px, 4vw, 38px);
       line-height: 1.15;
-      letter-spacing: -.035em;
     }
 
-    .subheading {
-      max-width: 680px;
-      margin: 10px 0 0;
-      color: var(--muted);
-    }
+    .subheading, .muted { color: var(--muted); }
 
     .graph-meta {
       color: var(--muted);
@@ -216,42 +186,21 @@
 
     .graph-shell {
       position: relative;
-      min-height: 440px;
+      min-height: 420px;
       height: min(66vh, 760px);
       overflow: auto;
       border: 1px solid #263244;
       border-radius: 16px;
-      background:
-        radial-gradient(circle at 50% 45%, #15212a 0, #0c121b 50%, #0a0f17 100%);
-      box-shadow: 0 22px 75px #0003, inset 0 1px #ffffff08;
-      scrollbar-color: #344354 #0c121b;
+      background: radial-gradient(circle at 50% 45%, #15212a, #0a0f17 75%);
     }
 
-    .graph-shell::before {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      content: "";
-      opacity: .25;
-      background-image: radial-gradient(#8090a022 .8px, transparent .8px);
-      background-size: 20px 20px;
-    }
-
-    svg.graph-svg {
-      position: relative;
-      z-index: 1;
-      display: block;
-      min-width: 100%;
-      overflow: visible;
-    }
+    svg { position: relative; display: block; min-width: 100%; }
 
     .edge {
       fill: none;
       stroke: var(--line);
       stroke-width: 1.7;
-      stroke-opacity: .82;
-      animation: line-appear .55s ease both;
+      animation: fade .4s ease both;
     }
 
     .node {
@@ -259,7 +208,7 @@
       opacity: 0;
       transform-box: fill-box;
       transform-origin: center;
-      animation: node-appear .42s cubic-bezier(.2,.75,.25,1) forwards;
+      animation: appear .35s ease forwards;
     }
 
     .node rect {
@@ -269,11 +218,7 @@
       transition: fill .2s, stroke .2s, filter .2s;
     }
 
-    .node.root rect {
-      fill: #15332f;
-      stroke: #54c69d;
-    }
-
+    .node.root rect { fill: #15332f; stroke: #54c69d; }
     .node:hover rect, .node.selected rect {
       fill: #1a2b35;
       stroke: #78dfb7;
@@ -288,17 +233,11 @@
     }
 
     .node .dot { fill: var(--accent); }
+    .node .indicator { fill: #9aabbf; font-size: 12px; }
 
-    .node .expand-indicator {
-      fill: #9aabbf;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .empty-state {
+    .empty {
       position: absolute;
       inset: 0;
-      z-index: 2;
       display: grid;
       place-items: center;
       padding: 24px;
@@ -306,7 +245,7 @@
       text-align: center;
     }
 
-    .content-grid {
+    .grid {
       display: grid;
       grid-template-columns: minmax(250px, .8fr) minmax(300px, 1.2fr);
       gap: 14px;
@@ -319,17 +258,9 @@
       border: 1px solid var(--border);
       border-radius: 14px;
       background: linear-gradient(145deg, #121a26, #0f1620);
-      box-shadow: 0 10px 32px #0002;
-      animation: card-appear .35s ease both;
     }
 
-    .card h2 {
-      margin: 0 0 10px;
-      font-size: 15px;
-      letter-spacing: -.01em;
-    }
-
-    .muted { color: var(--muted); }
+    .card h2 { margin: 0 0 10px; font-size: 15px; }
 
     .details {
       min-height: 55px;
@@ -339,12 +270,7 @@
     }
 
     .form-grid { display: grid; gap: 9px; }
-
-    textarea {
-      width: 100%;
-      min-height: 100px;
-      resize: vertical;
-    }
+    textarea { width: 100%; min-height: 100px; resize: vertical; }
 
     .button-row {
       display: flex;
@@ -364,16 +290,14 @@
     .hidden { display: none !important; }
 
     .notice {
-      margin: 10px 0;
-      padding: 11px 12px;
+      padding: 10px 12px;
       border: 1px solid #705d2c;
       border-radius: 9px;
       color: #f3dda2;
-      background: #382f191c;
       font-size: 13px;
     }
 
-    .modal-backdrop {
+    .backdrop {
       position: fixed;
       inset: 0;
       z-index: 30;
@@ -382,7 +306,6 @@
       padding: 16px;
       background: #0009;
       backdrop-filter: blur(4px);
-      animation: fade-in .18s ease both;
     }
 
     .modal {
@@ -391,11 +314,7 @@
       border: 1px solid var(--border);
       border-radius: 15px;
       background: #111925;
-      box-shadow: 0 24px 80px #0009;
-      animation: modal-in .22s cubic-bezier(.2,.75,.25,1) both;
     }
-
-    .modal h2 { margin-top: 0; }
 
     .splash {
       position: fixed;
@@ -405,61 +324,34 @@
       align-content: center;
       justify-items: center;
       gap: 15px;
-      background:
-        radial-gradient(ellipse at center, #321016 0, #100b10 48%, #08090d 100%);
-      opacity: 1;
-      visibility: visible;
-      transition: opacity .7s ease, visibility .7s ease;
+      background: radial-gradient(ellipse at center, #321016, #08090d 72%);
+      transition: opacity .7s, visibility .7s;
     }
 
-    .splash.finished {
+    .splash.done {
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
     }
 
-    .splash-art {
-      display: grid;
-      justify-items: center;
-      gap: 10px;
-    }
-
-    .ascii-title {
+    .ascii {
       width: max-content;
       max-width: 94vw;
       overflow: hidden;
       margin: 0;
       color: transparent;
-      background: linear-gradient(
-        90deg,
-        #591010 0%,
-        #ff2525 20%,
-        #fff0f0 48%,
-        #ff2525 70%,
-        #591010 100%
-      );
+      background: linear-gradient(90deg, #591010, #ff2525, #fff0f0, #ff2525, #591010);
       background-size: 250% 100%;
-      background-position: 0% 50%;
       background-clip: text;
       -webkit-background-clip: text;
-      font: 800 clamp(7px, 1.55vw, 18px)/1.12 "Courier New", monospace;
+      font: 800 clamp(6px, 1.5vw, 16px)/1.12 "Courier New", monospace;
       white-space: pre;
       text-shadow: 0 0 14px #ff171766;
-      animation: ascii-flow 5s linear forwards;
+      animation: flow 5s linear forwards;
     }
 
-    .stickman {
-      width: clamp(120px, 22vw, 190px);
-      height: auto;
-      overflow: visible;
-    }
-
-    .wall {
-      fill: none;
-      stroke: #545b67;
-      stroke-width: 3;
-    }
-
+    .stickman { width: clamp(120px, 22vw, 190px); }
+    .wall { fill: none; stroke: #545b67; stroke-width: 3; }
     .person {
       fill: none;
       stroke: #aab0ba;
@@ -467,113 +359,56 @@
       stroke-linecap: round;
       stroke-linejoin: round;
     }
-
     .face {
       fill: none;
       stroke: #aab0ba;
       stroke-width: 2;
       stroke-linecap: round;
     }
-
     .cigarette {
       stroke: #dedede;
       stroke-width: 3;
       stroke-linecap: round;
     }
-
     .smoke {
       fill: none;
       stroke: #89919b;
       stroke-width: 2;
-      stroke-linecap: round;
-      opacity: .7;
-      animation: smoke-rise 2.3s ease-in-out infinite;
+      animation: smoke 2.3s ease-in-out infinite;
     }
-
-    .smoke-two { animation-delay: .8s; }
-
-    .splash-caption {
+    .smoke.two { animation-delay: .8s; }
+    .caption {
       color: #ff9b9b;
       font-size: 12px;
       letter-spacing: .32em;
-      animation: caption-blink .8s steps(2, start) infinite;
     }
 
-    @keyframes line-appear {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes node-appear {
-      from { opacity: 0; scale: .94; translate: 0 5px; }
-      to { opacity: 1; scale: 1; translate: 0 0; }
-    }
-
-    @keyframes card-appear {
-      from { opacity: 0; translate: 0 7px; }
-      to { opacity: 1; translate: 0 0; }
-    }
-
-    @keyframes fade-in {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes modal-in {
-      from { opacity: 0; transform: translateY(8px) scale(.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    @keyframes ascii-flow {
-      from { background-position: 0% 50%; }
+    @keyframes flow {
+      from { background-position: 0 50%; }
       to { background-position: 100% 50%; }
     }
-
-    @keyframes smoke-rise {
+    @keyframes smoke {
       0% { opacity: 0; transform: translate(0, 5px); }
       35% { opacity: .7; }
       100% { opacity: 0; transform: translate(5px, -18px); }
     }
-
-    @keyframes caption-blink {
-      to { opacity: .35; }
+    @keyframes appear {
+      from { opacity: 0; scale: .95; translate: 0 5px; }
+      to { opacity: 1; scale: 1; translate: 0 0; }
     }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
     @media (max-width: 760px) {
-      .topbar {
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .top-actions {
-        width: 100%;
-        flex-wrap: wrap;
-      }
-
-      .search, .search:focus { width: 100%; }
-
-      .contact-wrap { margin-left: auto; }
-
-      .heading-row {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .content-grid { grid-template-columns: 1fr; }
-
-      .graph-shell {
-        height: 58vh;
-        min-height: 340px;
-      }
-
-      .ascii-title {
-        font-size: clamp(5px, 1.55vw, 12px);
-      }
+      .topbar, .top-actions { flex-wrap: wrap; }
+      .top-actions { width: 100%; }
+      .search { width: 100%; }
+      .heading-row { align-items: flex-start; flex-direction: column; }
+      .grid { grid-template-columns: 1fr; }
+      .graph-shell { height: 58vh; min-height: 340px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
-        scroll-behavior: auto !important;
         animation-duration: .01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: .01ms !important;
@@ -584,8 +419,8 @@
 
 <body>
   <div id="splash" class="splash" aria-label="Загрузка сайта">
-    <div class="splash-art">
-      <pre class="ascii-title" aria-label="EMODE1K">
+    <div>
+      <pre class="ascii" aria-label="EMODE1K">
  _____ __  __  ___  ____  _____ _  __
 | ____|  \/  |/ _ \|  _ \| ____| |/ /
 |  _| | |\/| | | | | | | |  _| | ' /
@@ -594,7 +429,7 @@
       </pre>
 
       <svg class="stickman" viewBox="0 0 190 230" role="img"
-           aria-label="Грустный стикман курит, прислонившись к стене">
+           aria-label="Стикман прислонился к стене">
         <path class="wall" d="M145 14V215"></path>
         <circle class="person" cx="105" cy="70" r="17"></circle>
         <path class="person" d="M101 88L91 139L117 145"></path>
@@ -604,49 +439,29 @@
         <path class="person" d="M117 145L128 179L145 179"></path>
         <path class="cigarette" d="M55 117L45 113"></path>
         <path class="smoke" d="M42 109C31 101 44 96 35 89"></path>
-        <path class="smoke smoke-two" d="M48 106C58 99 46 94 54 87"></path>
+        <path class="smoke two" d="M48 106C58 99 46 94 54 87"></path>
         <path class="face" d="M99 67L104 67M111 67L116 67M103 78Q108 74 113 78"></path>
       </svg>
     </div>
-
-    <div class="splash-caption">ЗАГРУЗКА ПРОЕКТА</div>
+    <div class="caption">ЗАГРУЗКА ПРОЕКТА</div>
   </div>
 
   <header class="topbar">
-    <a class="brand" href="#" aria-label="emode1k — главная">
-      <span class="brand-mark">e</span>emode1k
-    </a>
-
+    <a class="brand" href="#"><span class="brand-mark">e</span>emode1k</a>
     <div class="top-actions">
-      <input id="search" class="search" type="search"
-             placeholder="Поиск по дереву…" aria-label="Поиск по дереву">
-
+      <input id="search" class="search" type="search" placeholder="Поиск по дереву…">
       <div class="contact-wrap">
-        <button id="contactButton" class="button" type="button"
-                aria-expanded="false" aria-controls="contactMenu">
+        <button id="contactButton" class="button" type="button" aria-expanded="false">
           Связь с автором
         </button>
-
-        <nav id="contactMenu" class="contact-menu hidden" aria-label="Профили автора">
-          <a href="https://discord.gg/CWDxSzTxn" target="_blank" rel="noopener noreferrer">
-            Discord — emode1k
-          </a>
-          <a href="https://t.me/emode1k" target="_blank" rel="noopener noreferrer">
-            Telegram — emode1k
-          </a>
-          <a href="https://github.com/emode1k" target="_blank" rel="noopener noreferrer">
-            GitHub — emode1k
-          </a>
+        <nav id="contactMenu" class="contact-menu hidden">
+          <a href="https://discord.gg/CWDxSzTxn" target="_blank" rel="noopener noreferrer">Discord — emode1k</a>
+          <a href="https://t.me/emode1k" target="_blank" rel="noopener noreferrer">Telegram — emode1k</a>
+          <a href="https://github.com/emode1k" target="_blank" rel="noopener noreferrer">GitHub — emode1k</a>
         </nav>
       </div>
-
-      <button id="adminButton" class="button button-primary" type="button">
-        Админ-панель
-      </button>
-
-      <button id="logoutButton" class="button hidden" type="button">
-        Выйти
-      </button>
+      <button id="loginButton" class="button primary" type="button">Войти</button>
+      <button id="logoutButton" class="button hidden" type="button">Выйти</button>
     </div>
   </header>
 
@@ -655,236 +470,120 @@
       <div>
         <p class="eyebrow">Личный проект · интерактивная карта</p>
         <h1>Дерево проекта</h1>
-        <p class="subheading">
-          Нажимай на узлы с дочерними ветками, чтобы раскрывать и сворачивать дерево.
-        </p>
+        <p class="subheading">Нажимай на узлы с дочерними ветками, чтобы раскрывать дерево.</p>
       </div>
       <div id="graphMeta" class="graph-meta"></div>
     </div>
 
     <div id="graph" class="graph-shell" aria-label="Граф проекта"></div>
 
-    <div class="content-grid">
+    <div class="grid">
       <section class="card">
         <h2 id="detailsTitle">Информация об узле</h2>
-        <div id="details" class="details">Выбери узел на графе.</div>
-
-        <div id="adminNodeActions" class="button-row hidden">
-          <button id="editNodeButton" class="button" type="button">Изменить</button>
-          <button id="deleteNodeButton" class="button button-danger" type="button">
-            Удалить ветку
-          </button>
+        <div id="details" class="details">Загрузка дерева…</div>
+        <div id="nodeActions" class="button-row hidden">
+          <button id="editButton" class="button" type="button">Изменить</button>
+          <button id="deleteButton" class="button danger" type="button">Удалить ветку</button>
         </div>
       </section>
 
       <section id="adminPanel" class="card hidden">
         <h2 id="formTitle">Добавить узел</h2>
-        <p class="muted">Новый узел станет дочерним для выбранного узла.</p>
-
+        <p class="muted">Новый узел добавится внутрь выбранного узла.</p>
         <form id="nodeForm" class="form-grid">
           <input id="nodeLabel" maxlength="80" required placeholder="Название">
           <textarea id="nodeInfo" maxlength="2000" placeholder="Описание"></textarea>
-
           <div class="button-row">
-            <button id="saveNodeButton" class="button button-primary" type="submit">
-              Добавить
-            </button>
-            <button id="cancelEditButton" class="button hidden" type="button">
-              Отмена
-            </button>
+            <button id="saveButton" class="button primary" type="submit">Добавить</button>
+            <button id="cancelButton" class="button hidden" type="button">Отмена</button>
           </div>
         </form>
-
-        <p id="adminStatus" class="status" role="status"></p>
+        <p id="status" class="status" role="status"></p>
       </section>
     </div>
   </main>
 
-  <div id="loginDialog" class="modal-backdrop hidden"
-       role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+  <div id="loginDialog" class="backdrop hidden" role="dialog" aria-modal="true">
     <div class="modal">
-      <h2 id="loginTitle">Вход в админ-панель</h2>
-      <p class="notice">
-        Демоверсия: пароль находится в коде страницы и не защищает сайт от посетителей.
-      </p>
-
-      <form id="loginForm">
-        <input id="passwordInput" type="password" autocomplete="current-password"
-               placeholder="Пароль" required>
-
+      <h2>Вход администратора</h2>
+      <p class="notice">Введи почту и пароль пользователя, созданного в Supabase Authentication.</p>
+      <form id="loginForm" class="form-grid">
+        <input id="emailInput" type="email" autocomplete="username" placeholder="Почта" required>
+        <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Пароль" required>
         <div class="button-row">
-          <button class="button button-primary" type="submit">Войти</button>
-          <button id="closeLoginButton" class="button" type="button">Отмена</button>
+          <button class="button primary" type="submit">Войти</button>
+          <button id="closeLogin" class="button" type="button">Отмена</button>
         </div>
-
         <p id="loginStatus" class="status error" role="status"></p>
       </form>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const ADMIN_PASSWORD = "251063dsA";
-    const STORAGE_KEY = "emode1k-tree-v5";
+    const SUPABASE_URL = "https://ajydliryxxhqetfwefya.supabase.co";
+    const SUPABASE_PUBLIC_KEY = "sb_publishable_itE-NyvxMgqHsbqn3Dp4sQ_2uZPoiUZ";
 
-    const defaultData = [
-      {
-        id: "emode1k",
-        parent: null,
-        label: "emode1k",
-        info: "Главный узел проекта."
-      },
-      {
-        id: "about",
-        parent: "emode1k",
-        label: "О проекте",
-        info: "Описание проекта и его идея."
-      },
-      {
-        id: "goals",
-        parent: "emode1k",
-        label: "Цели",
-        info: "Основные цели и задачи проекта."
-      },
-      {
-        id: "projects",
-        parent: "emode1k",
-        label: "Проекты",
-        info: "Отдельные проекты и направления."
-      },
-      {
-        id: "links",
-        parent: "emode1k",
-        label: "Ссылки",
-        info: "Публичные ресурсы проекта."
-      },
-      {
-        id: "project-one",
-        parent: "projects",
-        label: "Первый проект",
-        info: "Пример узла третьего уровня. Нажми на «Проекты», чтобы раскрыть его."
-      },
-      {
-        id: "project-one-details",
-        parent: "project-one",
-        label: "Подробности",
-        info: "Пример узла четвёртого уровня. Нажми на «Первый проект», чтобы открыть его."
-      }
-    ];
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLIC_KEY
+    );
 
-    const $ = id => document.getElementById(id);
-    const copy = value => JSON.parse(JSON.stringify(value));
-
-    function validTree(items) {
-      if (!Array.isArray(items) || items.length === 0) return false;
-
-      const ids = new Set(items.map(item => item && item.id));
-      if (ids.size !== items.length || !ids.has("emode1k")) return false;
-
-      if (items.some(item =>
-        !item ||
-        typeof item.id !== "string" ||
-        typeof item.label !== "string" ||
-        (item.parent !== null && typeof item.parent !== "string")
-      )) return false;
-
-      const root = items.find(item => item.id === "emode1k");
-      if (root.parent !== null) return false;
-
-      if (items.some(item => item.id !== "emode1k" && !ids.has(item.parent))) {
-        return false;
-      }
-
-      for (const item of items) {
-        const visited = new Set();
-        let current = item;
-
-        while (current && current.parent !== null) {
-          if (visited.has(current.id)) return false;
-          visited.add(current.id);
-          current = items.find(candidate => candidate.id === current.parent);
-        }
-
-        if (!current) return false;
-      }
-
-      return true;
-    }
-
-    function loadTree() {
-      try {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-        return validTree(saved) ? saved : copy(defaultData);
-      } catch {
-        return copy(defaultData);
-      }
-    }
-
-    let data = loadTree();
+    let data = [];
     let selectedId = "emode1k";
-    let isAdmin = false;
     let editingId = null;
     let query = "";
+    let isAdmin = false;
     const expandedNodes = new Set();
 
-    function saveTree() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    }
+    const $ = id => document.getElementById(id);
 
     function escapeHtml(value) {
       return String(value).replace(/[&<>"']/g, char => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
       })[char]);
     }
 
     function childrenOf(id) {
-      return data.filter(node => node.parent === id);
+      return data.filter(node => node.parent_id === id);
     }
 
-    function descendantIds(id) {
-      const result = new Set([id]);
+    function descendantsOf(id) {
+      const ids = new Set([id]);
 
       function walk(parentId) {
         childrenOf(parentId).forEach(child => {
-          if (!result.has(child.id)) {
-            result.add(child.id);
+          if (!ids.has(child.id)) {
+            ids.add(child.id);
             walk(child.id);
           }
         });
       }
 
       walk(id);
-      return result;
+      return ids;
     }
 
-    function nodeDepth(node, byId) {
+    function depthOf(node, byId) {
       let depth = 0;
       let current = node;
       const visited = new Set();
 
-      while (current.parent && byId.has(current.parent) && !visited.has(current.id)) {
+      while (current.parent_id && byId.has(current.parent_id) && !visited.has(current.id)) {
         visited.add(current.id);
         depth++;
-        current = byId.get(current.parent);
+        current = byId.get(current.parent_id);
       }
 
       return depth;
     }
 
-    function isVisibleByExpansion(node, byId) {
+    function isVisible(node, byId) {
       let current = node;
 
-      while (current.parent && byId.has(current.parent)) {
-        const parent = byId.get(current.parent);
-        const parentDepth = nodeDepth(parent, byId);
-
-        if (parentDepth >= 2 && !expandedNodes.has(parent.id)) {
-          return false;
-        }
-
+      while (current.parent_id && byId.has(current.parent_id)) {
+        const parent = byId.get(current.parent_id);
+        if (depthOf(parent, byId) >= 2 && !expandedNodes.has(parent.id)) return false;
         current = parent;
       }
 
@@ -892,24 +591,20 @@
     }
 
     function getVisibleNodes(byId) {
-      const normallyVisible = data.filter(node => isVisibleByExpansion(node, byId));
-
-      if (!query) return normallyVisible;
+      if (!query) return data.filter(node => isVisible(node, byId));
 
       const result = new Map();
 
       data.forEach(node => {
-        const matches = `${node.label} ${node.info || ""}`
-          .toLowerCase()
-          .includes(query.toLowerCase());
-
-        if (!matches) return;
+        if (!(node.label + " " + (node.info || "")).toLowerCase().includes(query.toLowerCase())) {
+          return;
+        }
 
         result.set(node.id, node);
-
         let current = node;
-        while (current.parent && byId.has(current.parent)) {
-          current = byId.get(current.parent);
+
+        while (current.parent_id && byId.has(current.parent_id)) {
+          current = byId.get(current.parent_id);
           result.set(current.id, current);
         }
       });
@@ -924,27 +619,24 @@
 
       $("graphMeta").textContent = `${visible.length} / ${data.length} узлов`;
 
-      if (visible.length === 0) {
-        host.innerHTML = '<div class="empty-state">По запросу ничего не найдено.</div>';
+      if (!visible.length) {
+        host.innerHTML = '<div class="empty">Дерево пустое или ничего не найдено.</div>';
         return;
       }
 
       const levels = [];
-
       visible.forEach(node => {
-        const depth = nodeDepth(node, byId);
-        if (!levels[depth]) levels[depth] = [];
-        levels[depth].push(node);
+        const depth = depthOf(node, byId);
+        (levels[depth] ||= []).push(node);
       });
 
-      const maxWidth = Math.max(...levels.map(level => (level || []).length));
-      const width = Math.max(850, maxWidth * 245);
+      const widest = Math.max(...levels.map(level => (level || []).length));
+      const width = Math.max(850, widest * 245);
       const height = Math.max(420, levels.length * 148 + 55);
       const positions = new Map();
 
       levels.forEach((level, depth) => {
         if (!level) return;
-
         const gap = width / (level.length + 1);
 
         level.forEach((node, index) => {
@@ -956,64 +648,47 @@
       });
 
       let edges = "";
-
       visible.forEach(node => {
         const child = positions.get(node.id);
-        const parent = positions.get(node.parent);
-
+        const parent = positions.get(node.parent_id);
         if (!child || !parent) return;
 
-        const startX = parent.x + 92;
-        const startY = parent.y + 58;
-        const endX = child.x + 92;
-        const endY = child.y;
-        const middleY = startY + (endY - startY) * .52;
+        const x1 = parent.x + 92;
+        const y1 = parent.y + 58;
+        const x2 = child.x + 92;
+        const y2 = child.y;
+        const curveY = y1 + (y2 - y1) * .52;
 
-        const path = `M ${startX} ${startY}
-          C ${startX} ${middleY}, ${endX} ${middleY}, ${endX} ${endY}`;
-
-        edges += `<path class="edge" d="${path}"></path>`;
+        edges += `<path class="edge" d="M ${x1} ${y1} C ${x1} ${curveY}, ${x2} ${curveY}, ${x2} ${y2}"></path>`;
       });
 
       let nodes = "";
-
       visible.forEach((node, index) => {
         const point = positions.get(node.id);
-        const label = node.label.length > 24
-          ? node.label.slice(0, 23) + "…"
-          : node.label;
+        const depth = depthOf(node, byId);
         const hasChildren = childrenOf(node.id).length > 0;
-        const depth = nodeDepth(node, byId);
         const canExpand = depth >= 2 && hasChildren;
-        const expanded = expandedNodes.has(node.id);
-        const indicator = canExpand ? expanded ? "−" : "+" : "";
-        const delay = Math.min(index * 35, 350);
+        const indicator = canExpand ? expandedNodes.has(node.id) ? "−" : "+" : "";
+        const label = node.label.length > 24 ? node.label.slice(0, 23) + "…" : node.label;
 
         nodes += `
           <g class="node ${node.id === "emode1k" ? "root" : ""} ${selectedId === node.id ? "selected" : ""}"
              data-id="${escapeHtml(node.id)}"
              transform="translate(${point.x},${point.y})"
-             tabindex="0"
-             role="button"
+             tabindex="0" role="button"
              aria-label="${escapeHtml(node.label)}"
-             style="animation-delay:${delay}ms">
+             style="animation-delay:${Math.min(index * 30, 300)}ms">
             <rect width="184" height="58" rx="12"></rect>
             <circle class="dot" cx="16" cy="29" r="3"></circle>
             <text x="96" y="34" text-anchor="middle">${escapeHtml(label)}</text>
-            <text class="expand-indicator" x="169" y="19" text-anchor="middle">${indicator}</text>
+            <text class="indicator" x="169" y="19" text-anchor="middle">${indicator}</text>
           </g>`;
       });
 
-      host.innerHTML = `
-        <svg class="graph-svg" width="${width}" height="${height}"
-             viewBox="0 0 ${width} ${height}" aria-label="Дерево проекта">
-          ${edges}
-          ${nodes}
-        </svg>`;
+      host.innerHTML = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${edges}${nodes}</svg>`;
 
       host.querySelectorAll(".node").forEach(element => {
-        const activate = () => handleNodeClick(element.dataset.id);
-
+        const activate = () => selectOrExpand(element.dataset.id);
         element.addEventListener("click", activate);
         element.addEventListener("keydown", event => {
           if (event.key === "Enter" || event.key === " ") {
@@ -1024,218 +699,42 @@
       });
     }
 
-    function handleNodeClick(id) {
+    function selectOrExpand(id) {
       const node = data.find(item => item.id === id);
       if (!node) return;
 
       const byId = new Map(data.map(item => [item.id, item]));
-      const depth = nodeDepth(node, byId);
-      const hasChildren = childrenOf(node.id).length > 0;
-
-      if (depth >= 2 && hasChildren) {
+      if (depthOf(node, byId) >= 2 && childrenOf(node.id).length) {
         if (expandedNodes.has(node.id)) {
           expandedNodes.delete(node.id);
-          descendantIds(node.id).forEach(childId => expandedNodes.delete(childId));
+          descendantsOf(node.id).forEach(childId => expandedNodes.delete(childId));
         } else {
           expandedNodes.add(node.id);
         }
       }
 
-      selectNode(id);
-    }
-
-    function selectNode(id) {
-      const node = data.find(item => item.id === id);
-      if (!node) return;
-
       selectedId = id;
       $("detailsTitle").textContent = node.label;
       $("details").textContent = node.info || "Описание не добавлено.";
-      $("adminNodeActions").classList.toggle(
-        "hidden",
-        !isAdmin || id === "emode1k"
-      );
-
+      updateAdminControls();
       draw();
     }
 
-    function setAdmin(enabled) {
-      isAdmin = enabled;
-      $("adminPanel").classList.toggle("hidden", !enabled);
-      $("adminButton").classList.toggle("hidden", enabled);
-      $("logoutButton").classList.toggle("hidden", !enabled);
-      $("adminNodeActions").classList.toggle(
-        "hidden",
-        !enabled || selectedId === "emode1k"
-      );
-
-      $("adminStatus").textContent = enabled
-        ? "Режим редактирования включён. Данные хранятся в этом браузере."
-        : "";
-
-      draw();
+    function updateAdminControls() {
+      $("loginButton").classList.toggle("hidden", isAdmin);
+      $("logoutButton").classList.toggle("hidden", !isAdmin);
+      $("adminPanel").classList.toggle("hidden", !isAdmin);
+      $("nodeActions").classList.toggle("hidden", !isAdmin || selectedId === "emode1k");
     }
 
-    function resetForm() {
-      editingId = null;
-      $("nodeForm").reset();
-      $("formTitle").textContent = "Добавить узел";
-      $("saveNodeButton").textContent = "Добавить";
-      $("cancelEditButton").classList.add("hidden");
-    }
+    async function loadTree() {
+      $("details").textContent = "Загрузка дерева…";
 
-    $("contactButton").addEventListener("click", event => {
-      event.stopPropagation();
+      const { data: rows, error } = await supabaseClient
+        .from("nodes")
+        .select("id,parent_id,label,info");
 
-      const menu = $("contactMenu");
-      const shouldOpen = menu.classList.contains("hidden");
-
-      menu.classList.toggle("hidden", !shouldOpen);
-      $("contactButton").setAttribute("aria-expanded", String(shouldOpen));
-    });
-
-    document.addEventListener("click", event => {
-      if (!event.target.closest(".contact-wrap")) {
-        $("contactMenu").classList.add("hidden");
-        $("contactButton").setAttribute("aria-expanded", "false");
-      }
-    });
-
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape") {
-        $("contactMenu").classList.add("hidden");
-        $("contactButton").setAttribute("aria-expanded", "false");
-        $("loginDialog").classList.add("hidden");
-      }
-    });
-
-    $("search").addEventListener("input", event => {
-      query = event.target.value.trim();
-      draw();
-    });
-
-    $("adminButton").addEventListener("click", () => {
-      $("loginDialog").classList.remove("hidden");
-      $("passwordInput").focus();
-    });
-
-    $("closeLoginButton").addEventListener("click", () => {
-      $("loginDialog").classList.add("hidden");
-      $("loginForm").reset();
-      $("loginStatus").textContent = "";
-    });
-
-    $("loginForm").addEventListener("submit", event => {
-      event.preventDefault();
-
-      if ($("passwordInput").value === ADMIN_PASSWORD) {
-        $("loginDialog").classList.add("hidden");
-        $("loginForm").reset();
-        $("loginStatus").textContent = "";
-        setAdmin(true);
-      } else {
-        $("loginStatus").textContent = "Неверный пароль.";
-      }
-    });
-
-    $("logoutButton").addEventListener("click", () => {
-      setAdmin(false);
-      resetForm();
-    });
-
-    $("nodeForm").addEventListener("submit", event => {
-      event.preventDefault();
-      if (!isAdmin) return;
-
-      const label = $("nodeLabel").value.trim();
-      const info = $("nodeInfo").value.trim();
-
-      if (!label) {
-        $("adminStatus").textContent = "Укажи название узла.";
+      if (error) {
+        $("details").textContent = "Не удалось загрузить дерево: " + error.message;
         return;
-      }
-
-      if (editingId) {
-        const node = data.find(item => item.id === editingId);
-        if (!node) return;
-
-        node.label = label;
-        node.info = info;
-        saveTree();
-        resetForm();
-        $("adminStatus").textContent = "Изменения сохранены.";
-        selectNode(node.id);
-        return;
-      }
-
-      const parentId = data.some(item => item.id === selectedId)
-        ? selectedId
-        : "emode1k";
-
-      const newNode = {
-        id: "node-" + (
-          window.crypto && window.crypto.randomUUID
-            ? window.crypto.randomUUID()
-            : Date.now() + "-" + Math.random().toString(16).slice(2)
-        ),
-        parent: parentId,
-        label,
-        info
-      };
-
-      data.push(newNode);
-      saveTree();
-      $("nodeForm").reset();
-      $("adminStatus").textContent = "Узел добавлен.";
-      selectNode(newNode.id);
-    });
-
-    $("editNodeButton").addEventListener("click", () => {
-      if (!isAdmin || !selectedId || selectedId === "emode1k") return;
-
-      const node = data.find(item => item.id === selectedId);
-      if (!node) return;
-
-      editingId = node.id;
-      $("nodeLabel").value = node.label;
-      $("nodeInfo").value = node.info || "";
-      $("formTitle").textContent = "Редактировать узел";
-      $("saveNodeButton").textContent = "Сохранить";
-      $("cancelEditButton").classList.remove("hidden");
-      $("nodeLabel").focus();
-    });
-
-    $("cancelEditButton").addEventListener("click", resetForm);
-
-    $("deleteNodeButton").addEventListener("click", () => {
-      if (!isAdmin || !selectedId || selectedId === "emode1k") return;
-
-      const node = data.find(item => item.id === selectedId);
-      if (!node) return;
-
-      const idsToDelete = descendantIds(node.id);
-      const confirmed = confirm(
-        `Удалить «${node.label}» и все вложенные узлы: ${idsToDelete.size}?`
-      );
-
-      if (!confirmed) return;
-
-      data = data.filter(item => !idsToDelete.has(item.id));
-      idsToDelete.forEach(id => expandedNodes.delete(id));
-      saveTree();
-      resetForm();
-      $("adminStatus").textContent = "Ветка удалена.";
-      selectNode("emode1k");
-    });
-
-    // Анимация надписи длится 5 секунд.
-    // Заставка начинает исчезать через 4,3 секунды и скрывается за 0,7 секунды.
-    window.setTimeout(() => {
-      $("splash").classList.add("finished");
-    }, 4300);
-
-    draw();
-    selectNode("emode1k");
-  </script>
-</body>
-</html>
+     
