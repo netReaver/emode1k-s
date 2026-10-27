@@ -6,90 +6,517 @@
   <meta name="theme-color" content="#080709">
   <meta name="description" content="Интерактивное дерево проекта emode1k">
   <title>emode1k — дерево проекта</title>
+
   <style>
-    :root{color-scheme:dark;--bg:#080709;--panel:#141116;--panel-2:#1c171e;--border:#382b36;--text:#eee8ed;--muted:#a69ba6;--accent:#ff2638;--accent-glow:#ff263855;--danger:#ff8290;--line:#66525f}
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;color:var(--text);background:radial-gradient(ellipse at 50% 4%,#281118 0,transparent 48%),var(--bg);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    button,input,textarea{font:inherit}button{color:inherit}
-    .topbar{position:sticky;top:0;z-index:20;min-height:68px;padding:12px clamp(14px,3vw,34px);display:flex;align-items:center;gap:18px;border-bottom:1px solid #ffffff12;background:#080709ed;backdrop-filter:blur(16px)}
-    .brand{color:var(--text);font-weight:800;letter-spacing:.04em;text-decoration:none;white-space:nowrap}
-    .brand-mark{display:inline-grid;width:27px;height:27px;margin-right:8px;place-items:center;border:1px solid #ff263877;border-radius:8px;color:var(--accent);background:#ff263812}
-    .top-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-left:auto}
-    input,textarea,.button{color:var(--text);background:var(--panel-2);border:1px solid var(--border);border-radius:10px}
-    input,textarea{padding:10px 12px}
-    input:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:2px solid #ff263899;outline-offset:2px}
-    .search{width:min(28vw,300px);min-width:150px}
-    .button{min-height:40px;padding:9px 13px;cursor:pointer;transition:transform .18s ease,border-color .18s ease,background .18s ease}
-    .button:hover{transform:translateY(-1px);border-color:#ff263888;background:#292027}
-    .button:active{transform:scale(.98)}.button:disabled{opacity:.55;cursor:wait}
-    .button-primary{border-color:#ff263866;color:#ffc0c6;background:#ff263814}
-    .button-danger{border-color:#8a465177;color:#ffc1c8}
-    .contact-wrap{position:relative}
-    .contact-menu{position:absolute;top:calc(100% + 9px);right:0;z-index:30;width:210px;padding:6px;border:1px solid var(--border);border-radius:12px;background:var(--panel);box-shadow:0 16px 45px #0009;transition:opacity .16s ease,transform .16s ease}
-    .contact-menu.hidden{display:block!important;opacity:0;pointer-events:none;transform:translateY(-6px) scale(.98)}
-    .contact-menu a{display:block;padding:10px 11px;border-radius:8px;color:var(--text);text-decoration:none}
-    .contact-menu a:hover{color:#ffc0c6;background:#ff263812}
-    main{width:min(1500px,100%);margin:0 auto;padding:28px clamp(14px,3vw,34px) 54px}
-    .heading-row{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
-    .eyebrow{margin:0 0 6px;color:#ff5360;font-size:11px;font-weight:750;letter-spacing:.16em;text-transform:uppercase}
-    h1{margin:0;font-size:clamp(25px,4vw,38px);line-height:1.15;letter-spacing:-.035em}
-    .subheading{max-width:720px;margin:10px 0 0;color:var(--muted)}
-    .graph-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .graph-meta{color:var(--muted);font-size:13px;white-space:nowrap}
-    .graph-shell{position:relative;min-height:440px;height:min(66vh,760px);overflow:hidden;border:1px solid #382b36;border-radius:16px;background:radial-gradient(circle at 50% 45%,#21151c 0,#100d12 55%,#0b090c 100%);box-shadow:0 22px 75px #0004,inset 0 1px #ffffff08;cursor:grab;touch-action:none}
-    .graph-shell.dragging{cursor:grabbing}
-    .graph-shell:before{position:absolute;inset:0;z-index:0;pointer-events:none;content:"";opacity:.24;background-image:radial-gradient(#ba9eaa22 .8px,transparent .8px);background-size:22px 22px}
-    svg.graph-svg{position:absolute;inset:0;z-index:1;width:100%;height:100%;overflow:visible;user-select:none}
-    .edge{fill:none;stroke:var(--line);stroke-width:1.8;stroke-opacity:.8}
-    .node{cursor:pointer;opacity:0;transform-box:fill-box;transform-origin:center;animation:node-appear .38s cubic-bezier(.2,.75,.25,1) forwards}
-    .node rect{fill:#19151c;stroke:#4b3e50;stroke-width:1.3;transition:fill .2s,stroke .2s,filter .2s}
-    .node.root rect{fill:#30151b;stroke:#ed3948}
-    .node:hover rect,.node.selected rect{fill:#2a1b22;stroke:#ff5261;filter:drop-shadow(0 0 9px var(--accent-glow))}
-    .node text{fill:var(--text);font-size:13px;font-weight:600;pointer-events:none}
-    .node .dot{fill:#ff4a57}.node .expand-indicator{fill:#f0a1a8;font-size:12px}
-    .empty-state{position:absolute;inset:0;z-index:2;display:grid;place-items:center;padding:24px;color:var(--muted);text-align:center}
-    .content-grid{display:grid;grid-template-columns:minmax(250px,.8fr) minmax(300px,1.2fr);gap:14px;margin-top:14px}
-    .card{min-width:0;padding:18px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(145deg,#171319,#110f14);box-shadow:0 10px 32px #0003}
-    .card h2{margin:0 0 10px;font-size:15px}.muted{color:var(--muted)}
-    .details{min-height:55px;color:#c0b6c1;white-space:pre-wrap;overflow-wrap:anywhere}
-    .form-grid{display:grid;gap:9px}
-    textarea{width:100%;min-height:100px;resize:vertical}
-    .button-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-    .status{min-height:1.4em;margin:9px 0 0;color:#b8d5aa;font-size:13px;overflow-wrap:anywhere}
-    .error{color:#ffabb3}.hidden{display:none!important}
-    .notice{margin:10px 0;padding:11px 12px;border:1px solid #705d2c;border-radius:9px;color:#f3dda2;background:#382f191c;font-size:13px}
-    .modal-backdrop{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:16px;background:#000b;backdrop-filter:blur(5px)}
-    .modal{width:min(100%,420px);padding:20px;border:1px solid var(--border);border-radius:15px;background:#171319;box-shadow:0 24px 80px #0009}
-    .modal h2{margin-top:0}
-    .splash{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;overflow:hidden;background:#030303;transition:opacity .7s ease,visibility .7s ease}
-    .splash.finished{opacity:0;visibility:hidden;pointer-events:none}
-    .splash-content{display:grid;justify-items:center;gap:18px;width:100%;padding:20px}
-    .ascii-title{margin:0;max-width:96vw;overflow:hidden;color:#ff2538;font:800 clamp(7px,1.8vw,19px)/1.12 "Courier New",monospace;white-space:pre;text-shadow:0 0 8px #ff1a2a88,0 0 25px #d0001e66;animation:red-flow 5s ease-in-out forwards}
-    .face-drawing{display:block;width:min(320px,58vw);max-height:45vh;overflow:visible;filter:drop-shadow(0 8px 18px #ff182522)}
-    .face-hair-outline{fill:#171319;stroke:#09080b;stroke-width:8;stroke-linejoin:bevel}
-    .hair-dark{fill:#08080a;stroke:#050506;stroke-width:4;stroke-linejoin:bevel}
-    .hair-highlight{fill:none;stroke:#25212a;stroke-width:3;stroke-linecap:round}
-    .face-shape{fill:#f0e9df;stroke:#050505;stroke-width:5;stroke-linejoin:bevel}
-    .face-shadow{fill:#d9d0c9;opacity:.48}
-    .eye-brow{fill:#050505;stroke:#050505;stroke-width:3;stroke-linejoin:bevel}
-    .eye-white{fill:#f4f0e9;stroke:#080808;stroke-width:4;stroke-linejoin:bevel}
-    .eye-pupil{fill:#080808}.eye-glint{fill:#f5eee7}
-    .nose{fill:none;stroke:#090909;stroke-width:5;stroke-linecap:square;stroke-linejoin:bevel}
-    .mouth{fill:#e6ded4;stroke:#050505;stroke-width:5;stroke-linejoin:bevel}
-    .teeth-line{fill:none;stroke:#151313;stroke-width:2}
-    .jaw-line{fill:none;stroke:#111;stroke-width:4}
-    .neck{fill:#eee6dc;stroke:#080808;stroke-width:4}
-    .shirt{fill:#080808;stroke:#050505;stroke-width:5;stroke-linejoin:bevel}
-    .shirt-detail{fill:none;stroke:#30252b;stroke-width:4;stroke-linejoin:bevel}
-    .shirt-mark{fill:#e9e3dc;stroke:#111;stroke-width:3}
-    .splash-caption{color:#b81f30;font-size:11px;letter-spacing:.35em;animation:caption-pulse 1.4s ease-in-out infinite alternate}
-    @keyframes node-appear{from{opacity:0;scale:.96;translate:0 5px}to{opacity:1;scale:1;translate:0 0}}
-    @keyframes red-flow{0%{color:#9e0718;text-shadow:0 0 4px #8f061566;transform:translateX(-24px)}50%{color:#ff2638;text-shadow:0 0 10px #ff2638aa,0 0 32px #c9002077;transform:translateX(0)}100%{color:#e51c30;text-shadow:0 0 8px #e51c3088,0 0 24px #c9002066;transform:translateX(24px)}}
-    @keyframes caption-pulse{from{opacity:.45}to{opacity:1}}
-    @media(max-width:760px){.topbar{flex-wrap:wrap;gap:10px}.top-actions{width:100%;flex-wrap:wrap}.search{width:100%}.contact-wrap{margin-left:auto}.heading-row{align-items:flex-start;flex-direction:column}.graph-tools{justify-content:flex-start}.content-grid{grid-template-columns:1fr}.graph-shell{height:58vh;min-height:340px}.ascii-title{font-size:clamp(5px,1.55vw,12px)}}
-    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+    :root {
+      color-scheme: dark;
+      --bg: #080709;
+      --panel: #141116;
+      --panel-2: #1c171e;
+      --border: #523542;
+      --text: #eee8ed;
+      --muted: #a69ba6;
+      --accent: #ff2638;
+      --accent-soft: #ff263855;
+      --danger: #ff8290;
+      --line: #75515e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 50% 4%, #281118 0, transparent 48%),
+        var(--bg);
+      font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input, textarea { font: inherit; }
+    button { color: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      min-height: 68px;
+      padding: 12px clamp(14px, 3vw, 34px);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      border-bottom: 1px solid #ffffff12;
+      background: #080709ed;
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      position: relative;
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      overflow: hidden;
+      border: 1px solid #ff2638aa;
+      border-radius: 11px;
+      color: #ff3547;
+      background:
+        radial-gradient(circle at 50% 0%, #ff263833, transparent 70%),
+        #13090c;
+      box-shadow: 0 0 16px #ff263833, inset 0 0 12px #ff263814;
+      font-size: 23px;
+      text-shadow: 0 0 12px #ff2638aa;
+    }
+
+    .brand-word {
+      display: inline-flex;
+      align-items: flex-start;
+      color: #f3e8e9;
+      font-size: 17px;
+      text-shadow: 0 0 12px #ff263822;
+    }
+
+    .brand-word span {
+      position: relative;
+      display: inline-block;
+      color: #ff3448;
+      text-shadow: 0 0 9px #ff263877;
+    }
+
+    .brand-word span::after {
+      position: absolute;
+      top: calc(100% - 1px);
+      left: 50%;
+      width: 4px;
+      height: var(--drip, 7px);
+      border-radius: 0 0 5px 5px;
+      background: linear-gradient(#e9172d, #780713);
+      box-shadow: 0 2px 5px #ff102455;
+      content: "";
+      transform: translateX(-50%);
+      transform-origin: top;
+      animation: blood-drip 2.8s ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    @keyframes blood-drip {
+      0%, 67%, 100% {
+        height: var(--drip, 7px);
+        opacity: .88;
+        transform: translateX(-50%) scaleY(.72);
+      }
+      78% {
+        height: calc(var(--drip, 7px) + 6px);
+        opacity: 1;
+        transform: translateX(-50%) scaleY(1);
+      }
+      92% {
+        height: 2px;
+        opacity: .35;
+        transform: translateX(-50%) scaleY(.55);
+      }
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    input, textarea, .button {
+      color: var(--text);
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    input, textarea { padding: 10px 12px; }
+
+    input:focus, textarea:focus, button:focus-visible, a:focus-visible {
+      outline: 2px solid #ff263899;
+      outline-offset: 2px;
+    }
+
+    .search { width: min(28vw, 300px); min-width: 150px; }
+
+    .button {
+      min-height: 40px;
+      padding: 9px 13px;
+      cursor: pointer;
+      transition:
+        transform .25s cubic-bezier(.16, 1, .3, 1),
+        border-color .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      border-color: #ff263888;
+      background: #292027;
+      box-shadow: 0 5px 20px #ff26381c;
+    }
+
+    .button:active { transform: scale(.98); }
+    .button:disabled { opacity: .55; cursor: wait; }
+    .button-primary { border-color: #ff263866; color: #ffc0c6; background: #ff263814; }
+    .button-danger { border-color: #8a465177; color: #ffc1c8; }
+
+    .contact-wrap { position: relative; }
+
+    .contact-menu {
+      position: absolute;
+      top: calc(100% + 9px);
+      right: 0;
+      z-index: 30;
+      width: 210px;
+      padding: 6px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel);
+      box-shadow: 0 16px 45px #0009;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .contact-menu.hidden {
+      display: block !important;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px) scale(.98);
+    }
+
+    .contact-menu a {
+      display: block;
+      padding: 10px 11px;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .contact-menu a:hover { color: #ffc0c6; background: #ff263812; }
+
+    main {
+      width: min(1500px, 100%);
+      margin: 0 auto;
+      padding: 28px clamp(14px, 3vw, 34px) 54px;
+    }
+
+    .heading-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      color: #ff5360;
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(25px, 4vw, 38px);
+      line-height: 1.15;
+      letter-spacing: -.035em;
+    }
+
+    .subheading { max-width: 720px; margin: 10px 0 0; color: var(--muted); }
+
+    .graph-tools {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .graph-meta { color: var(--muted); font-size: 13px; white-space: nowrap; }
+
+    .graph-shell {
+      position: relative;
+      min-height: 440px;
+      height: min(66vh, 760px);
+      overflow: hidden;
+      border: 1px solid #70404d;
+      border-radius: 18px;
+      background:
+        radial-gradient(ellipse at 50% 0%, #38141d66, transparent 55%),
+        radial-gradient(circle at 50% 45%, #21151c 0, #100d12 55%, #0b090c 100%);
+      box-shadow:
+        0 0 0 1px #ff263810,
+        0 22px 75px #0007,
+        inset 0 1px #ffffff0c;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .graph-shell.dragging { cursor: grabbing; }
+
+    .graph-shell::before {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      content: "";
+      opacity: .24;
+      background-image: radial-gradient(#ba9eaa22 .8px, transparent .8px);
+      background-size: 22px 22px;
+    }
+
+    svg.graph-svg {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      user-select: none;
+    }
+
+    .edge {
+      fill: none;
+      stroke: var(--line);
+      stroke-width: 2;
+      stroke-opacity: .72;
+      transition: stroke-opacity .3s ease;
+    }
+
+    .node {
+      cursor: pointer;
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: node-appear .55s cubic-bezier(.16, 1, .3, 1) both;
+    }
+
+    .node rect {
+      fill: #19151c;
+      stroke: #705363;
+      stroke-width: 1.6;
+      transition: fill .28s ease, stroke .28s ease, filter .35s ease, stroke-width .28s ease;
+    }
+
+    .node.root rect { fill: #30151b; stroke: #ff4558; stroke-width: 2; }
+
+    .node:hover rect, .node.selected rect {
+      fill: #2a1b22;
+      stroke: #ff5268;
+      stroke-width: 2;
+      filter: drop-shadow(0 0 7px #ff263855) drop-shadow(0 0 18px #ff263822);
+    }
+
+    .node text {
+      fill: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    .node .dot { fill: #ff4a57; }
+    .node .expand-indicator { fill: #f0a1a8; font-size: 12px; }
+
+    @keyframes node-appear {
+      from { opacity: 0; scale: .92; translate: 0 12px; }
+      to { opacity: 1; scale: 1; translate: 0 0; }
+    }
+
+    .empty-state {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(250px, .8fr) minmax(300px, 1.2fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .card {
+      min-width: 0;
+      padding: 18px;
+      border: 1px solid #70404d;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #171319, #110f14);
+      box-shadow: 0 0 0 1px #ff263810, 0 10px 32px #0005, inset 0 1px #ffffff0c;
+    }
+
+    .card h2 { margin: 0 0 10px; font-size: 15px; }
+    .muted { color: var(--muted); }
+
+    .details {
+      min-height: 55px;
+      color: #c0b6c1;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .form-grid { display: grid; gap: 9px; }
+    textarea { width: 100%; min-height: 100px; resize: vertical; }
+
+    .button-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+    .status {
+      min-height: 1.4em;
+      margin: 9px 0 0;
+      color: #b8d5aa;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .error { color: #ffabb3; }
+    .hidden { display: none !important; }
+
+    .notice {
+      margin: 10px 0;
+      padding: 11px 12px;
+      border: 1px solid #705d2c;
+      border-radius: 9px;
+      color: #f3dda2;
+      background: #382f191c;
+      font-size: 13px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      background: #000b;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal {
+      width: min(100%, 420px);
+      padding: 20px;
+      border: 1px solid #70404d;
+      border-radius: 16px;
+      background: #171319;
+      box-shadow: 0 0 0 1px #ff263810, 0 24px 80px #0009;
+    }
+
+    .modal h2 { margin-top: 0; }
+
+    .splash {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: #030303;
+      transition: opacity .7s ease, visibility .7s ease;
+    }
+
+    .splash.finished { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .splash-content { display: grid; justify-items: center; gap: 18px; width: 100%; padding: 20px; }
+
+    .ascii-title {
+      margin: 0;
+      max-width: 96vw;
+      overflow: hidden;
+      color: #ff2538;
+      font: 800 clamp(7px, 1.8vw, 19px)/1.12 "Courier New", monospace;
+      white-space: pre;
+      text-shadow: 0 0 8px #ff1a2a88, 0 0 25px #d0001e66;
+      animation: red-flow 5s ease-in-out forwards;
+    }
+
+    .face-drawing {
+      display: block;
+      width: min(320px, 58vw);
+      max-height: 45vh;
+      overflow: visible;
+      filter: drop-shadow(0 8px 18px #ff182522);
+    }
+
+    .face-hair-outline { fill: #171319; stroke: #09080b; stroke-width: 8; stroke-linejoin: bevel; }
+    .hair-dark { fill: #08080a; stroke: #050506; stroke-width: 4; stroke-linejoin: bevel; }
+    .hair-highlight { fill: none; stroke: #25212a; stroke-width: 3; stroke-linecap: round; }
+    .face-shape { fill: #f0e9df; stroke: #050505; stroke-width: 5; stroke-linejoin: bevel; }
+    .face-shadow { fill: #d9d0c9; opacity: .48; }
+    .eye-brow { fill: #050505; stroke: #050505; stroke-width: 3; stroke-linejoin: bevel; }
+    .eye-white { fill: #f4f0e9; stroke: #080808; stroke-width: 4; stroke-linejoin: bevel; }
+    .eye-pupil { fill: #080808; }
+    .eye-glint { fill: #f5eee7; }
+    .nose { fill: none; stroke: #090909; stroke-width: 5; stroke-linecap: square; stroke-linejoin: bevel; }
+    .mouth { fill: #e6ded4; stroke: #050505; stroke-width: 5; stroke-linejoin: bevel; }
+    .teeth-line { fill: none; stroke: #151313; stroke-width: 2; }
+    .jaw-line { fill: none; stroke: #111; stroke-width: 4; }
+    .neck { fill: #eee6dc; stroke: #080808; stroke-width: 4; }
+    .shirt { fill: #080808; stroke: #050505; stroke-width: 5; stroke-linejoin: bevel; }
+    .shirt-detail { fill: none; stroke: #30252b; stroke-width: 4; stroke-linejoin: bevel; }
+    .shirt-mark { fill: #e9e3dc; stroke: #111; stroke-width: 3; }
+
+    .splash-caption {
+      color: #b81f30;
+      font-size: 11px;
+      letter-spacing: .35em;
+      animation: caption-pulse 1.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes red-flow {
+      0% { color: #9e0718; transform: translateX(-24px); }
+      50% { color: #ff2638; transform: translateX(0); }
+      100% { color: #e51c30; transform: translateX(24px); }
+    }
+
+    @keyframes caption-pulse {
+      from { opacity: .45; }
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 760px) {
+      .topbar { flex-wrap: wrap; gap: 10px; }
+      .top-actions { width: 100%; flex-wrap: wrap; }
+      .search { width: 100%; }
+      .contact-wrap { margin-left: auto; }
+      .heading-row { align-items: flex-start; flex-direction: column; }
+      .graph-tools { justify-content: flex-start; }
+      .content-grid { grid-template-columns: 1fr; }
+      .graph-shell { height: 58vh; min-height: 340px; }
+      .ascii-title { font-size: clamp(5px, 1.55vw, 12px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div id="splash" class="splash" aria-label="Загрузка сайта">
     <div class="splash-content">
@@ -100,38 +527,47 @@
 | |___| |  | | |_| | |_| | |___| . \
 |_____|_|  |_|\___/|____/|_____|_|\_\
       </pre>
+
       <svg class="face-drawing" viewBox="0 0 320 390" role="img" aria-label="Стилизованный угловатый рисунок лица">
-        <path class="face-hair-outline" d="M54 132L34 105L57 96L43 69L77 76L74 45L104 61L111 28L137 54L156 17L173 51L197 25L208 59L239 42L234 75L267 68L253 100L283 111L263 133L273 158L249 170L246 218L225 260L197 281L121 281L91 259L70 222L65 176Z"></path>
-        <path class="face-shape" d="M76 124L241 126L233 218L214 264L184 291L133 291L101 263L83 223Z"></path>
-        <path class="hair-dark" d="M55 126L44 96L70 102L67 67L100 83L104 48L131 76L151 36L166 77L194 48L202 86L237 67L228 104L261 96L245 126L219 141L184 137L162 159L153 128L141 181L130 131L104 146L84 133Z"></path>
-        <path class="hair-highlight" d="M75 91L95 72L94 95M111 72L132 54L128 83M169 73L191 58L185 87"></path>
-        <path class="face-shadow" d="M79 134L155 151L153 264L105 254L84 218Z"></path>
-        <path class="face-shadow" d="M157 151L237 132L229 216L212 255L164 269Z"></path>
-        <path class="eye-brow" d="M91 151L135 143L126 159L93 168Z"></path>
-        <path class="eye-brow" d="M174 145L220 151L214 166L177 159Z"></path>
-        <path class="eye-white" d="M92 168L127 160L144 174L125 189L94 181Z"></path>
-        <path class="eye-white" d="M171 161L207 168L210 181L180 190L160 176Z"></path>
-        <circle class="eye-pupil" cx="119" cy="174" r="5"></circle>
-        <circle class="eye-pupil" cx="187" cy="175" r="5"></circle>
-        <circle class="eye-glint" cx="121" cy="172" r="1.5"></circle>
-        <circle class="eye-glint" cx="189" cy="173" r="1.5"></circle>
-        <path class="nose" d="M157 164L148 211L161 215L151 220"></path>
-        <path class="mouth" d="M111 240L211 229L221 246L130 257Z"></path>
-        <path class="teeth-line" d="M120 242L132 255M136 239L148 253M153 237L165 251M170 235L182 249M188 233L200 247M205 231L215 244"></path>
-        <path class="jaw-line" d="M103 258L129 292L184 292L216 256"></path>
-        <path class="neck" d="M130 286L129 317L188 317L183 283Z"></path>
-        <path class="shirt" d="M130 313L100 322L70 333L48 390L272 390L247 332L212 320L184 312L160 335Z"></path>
-        <path class="shirt-detail" d="M130 315L160 339L185 314M159 340L160 389"></path>
-        <path class="shirt-mark" d="M203 349L227 349L227 379L203 369Z"></path>
+        <path class="face-hair-outline" d="M54 132L34 105L57 96L43 69L77 76L74 45L104 61L111 28L137 54L156 17L173 51L197 25L208 59L239 42L234 75L267 68L253 100L283 111L263 133L273 158L249 170L246 218L225 260L197 281L121 281L91 259L70 222L65 176Z"/>
+        <path class="face-shape" d="M76 124L241 126L233 218L214 264L184 291L133 291L101 263L83 223Z"/>
+        <path class="hair-dark" d="M55 126L44 96L70 102L67 67L100 83L104 48L131 76L151 36L166 77L194 48L202 86L237 67L228 104L261 96L245 126L219 141L184 137L162 159L153 128L141 181L130 131L104 146L84 133Z"/>
+        <path class="hair-highlight" d="M75 91L95 72L94 95M111 72L132 54L128 83M169 73L191 58L185 87"/>
+        <path class="face-shadow" d="M79 134L155 151L153 264L105 254L84 218Z"/>
+        <path class="face-shadow" d="M157 151L237 132L229 216L212 255L164 269Z"/>
+        <path class="eye-brow" d="M91 151L135 143L126 159L93 168Z"/>
+        <path class="eye-brow" d="M174 145L220 151L214 166L177 159Z"/>
+        <path class="eye-white" d="M92 168L127 160L144 174L125 189L94 181Z"/>
+        <path class="eye-white" d="M171 161L207 168L210 181L180 190L160 176Z"/>
+        <circle class="eye-pupil" cx="119" cy="174" r="5"/>
+        <circle class="eye-pupil" cx="187" cy="175" r="5"/>
+        <circle class="eye-glint" cx="121" cy="172" r="1.5"/>
+        <circle class="eye-glint" cx="189" cy="173" r="1.5"/>
+        <path class="nose" d="M157 164L148 211L161 215L151 220"/>
+        <path class="mouth" d="M111 240L211 229L221 246L130 257Z"/>
+        <path class="teeth-line" d="M120 242L132 255M136 239L148 253M153 237L165 251M170 235L182 249M188 233L200 247M205 231L215 244"/>
+        <path class="jaw-line" d="M103 258L129 292L184 292L216 256"/>
+        <path class="neck" d="M130 286L129 317L188 317L183 283Z"/>
+        <path class="shirt" d="M130 313L100 322L70 333L48 390L272 390L247 332L212 320L184 312L160 335Z"/>
+        <path class="shirt-detail" d="M130 315L160 339L185 314M159 340L160 389"/>
+        <path class="shirt-mark" d="M203 349L227 349L227 379L203 369Z"/>
       </svg>
+
       <div class="splash-caption">ЗАГРУЗКА ПРОЕКТА</div>
     </div>
   </div>
 
   <header class="topbar">
-    <a class="brand" href="#"><span class="brand-mark">e</span>emode1k</a>
+    <a class="brand" href="#" aria-label="Emode1k">
+      <span class="brand-mark" aria-hidden="true">e</span>
+      <span class="brand-word" aria-hidden="true">
+        <span style="--drip:8px;--delay:0s">E</span><span style="--drip:5px;--delay:.2s">m</span><span style="--drip:9px;--delay:.4s">o</span><span style="--drip:6px;--delay:.1s">d</span><span style="--drip:8px;--delay:.5s">e</span><span style="--drip:5px;--delay:.3s">1</span><span style="--drip:9px;--delay:.6s">k</span>
+      </span>
+    </a>
+
     <div class="top-actions">
       <input id="search" class="search" type="search" placeholder="Поиск по дереву…" aria-label="Поиск по дереву">
+
       <div class="contact-wrap">
         <button id="contactButton" class="button" type="button" aria-expanded="false" aria-controls="contactMenu">Связь с автором</button>
         <nav id="contactMenu" class="contact-menu hidden" aria-label="Профили автора">
@@ -140,6 +576,7 @@
           <a href="https://github.com/emode1k" target="_blank" rel="noopener noreferrer">GitHub — emode1k</a>
         </nav>
       </div>
+
       <button id="adminButton" class="button button-primary" type="button">Войти</button>
       <button id="logoutButton" class="button hidden" type="button">Выйти</button>
     </div>
@@ -150,8 +587,9 @@
       <div>
         <p class="eyebrow">Интерактивная карта проекта</p>
         <h1>Дерево emode1k</h1>
-        <p class="subheading">Перетаскивай пустое место, чтобы двигать граф. Колесо мыши меняет масштаб. Узлы третьего уровня и глубже раскрываются нажатием.</p>
+        <p class="subheading">Перетаскивай пустое место, чтобы двигать граф. Колесо мыши меняет масштаб. Ветки второго уровня и глубже раскрываются нажатием.</p>
       </div>
+
       <div class="graph-tools">
         <span id="graphMeta" class="graph-meta"></span>
         <button id="resetViewButton" class="button" type="button">Сбросить вид</button>
@@ -207,6 +645,7 @@
     const SUPABASE_URL = "https://ajydliryxxhqetfwefya.supabase.co";
     const SUPABASE_PUBLIC_KEY = "sb_publishable_itE-NyvxMgqHsbqn3Dp4sQ_2uZPoiUZ";
     const TABLE_NAME = "nodes";
+
     const $ = id => document.getElementById(id);
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
 
@@ -218,17 +657,27 @@
     let loading = false;
     let dragState = null;
     let hasInitialFit = false;
+
     const expandedNodes = new Set();
     const view = { x: 0, y: 0, scale: 1 };
 
     function escapeHtml(value) {
       return String(value).replace(/[&<>"']/g, char => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
       })[char]);
     }
 
     function fromDatabase(row) {
-      return { id: row.id, parent: row.parent_id, label: row.label, info: row.info || "" };
+      return {
+        id: row.id,
+        parent: row.parent_id,
+        label: row.label,
+        info: row.info || ""
+      };
     }
 
     function childrenOf(id) {
@@ -237,6 +686,7 @@
 
     function descendantIds(id) {
       const result = new Set([id]);
+
       function visit(parentId) {
         childrenOf(parentId).forEach(child => {
           if (!result.has(child.id)) {
@@ -245,6 +695,7 @@
           }
         });
       }
+
       visit(id);
       return result;
     }
@@ -253,33 +704,51 @@
       let depth = 0;
       let current = node;
       const visited = new Set();
+
       while (current.parent && byId.has(current.parent) && !visited.has(current.id)) {
         visited.add(current.id);
         depth++;
         current = byId.get(current.parent);
       }
+
       return depth;
     }
 
+    // Узлы глубины 0 и 1 видны сразу.
+    // Дети узлов глубины 2 и больше отображаются только после раскрытия родителя.
     function isVisibleByExpansion(node, byId) {
       let current = node;
+
       while (current.parent && byId.has(current.parent)) {
         const parent = byId.get(current.parent);
-        if (nodeDepth(parent, byId) >= 2 && !expandedNodes.has(parent.id)) return false;
+
+        if (nodeDepth(parent, byId) >= 2 && !expandedNodes.has(parent.id)) {
+          return false;
+        }
+
         current = parent;
       }
+
       return true;
     }
 
     function getVisibleNodes(byId) {
-      if (!query) return data.filter(node => isVisibleByExpansion(node, byId));
+      if (!query) {
+        return data.filter(node => isVisibleByExpansion(node, byId));
+      }
+
       const result = new Map();
 
       data.forEach(node => {
-        const matches = `${node.label} ${node.info || ""}`.toLowerCase().includes(query.toLowerCase());
+        const matches = `${node.label} ${node.info || ""}`
+          .toLowerCase()
+          .includes(query.toLowerCase());
+
         if (!matches) return;
+
         result.set(node.id, node);
         let current = node;
+
         while (current.parent && byId.has(current.parent)) {
           current = byId.get(current.parent);
           result.set(current.id, current);
@@ -304,7 +773,8 @@
       if (error) {
         data = [];
         $("detailsTitle").textContent = "Ошибка загрузки";
-        $("details").textContent = "Проверь таблицу nodes, ключ и политику чтения в Supabase. " + error.message;
+        $("details").textContent =
+          "Проверь таблицу nodes, ключ и политику чтения в Supabase. " + error.message;
         draw();
         return;
       }
@@ -313,12 +783,16 @@
 
       if (!data.some(node => node.id === "emode1k")) {
         $("detailsTitle").textContent = "Корневой узел не найден";
-        $("details").textContent = "Добавь запись emode1k в таблицу nodes с parent_id равным null.";
+        $("details").textContent =
+          "Добавь запись emode1k в таблицу nodes с parent_id равным null.";
         draw();
         return;
       }
 
-      if (!data.some(node => node.id === selectedId)) selectedId = "emode1k";
+      if (!data.some(node => node.id === selectedId)) {
+        selectedId = "emode1k";
+      }
+
       selectNode(selectedId);
     }
 
@@ -341,6 +815,7 @@
       }
 
       const levels = [];
+
       visible.forEach(node => {
         const depth = nodeDepth(node, byId);
         if (!levels[depth]) levels[depth] = [];
@@ -354,53 +829,96 @@
 
       levels.forEach((level, depth) => {
         if (!level) return;
+
         const gap = contentWidth / (level.length + 1);
+
         level.forEach((node, index) => {
-          positions.set(node.id, { x: gap * (index + 1) - 94, y: 30 + depth * 150 });
+          positions.set(node.id, {
+            x: gap * (index + 1) - 94,
+            y: 30 + depth * 150
+          });
         });
       });
 
       let edges = "";
+
       visible.forEach(node => {
         const child = positions.get(node.id);
         const parent = positions.get(node.parent);
         if (!child || !parent) return;
+
         const startX = parent.x + 94;
         const startY = parent.y + 60;
         const endX = child.x + 94;
         const endY = child.y;
         const middleY = startY + (endY - startY) * .52;
+
         edges += `<path class="edge" d="M ${startX} ${startY} C ${startX} ${middleY}, ${endX} ${middleY}, ${endX} ${endY}"></path>`;
       });
 
       let nodes = "";
+
       visible.forEach((node, index) => {
         const point = positions.get(node.id);
-        const label = node.label.length > 24 ? node.label.slice(0, 23) + "…" : node.label;
+        const label = node.label.length > 24
+          ? node.label.slice(0, 23) + "…"
+          : node.label;
+
         const depth = nodeDepth(node, byId);
         const canExpand = depth >= 2 && childrenOf(node.id).length > 0;
-        const indicator = canExpand ? (expandedNodes.has(node.id) ? "−" : "+") : "";
+        const indicator = canExpand
+          ? (expandedNodes.has(node.id) ? "−" : "+")
+          : "";
 
-        nodes += `<g class="node ${node.id === "emode1k" ? "root" : ""} ${selectedId === node.id ? "selected" : ""}" data-id="${escapeHtml(node.id)}" transform="translate(${point.x},${point.y})" tabindex="0" role="button" aria-label="${escapeHtml(node.label)}" style="animation-delay:${Math.min(index * 30, 300)}ms"><rect width="188" height="60" rx="12"></rect><circle class="dot" cx="16" cy="30" r="3"></circle><text x="98" y="35" text-anchor="middle">${escapeHtml(label)}</text><text class="expand-indicator" x="173" y="20" text-anchor="middle">${indicator}</text></g>`;
+        nodes += `
+          <g class="node ${node.id === "emode1k" ? "root" : ""} ${selectedId === node.id ? "selected" : ""}"
+             data-id="${escapeHtml(node.id)}"
+             transform="translate(${point.x},${point.y})"
+             tabindex="0"
+             role="button"
+             aria-label="${escapeHtml(node.label)}${canExpand ? (expandedNodes.has(node.id) ? ", свернуть ветку" : ", раскрыть ветку") : ""}"
+             style="animation-delay:${Math.min(index * 30, 300)}ms">
+            <rect width="188" height="60" rx="12"></rect>
+            <circle class="dot" cx="16" cy="30" r="3"></circle>
+            <text x="98" y="35" text-anchor="middle">${escapeHtml(label)}</text>
+            <text class="expand-indicator" x="173" y="20" text-anchor="middle">${indicator}</text>
+          </g>`;
       });
 
-      host.innerHTML = `<svg class="graph-svg" aria-label="Дерево проекта"><g id="graphContent">${edges}${nodes}</g></svg>`;
+      host.innerHTML = `
+        <svg class="graph-svg" aria-label="Дерево проекта">
+          <g id="graphContent">${edges}${nodes}</g>
+        </svg>`;
+
       const svg = host.querySelector("svg");
       svg.setAttribute("viewBox", `0 0 ${host.clientWidth} ${host.clientHeight}`);
 
       const group = document.getElementById("graphContent");
+
       if (!hasInitialFit) {
-        const scale = Math.max(.4, Math.min(1, (host.clientWidth - 40) / contentWidth, (host.clientHeight - 40) / contentHeight));
+        const scale = Math.max(
+          .4,
+          Math.min(
+            1,
+            (host.clientWidth - 40) / contentWidth,
+            (host.clientHeight - 40) / contentHeight
+          )
+        );
+
         view.scale = scale;
         view.x = Math.max(20, (host.clientWidth - contentWidth * scale) / 2);
         view.y = Math.max(20, (host.clientHeight - contentHeight * scale) / 2);
         hasInitialFit = true;
       }
 
-      group.setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
+      group.setAttribute(
+        "transform",
+        `translate(${view.x} ${view.y}) scale(${view.scale})`
+      );
 
       host.querySelectorAll(".node").forEach(element => {
         const activate = () => handleNodeClick(element.dataset.id);
+
         element.addEventListener("click", activate);
         element.addEventListener("keydown", event => {
           if (event.key === "Enter" || event.key === " ") {
@@ -433,6 +951,7 @@
     function selectNode(id) {
       const node = data.find(item => item.id === id);
       if (!node) return;
+
       selectedId = id;
       $("detailsTitle").textContent = node.label;
       $("details").textContent = node.info || "Описание не добавлено.";
@@ -445,7 +964,10 @@
       $("adminPanel").classList.toggle("hidden", !enabled);
       $("adminButton").classList.toggle("hidden", enabled);
       $("logoutButton").classList.toggle("hidden", !enabled);
-      $("adminNodeActions").classList.toggle("hidden", !enabled || selectedId === "emode1k");
+      $("adminNodeActions").classList.toggle(
+        "hidden",
+        !enabled || selectedId === "emode1k"
+      );
       draw();
     }
 
@@ -488,11 +1010,14 @@
 
     $("adminButton").addEventListener("click", async () => {
       const { data: sessionData, error } = await supabaseClient.auth.getSession();
+
       if (error) $("loginStatus").textContent = error.message;
+
       if (sessionData && sessionData.session) {
         setAdmin(true);
         return;
       }
+
       $("loginDialog").classList.remove("hidden");
       $("emailInput").focus();
     });
@@ -506,14 +1031,17 @@
     $("loginForm").addEventListener("submit", async event => {
       event.preventDefault();
       $("loginStatus").textContent = "Проверяю вход…";
+
       const { error } = await supabaseClient.auth.signInWithPassword({
         email: $("emailInput").value.trim(),
         password: $("passwordInput").value
       });
+
       if (error) {
         $("loginStatus").textContent = "Не удалось войти: " + error.message;
         return;
       }
+
       $("loginDialog").classList.add("hidden");
       $("loginForm").reset();
       $("loginStatus").textContent = "";
@@ -522,10 +1050,12 @@
 
     $("logoutButton").addEventListener("click", async () => {
       const { error } = await supabaseClient.auth.signOut();
+
       if (error) {
         $("adminStatus").textContent = "Ошибка выхода: " + error.message;
         return;
       }
+
       setAdmin(false);
       resetForm();
     });
@@ -540,6 +1070,7 @@
 
       const label = $("nodeLabel").value.trim();
       const info = $("nodeInfo").value.trim();
+
       if (!label) {
         $("adminStatus").textContent = "Укажи название узла.";
         return;
@@ -552,19 +1083,28 @@
       let savedId = editingId;
 
       if (editingId) {
-        const result = await supabaseClient.from(TABLE_NAME)
+        const result = await supabaseClient
+          .from(TABLE_NAME)
           .update({ label, info })
           .eq("id", editingId);
+
         error = result.error;
       } else {
-        const parentId = data.some(item => item.id === selectedId) ? selectedId : "emode1k";
+        const parentId = data.some(item => item.id === selectedId)
+          ? selectedId
+          : "emode1k";
+
         savedId = "node-" + crypto.randomUUID();
-        const result = await supabaseClient.from(TABLE_NAME).insert({
-          id: savedId,
-          parent_id: parentId,
-          label,
-          info
-        });
+
+        const result = await supabaseClient
+          .from(TABLE_NAME)
+          .insert({
+            id: savedId,
+            parent_id: parentId,
+            label,
+            info
+          });
+
         error = result.error;
       }
 
@@ -578,14 +1118,18 @@
       resetForm();
       hasInitialFit = false;
       await loadTree();
+
       if (savedId) selectNode(savedId);
+
       $("adminStatus").textContent = "Изменения сохранены в Supabase.";
     });
 
     $("editNodeButton").addEventListener("click", () => {
       if (!isAdmin || !selectedId || selectedId === "emode1k") return;
+
       const node = data.find(item => item.id === selectedId);
       if (!node) return;
+
       editingId = node.id;
       $("nodeLabel").value = node.label;
       $("nodeInfo").value = node.info || "";
@@ -599,12 +1143,18 @@
 
     $("deleteNodeButton").addEventListener("click", async () => {
       if (!isAdmin || !selectedId || selectedId === "emode1k") return;
+
       const node = data.find(item => item.id === selectedId);
       if (!node) return;
+
       if (!confirm(`Удалить «${node.label}» и все вложенные узлы?`)) return;
 
       $("adminStatus").textContent = "Удаляю ветку…";
-      const { error } = await supabaseClient.from(TABLE_NAME).delete().eq("id", node.id);
+
+      const { error } = await supabaseClient
+        .from(TABLE_NAME)
+        .delete()
+        .eq("id", node.id);
 
       if (error) {
         $("adminStatus").textContent = "Ошибка удаления: " + error.message;
@@ -621,6 +1171,7 @@
 
     $("graph").addEventListener("pointerdown", event => {
       if (event.target.closest(".node") || event.button !== 0) return;
+
       dragState = {
         pointerId: event.pointerId,
         startX: event.clientX,
@@ -628,16 +1179,24 @@
         viewX: view.x,
         viewY: view.y
       };
+
       $("graph").classList.add("dragging");
       $("graph").setPointerCapture(event.pointerId);
     });
 
     $("graph").addEventListener("pointermove", event => {
       if (!dragState || event.pointerId !== dragState.pointerId) return;
+
       view.x = dragState.viewX + event.clientX - dragState.startX;
       view.y = dragState.viewY + event.clientY - dragState.startY;
+
       const group = document.getElementById("graphContent");
-      if (group) group.setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
+      if (group) {
+        group.setAttribute(
+          "transform",
+          `translate(${view.x} ${view.y}) scale(${view.scale})`
+        );
+      }
     });
 
     function stopDragging(event) {
@@ -651,17 +1210,25 @@
 
     $("graph").addEventListener("wheel", event => {
       event.preventDefault();
+
       const rect = $("graph").getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
       const oldScale = view.scale;
       const factor = event.deltaY < 0 ? 1.1 : .9;
       const newScale = Math.max(.35, Math.min(2.2, oldScale * factor));
+
       view.x = x - (x - view.x) * newScale / oldScale;
       view.y = y - (y - view.y) * newScale / oldScale;
       view.scale = newScale;
+
       const group = document.getElementById("graphContent");
-      if (group) group.setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
+      if (group) {
+        group.setAttribute(
+          "transform",
+          `translate(${view.x} ${view.y}) scale(${view.scale})`
+        );
+      }
     }, { passive: false });
 
     $("resetViewButton").addEventListener("click", () => {
