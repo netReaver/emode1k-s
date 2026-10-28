@@ -17,8 +17,6 @@
       --text: #eee8ed;
       --muted: #a69ba6;
       --accent: #ff2638;
-      --accent-soft: #ff263855;
-      --danger: #ff8290;
       --line: #75515e;
     }
 
@@ -28,9 +26,7 @@
       margin: 0;
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(ellipse at 50% 4%, #281118 0, transparent 48%),
-        var(--bg);
+      background: radial-gradient(ellipse at 50% 4%, #281118 0, transparent 48%), var(--bg);
       font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system,
         BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -64,18 +60,14 @@
     }
 
     .brand-mark {
-      position: relative;
       display: grid;
       width: 38px;
       height: 38px;
       place-items: center;
-      overflow: hidden;
       border: 1px solid #ff2638aa;
       border-radius: 11px;
       color: #ff3547;
-      background:
-        radial-gradient(circle at 50% 0%, #ff263833, transparent 70%),
-        #13090c;
+      background: radial-gradient(circle at 50% 0%, #ff263833, transparent 70%), #13090c;
       box-shadow: 0 0 16px #ff263833, inset 0 0 12px #ff263814;
       font-size: 23px;
       text-shadow: 0 0 12px #ff2638aa;
@@ -86,7 +78,6 @@
       align-items: flex-start;
       color: #f3e8e9;
       font-size: 17px;
-      text-shadow: 0 0 12px #ff263822;
     }
 
     .brand-word span {
@@ -158,11 +149,8 @@
       min-height: 40px;
       padding: 9px 13px;
       cursor: pointer;
-      transition:
-        transform .25s cubic-bezier(.16, 1, .3, 1),
-        border-color .25s ease,
-        background .25s ease,
-        box-shadow .25s ease;
+      transition: transform .25s cubic-bezier(.16, 1, .3, 1),
+        border-color .25s ease, background .25s ease, box-shadow .25s ease;
     }
 
     .button:hover {
@@ -262,10 +250,7 @@
       background:
         radial-gradient(ellipse at 50% 0%, #38141d66, transparent 55%),
         radial-gradient(circle at 50% 45%, #21151c 0, #100d12 55%, #0b090c 100%);
-      box-shadow:
-        0 0 0 1px #ff263810,
-        0 22px 75px #0007,
-        inset 0 1px #ffffff0c;
+      box-shadow: 0 0 0 1px #ff263810, 0 22px 75px #0007, inset 0 1px #ffffff0c;
       cursor: grab;
       touch-action: none;
     }
@@ -298,7 +283,6 @@
       stroke: var(--line);
       stroke-width: 2;
       stroke-opacity: .72;
-      transition: stroke-opacity .3s ease;
     }
 
     .node {
@@ -313,7 +297,7 @@
       fill: #19151c;
       stroke: #705363;
       stroke-width: 1.6;
-      transition: fill .28s ease, stroke .28s ease, filter .35s ease, stroke-width .28s ease;
+      transition: fill .28s ease, stroke .28s ease, filter .35s ease;
     }
 
     .node.root rect { fill: #30151b; stroke: #ff4558; stroke-width: 2; }
@@ -379,7 +363,6 @@
 
     .form-grid { display: grid; gap: 9px; }
     textarea { width: 100%; min-height: 100px; resize: vertical; }
-
     .button-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 
     .status {
@@ -437,7 +420,6 @@
     }
 
     .splash.finished { opacity: 0; visibility: hidden; pointer-events: none; }
-
     .splash-content { display: grid; justify-items: center; gap: 18px; width: 100%; padding: 20px; }
 
     .ascii-title {
@@ -523,7 +505,7 @@
       <pre class="ascii-title" aria-label="EMODE1K">
  _____ __  __  ___  ____  _____ _  __
 | ____|  \/  |/ _ \|  _ \| ____| |/ /
-|  _| | |\/| | | | | | | |  _| | ' /
+|  _| | |\/| | | | | | |  _| | ' /
 | |___| |  | | |_| | |_| | |___| . \
 |_____|_|  |_|\___/|____/|_____|_|\_\
       </pre>
@@ -587,7 +569,7 @@
       <div>
         <p class="eyebrow">Интерактивная карта проекта</p>
         <h1>Дерево emode1k</h1>
-        <p class="subheading">Перетаскивай пустое место, чтобы двигать граф. Колесо мыши меняет масштаб. Ветки второго уровня и глубже раскрываются нажатием.</p>
+        <p class="subheading">Перетаскивай пустое место, чтобы двигать граф. Колесо мыши меняет масштаб. Узлы второго уровня и глубже раскрываются нажатием.</p>
       </div>
 
       <div class="graph-tools">
@@ -714,15 +696,15 @@
       return depth;
     }
 
-    // Узлы глубины 0 и 1 видны сразу.
-    // Дети узлов глубины 2 и больше отображаются только после раскрытия родителя.
+    // Корень и первый уровень видны сразу.
+    // Для узлов второго уровня и глубже родитель должен быть раскрыт.
     function isVisibleByExpansion(node, byId) {
       let current = node;
 
       while (current.parent && byId.has(current.parent)) {
         const parent = byId.get(current.parent);
 
-        if (nodeDepth(parent, byId) >= 2 && !expandedNodes.has(parent.id)) {
+        if (nodeDepth(parent, byId) >= 1 && !expandedNodes.has(parent.id)) {
           return false;
         }
 
@@ -865,7 +847,7 @@
           : node.label;
 
         const depth = nodeDepth(node, byId);
-        const canExpand = depth >= 2 && childrenOf(node.id).length > 0;
+        const canExpand = depth >= 1 && childrenOf(node.id).length > 0;
         const indicator = canExpand
           ? (expandedNodes.has(node.id) ? "−" : "+")
           : "";
@@ -911,10 +893,7 @@
         hasInitialFit = true;
       }
 
-      group.setAttribute(
-        "transform",
-        `translate(${view.x} ${view.y}) scale(${view.scale})`
-      );
+      group.setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
 
       host.querySelectorAll(".node").forEach(element => {
         const activate = () => handleNodeClick(element.dataset.id);
@@ -936,7 +915,8 @@
       const byId = new Map(data.map(item => [item.id, item]));
       const depth = nodeDepth(node, byId);
 
-      if (depth >= 2 && childrenOf(node.id).length > 0) {
+      // Глубина 1 — первый уровень; он и все более глубокие уровни раскрываются кликом.
+      if (depth >= 1 && childrenOf(node.id).length > 0) {
         if (expandedNodes.has(node.id)) {
           expandedNodes.delete(node.id);
           descendantIds(node.id).forEach(childId => expandedNodes.delete(childId));
@@ -964,10 +944,7 @@
       $("adminPanel").classList.toggle("hidden", !enabled);
       $("adminButton").classList.toggle("hidden", enabled);
       $("logoutButton").classList.toggle("hidden", !enabled);
-      $("adminNodeActions").classList.toggle(
-        "hidden",
-        !enabled || selectedId === "emode1k"
-      );
+      $("adminNodeActions").classList.toggle("hidden", !enabled || selectedId === "emode1k");
       draw();
     }
 
@@ -1192,10 +1169,7 @@
 
       const group = document.getElementById("graphContent");
       if (group) {
-        group.setAttribute(
-          "transform",
-          `translate(${view.x} ${view.y}) scale(${view.scale})`
-        );
+        group.setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
       }
     });
 
@@ -1224,10 +1198,7 @@
 
       const group = document.getElementById("graphContent");
       if (group) {
-        group.setAttribute(
-          "transform",
-          `translate(${view.x} ${view.y}) scale(${view.scale})`
-        );
+        group.setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
       }
     }, { passive: false });
 
