@@ -278,12 +278,7 @@
       user-select: none;
     }
 
-    .edge {
-      fill: none;
-      stroke: var(--line);
-      stroke-width: 2;
-      stroke-opacity: .72;
-    }
+    .edge { fill: none; stroke: var(--line); stroke-width: 2; stroke-opacity: .72; }
 
     .node {
       cursor: pointer;
@@ -309,13 +304,7 @@
       filter: drop-shadow(0 0 7px #ff263855) drop-shadow(0 0 18px #ff263822);
     }
 
-    .node text {
-      fill: var(--text);
-      font-size: 13px;
-      font-weight: 600;
-      pointer-events: none;
-    }
-
+    .node text { fill: var(--text); font-size: 13px; font-weight: 600; pointer-events: none; }
     .node .dot { fill: #ff4a57; }
     .node .expand-indicator { fill: #f0a1a8; font-size: 12px; }
 
@@ -433,31 +422,14 @@
       animation: red-flow 5s ease-in-out forwards;
     }
 
-    .face-drawing {
+    /* PNG-изображение на заставке */
+    .splash-image {
       display: block;
       width: min(320px, 58vw);
       max-height: 45vh;
-      overflow: visible;
+      object-fit: contain;
       filter: drop-shadow(0 8px 18px #ff182522);
     }
-
-    .face-hair-outline { fill: #171319; stroke: #09080b; stroke-width: 8; stroke-linejoin: bevel; }
-    .hair-dark { fill: #08080a; stroke: #050506; stroke-width: 4; stroke-linejoin: bevel; }
-    .hair-highlight { fill: none; stroke: #25212a; stroke-width: 3; stroke-linecap: round; }
-    .face-shape { fill: #f0e9df; stroke: #050505; stroke-width: 5; stroke-linejoin: bevel; }
-    .face-shadow { fill: #d9d0c9; opacity: .48; }
-    .eye-brow { fill: #050505; stroke: #050505; stroke-width: 3; stroke-linejoin: bevel; }
-    .eye-white { fill: #f4f0e9; stroke: #080808; stroke-width: 4; stroke-linejoin: bevel; }
-    .eye-pupil { fill: #080808; }
-    .eye-glint { fill: #f5eee7; }
-    .nose { fill: none; stroke: #090909; stroke-width: 5; stroke-linecap: square; stroke-linejoin: bevel; }
-    .mouth { fill: #e6ded4; stroke: #050505; stroke-width: 5; stroke-linejoin: bevel; }
-    .teeth-line { fill: none; stroke: #151313; stroke-width: 2; }
-    .jaw-line { fill: none; stroke: #111; stroke-width: 4; }
-    .neck { fill: #eee6dc; stroke: #080808; stroke-width: 4; }
-    .shirt { fill: #080808; stroke: #050505; stroke-width: 5; stroke-linejoin: bevel; }
-    .shirt-detail { fill: none; stroke: #30252b; stroke-width: 4; stroke-linejoin: bevel; }
-    .shirt-mark { fill: #e9e3dc; stroke: #111; stroke-width: 3; }
 
     .splash-caption {
       color: #b81f30;
@@ -510,30 +482,11 @@
 |_____|_|  |_|\___/|____/|_____|_|\_\
       </pre>
 
-      <svg class="face-drawing" viewBox="0 0 320 390" role="img" aria-label="Стилизованный угловатый рисунок лица">
-        <path class="face-hair-outline" d="M54 132L34 105L57 96L43 69L77 76L74 45L104 61L111 28L137 54L156 17L173 51L197 25L208 59L239 42L234 75L267 68L253 100L283 111L263 133L273 158L249 170L246 218L225 260L197 281L121 281L91 259L70 222L65 176Z"/>
-        <path class="face-shape" d="M76 124L241 126L233 218L214 264L184 291L133 291L101 263L83 223Z"/>
-        <path class="hair-dark" d="M55 126L44 96L70 102L67 67L100 83L104 48L131 76L151 36L166 77L194 48L202 86L237 67L228 104L261 96L245 126L219 141L184 137L162 159L153 128L141 181L130 131L104 146L84 133Z"/>
-        <path class="hair-highlight" d="M75 91L95 72L94 95M111 72L132 54L128 83M169 73L191 58L185 87"/>
-        <path class="face-shadow" d="M79 134L155 151L153 264L105 254L84 218Z"/>
-        <path class="face-shadow" d="M157 151L237 132L229 216L212 255L164 269Z"/>
-        <path class="eye-brow" d="M91 151L135 143L126 159L93 168Z"/>
-        <path class="eye-brow" d="M174 145L220 151L214 166L177 159Z"/>
-        <path class="eye-white" d="M92 168L127 160L144 174L125 189L94 181Z"/>
-        <path class="eye-white" d="M171 161L207 168L210 181L180 190L160 176Z"/>
-        <circle class="eye-pupil" cx="119" cy="174" r="5"/>
-        <circle class="eye-pupil" cx="187" cy="175" r="5"/>
-        <circle class="eye-glint" cx="121" cy="172" r="1.5"/>
-        <circle class="eye-glint" cx="189" cy="173" r="1.5"/>
-        <path class="nose" d="M157 164L148 211L161 215L151 220"/>
-        <path class="mouth" d="M111 240L211 229L221 246L130 257Z"/>
-        <path class="teeth-line" d="M120 242L132 255M136 239L148 253M153 237L165 251M170 235L182 249M188 233L200 247M205 231L215 244"/>
-        <path class="jaw-line" d="M103 258L129 292L184 292L216 256"/>
-        <path class="neck" d="M130 286L129 317L188 317L183 283Z"/>
-        <path class="shirt" d="M130 313L100 322L70 333L48 390L272 390L247 332L212 320L184 312L160 335Z"/>
-        <path class="shirt-detail" d="M130 315L160 339L185 314M159 340L160 389"/>
-        <path class="shirt-mark" d="M203 349L227 349L227 379L203 369Z"/>
-      </svg>
+      <img
+  class="splash-image"
+  src="images/loading-art.gif"
+  alt="Анимированная иллюстрация проекта"
+>
 
       <div class="splash-caption">ЗАГРУЗКА ПРОЕКТА</div>
     </div>
@@ -697,7 +650,7 @@
     }
 
     // Корень и первый уровень видны сразу.
-    // Для узлов второго уровня и глубже родитель должен быть раскрыт.
+    // Содержимое узлов второго уровня и глубже открывается кликом по родителю.
     function isVisibleByExpansion(node, byId) {
       let current = node;
 
@@ -715,9 +668,7 @@
     }
 
     function getVisibleNodes(byId) {
-      if (!query) {
-        return data.filter(node => isVisibleByExpansion(node, byId));
-      }
+      if (!query) return data.filter(node => isVisibleByExpansion(node, byId));
 
       const result = new Map();
 
@@ -771,10 +722,7 @@
         return;
       }
 
-      if (!data.some(node => node.id === selectedId)) {
-        selectedId = "emode1k";
-      }
-
+      if (!data.some(node => node.id === selectedId)) selectedId = "emode1k";
       selectNode(selectedId);
     }
 
@@ -915,7 +863,6 @@
       const byId = new Map(data.map(item => [item.id, item]));
       const depth = nodeDepth(node, byId);
 
-      // Глубина 1 — первый уровень; он и все более глубокие уровни раскрываются кликом.
       if (depth >= 1 && childrenOf(node.id).length > 0) {
         if (expandedNodes.has(node.id)) {
           expandedNodes.delete(node.id);
