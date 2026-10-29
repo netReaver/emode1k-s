@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080709">
-  <meta name="description" content="Интерактивное дерево проекта emode1k">
-  <title>emode1k — дерево проекта</title>
+  <meta name="description" content="Интерактивный сайт проекта emode1k">
+  <title>emode1k</title>
 
   <style>
     :root {
@@ -18,6 +18,9 @@
       --muted: #a69ba6;
       --accent: #ff2638;
       --line: #75515e;
+      --brightness: 1;
+      --page-scale: 1;
+      --anime-orange: #ff8b24;
     }
 
     * { box-sizing: border-box; }
@@ -31,22 +34,23 @@
         var(--bg);
       font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system,
         BlinkMacSystemFont, "Segoe UI", sans-serif;
+      filter: brightness(var(--brightness));
     }
 
-    button, input, textarea { font: inherit; }
+    button, input, textarea, select { font: inherit; }
     button { color: inherit; }
 
-    input, textarea, .button {
+    input, textarea, select, .button {
       color: var(--text);
       background: var(--panel-soft);
       border: 1px solid var(--border);
       border-radius: 10px;
     }
 
-    input, textarea { padding: 10px 12px; }
-
-    input:focus, textarea:focus, button:focus-visible, a:focus-visible {
-      outline: 2px solid #ff263899;
+    input, textarea, select { padding: 10px 12px; }
+    input:focus, textarea:focus, select:focus,
+    button:focus-visible, a:focus-visible {
+      outline: 2px solid var(--accent);
       outline-offset: 2px;
     }
 
@@ -81,34 +85,24 @@
       padding: 8px;
       border: 1px solid #70404d;
       border-radius: 11px;
-      color: #ff5268;
+      color: var(--accent);
       background: linear-gradient(145deg, #1c1218, #100d12);
-      box-shadow: inset 0 1px #ffffff0c, 0 0 12px #ff26381c;
       cursor: pointer;
     }
 
-    .menu-button:hover {
-      border-color: #ff5268;
-      box-shadow: 0 0 16px #ff263833;
-    }
-
     .menu-button span {
-      display: block;
       width: 19px;
       height: 2px;
       border-radius: 2px;
       background: currentColor;
-      transition: transform .28s ease, opacity .2s ease, width .28s ease;
+      transition: transform .25s ease, opacity .2s ease;
     }
 
     .menu-button[aria-expanded="true"] span:first-child {
       transform: translateY(7px) rotate(45deg);
     }
 
-    .menu-button[aria-expanded="true"] span:nth-child(2) {
-      width: 0;
-      opacity: 0;
-    }
+    .menu-button[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
 
     .menu-button[aria-expanded="true"] span:last-child {
       transform: translateY(-7px) rotate(-45deg);
@@ -123,10 +117,10 @@
       gap: 4px;
       width: 220px;
       padding: 7px;
-      border: 1px solid #70404d;
+      border: 1px solid var(--border);
       border-radius: 13px;
-      background: #141116;
-      box-shadow: 0 16px 45px #0009, 0 0 18px #ff26381c;
+      background: var(--panel);
+      box-shadow: 0 16px 45px #0009;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
@@ -142,26 +136,18 @@
       transform: translateY(0) scale(1);
     }
 
-    .site-menu a,
     .site-menu button {
-      display: block;
       width: 100%;
       padding: 10px 12px;
       border: 0;
       border-radius: 8px;
       color: var(--text);
       background: transparent;
-      font: inherit;
       text-align: left;
-      text-decoration: none;
       cursor: pointer;
     }
 
-    .site-menu a:hover,
-    .site-menu button:hover {
-      color: #ffc0c6;
-      background: #ff263812;
-    }
+    .site-menu button:hover { color: var(--accent); background: #ffffff0b; }
 
     .brand {
       display: inline-flex;
@@ -179,62 +165,21 @@
       width: 38px;
       height: 38px;
       place-items: center;
-      border: 1px solid #ff2638aa;
+      border: 1px solid var(--accent);
       border-radius: 11px;
-      color: #ff3547;
-      background: radial-gradient(circle at 50% 0%, #ff263833, transparent 70%), #13090c;
-      box-shadow: 0 0 16px #ff263833, inset 0 0 12px #ff263814;
+      color: var(--accent);
+      background: #13090c;
+      box-shadow: 0 0 16px #ff263833;
       font-size: 23px;
-      text-shadow: 0 0 12px #ff2638aa;
     }
 
     .brand-word {
       display: inline-flex;
-      align-items: flex-start;
       color: #f3e8e9;
       font-size: 17px;
     }
 
-    .brand-word span {
-      position: relative;
-      display: inline-block;
-      color: #ff3448;
-      text-shadow: 0 0 9px #ff263877;
-    }
-
-    .brand-word span::after {
-      position: absolute;
-      top: calc(100% - 1px);
-      left: 50%;
-      width: 4px;
-      height: var(--drip, 7px);
-      border-radius: 0 0 5px 5px;
-      background: linear-gradient(#e9172d, #780713);
-      box-shadow: 0 2px 5px #ff102455;
-      content: "";
-      transform: translateX(-50%);
-      transform-origin: top;
-      animation: drip 2.8s ease-in-out infinite;
-      animation-delay: var(--delay, 0s);
-    }
-
-    @keyframes drip {
-      0%, 67%, 100% {
-        height: var(--drip, 7px);
-        opacity: .88;
-        transform: translateX(-50%) scaleY(.72);
-      }
-      78% {
-        height: calc(var(--drip, 7px) + 6px);
-        opacity: 1;
-        transform: translateX(-50%) scaleY(1);
-      }
-      92% {
-        height: 2px;
-        opacity: .35;
-        transform: translateX(-50%) scaleY(.55);
-      }
-    }
+    .brand-word span { color: var(--accent); }
 
     .top-actions {
       display: flex;
@@ -250,21 +195,18 @@
       min-height: 40px;
       padding: 9px 13px;
       cursor: pointer;
-      transition: transform .25s cubic-bezier(.16, 1, .3, 1),
-        border-color .25s ease, background .25s ease, box-shadow .25s ease;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
     }
 
     .button:hover {
       transform: translateY(-1px);
-      border-color: #ff263888;
+      border-color: var(--accent);
       background: #292027;
-      box-shadow: 0 5px 20px #ff26381c;
     }
 
-    .button:active { transform: scale(.98); }
     .button:disabled { opacity: .55; cursor: wait; }
-    .button-primary { border-color: #ff263866; color: #ffc0c6; background: #ff263814; }
-    .button-danger { border-color: #8a465177; color: #ffc1c8; }
+    .button-primary { border-color: var(--accent); color: var(--text); }
+    .button-danger { border-color: #8a4651; color: #ffc1c8; }
 
     .contact-wrap { position: relative; }
 
@@ -279,14 +221,6 @@
       border-radius: 12px;
       background: var(--panel);
       box-shadow: 0 16px 45px #0009;
-      transition: opacity .2s ease, transform .2s ease;
-    }
-
-    .contact-menu.hidden {
-      display: block !important;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-6px) scale(.98);
     }
 
     .contact-menu a {
@@ -297,13 +231,17 @@
       text-decoration: none;
     }
 
-    .contact-menu a:hover { color: #ffc0c6; background: #ff263812; }
+    .contact-menu a:hover { color: var(--accent); background: #ffffff0b; }
 
     main {
       width: min(1500px, 100%);
       margin: 0 auto;
       padding: 28px clamp(14px, 3vw, 34px) 54px;
+      zoom: var(--page-scale);
     }
+
+    .page { min-height: 70vh; }
+    .hidden { display: none !important; }
 
     .heading-row {
       display: flex;
@@ -315,7 +253,7 @@
 
     .eyebrow {
       margin: 0 0 6px;
-      color: #ff5360;
+      color: var(--accent);
       font-size: 11px;
       font-weight: 750;
       letter-spacing: .16em;
@@ -326,9 +264,9 @@
       margin: 0;
       font-size: clamp(25px, 4vw, 38px);
       line-height: 1.15;
-      letter-spacing: -.035em;
     }
 
+    h2 { margin-top: 0; }
     .subheading { max-width: 720px; margin: 10px 0 0; color: var(--muted); }
 
     .graph-tools {
@@ -346,28 +284,17 @@
       min-height: 440px;
       height: min(66vh, 760px);
       overflow: hidden;
-      border: 1px solid #70404d;
+      border: 1px solid var(--border);
       border-radius: 18px;
       background:
         radial-gradient(ellipse at 50% 0%, #38141d66, transparent 55%),
-        radial-gradient(circle at 50% 45%, #21151c 0, #100d12 55%, #0b090c 100%);
-      box-shadow: 0 0 0 1px #ff263810, 0 22px 75px #0007, inset 0 1px #ffffff0c;
+        #100d12;
+      box-shadow: 0 22px 75px #0007;
       cursor: grab;
       touch-action: none;
     }
 
     .graph-shell.dragging { cursor: grabbing; }
-
-    .graph-shell::before {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      content: "";
-      opacity: .24;
-      background-image: radial-gradient(#ba9eaa22 .8px, transparent .8px);
-      background-size: 22px 22px;
-    }
 
     svg.graph-svg {
       position: absolute;
@@ -379,45 +306,18 @@
       user-select: none;
     }
 
-    .edge { fill: none; stroke: var(--line); stroke-width: 2; stroke-opacity: .72; }
-
-    .node {
-      cursor: pointer;
-      opacity: 0;
-      transform-box: fill-box;
-      transform-origin: center;
-      animation: appear .55s cubic-bezier(.16, 1, .3, 1) both;
-    }
-
-    .node rect {
-      fill: #19151c;
-      stroke: #705363;
-      stroke-width: 1.6;
-      transition: fill .28s ease, stroke .28s ease, filter .35s ease;
-    }
-
-    .node.root rect { fill: #30151b; stroke: #ff4558; stroke-width: 2; }
-
-    .node:hover rect, .node.selected rect {
-      fill: #2a1b22;
-      stroke: #ff5268;
-      stroke-width: 2;
-      filter: drop-shadow(0 0 7px #ff263855) drop-shadow(0 0 18px #ff263822);
-    }
-
+    .edge { fill: none; stroke: var(--line); stroke-width: 2; stroke-opacity: .8; }
+    .node { cursor: pointer; }
+    .node rect { fill: #19151c; stroke: var(--border); stroke-width: 1.6; }
+    .node.root rect { fill: #30151b; stroke: var(--accent); stroke-width: 2; }
+    .node:hover rect, .node.selected rect { stroke: var(--accent); }
     .node text { fill: var(--text); font-size: 13px; font-weight: 600; pointer-events: none; }
-    .node .dot { fill: #ff4a57; }
-    .node .expand-indicator { fill: #f0a1a8; font-size: 12px; }
-
-    @keyframes appear {
-      from { opacity: 0; scale: .92; translate: 0 12px; }
-      to { opacity: 1; scale: 1; translate: 0 0; }
-    }
+    .node .dot { fill: var(--accent); }
+    .node .expand-indicator { fill: var(--accent); font-size: 12px; }
 
     .empty-state {
       position: absolute;
       inset: 0;
-      z-index: 2;
       display: grid;
       place-items: center;
       padding: 24px;
@@ -435,25 +335,21 @@
     .card {
       min-width: 0;
       padding: 18px;
-      border: 1px solid #70404d;
+      border: 1px solid var(--border);
       border-radius: 16px;
-      background: linear-gradient(145deg, #171319, #110f14);
-      box-shadow: 0 0 0 1px #ff263810, 0 10px 32px #0005, inset 0 1px #ffffff0c;
+      background: linear-gradient(145deg, var(--panel), #110f14);
+      box-shadow: 0 10px 32px #0005;
     }
 
-    .card h2 { margin: 0 0 10px; font-size: 15px; }
-    .muted { color: var(--muted); }
-
-    .details {
-      min-height: 55px;
-      color: #c0b6c1;
+    .details, .article-content {
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
 
-    .form-grid { display: grid; gap: 9px; }
-    textarea { width: 100%; min-height: 100px; resize: vertical; }
-    .button-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .muted { color: var(--muted); }
+    .form-grid { display: grid; gap: 10px; }
+    textarea { width: 100%; min-height: 120px; resize: vertical; }
+    .button-row, .article-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 
     .status {
       min-height: 1.4em;
@@ -464,8 +360,6 @@
     }
 
     .error { color: #ffabb3; }
-    .hidden { display: none !important; }
-
     .notice {
       margin: 10px 0;
       padding: 11px 12px;
@@ -488,68 +382,103 @@
     }
 
     .modal {
-      width: min(100%, 420px);
+      width: min(100%, 460px);
+      max-height: 90vh;
+      overflow: auto;
       padding: 20px;
-      border: 1px solid #70404d;
+      border: 1px solid var(--border);
       border-radius: 16px;
-      background: #171319;
-      box-shadow: 0 0 0 1px #ff263810, 0 24px 80px #0009;
+      background: var(--panel);
+      box-shadow: 0 24px 80px #0009;
     }
 
-    .modal h2 { margin-top: 0; }
+    .page-heading { margin: 0 0 18px; }
+    .back-button { margin-bottom: 16px; }
+    .article-list { display: grid; gap: 12px; margin-top: 16px; }
+    .article-card h2 { margin-bottom: 8px; }
+    .setting-row { display: grid; gap: 6px; }
+    .setting-check { display: flex; align-items: center; gap: 10px; }
+    .range-line { display: flex; align-items: center; gap: 12px; }
+    .range-line input { flex: 1; }
+    input[type="range"] { accent-color: var(--accent); }
+    input[type="color"] { width: 70px; height: 42px; padding: 4px; }
+    select { width: 100%; }
 
-    .splash {
+    .side-art {
+      display: none;
       position: fixed;
-      inset: 0;
-      z-index: 1000;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      background: #030303;
-      transition: opacity .7s ease, visibility .7s ease;
-    }
-
-    .splash.finished { opacity: 0; visibility: hidden; pointer-events: none; }
-    .splash-content { display: grid; justify-items: center; gap: 18px; width: 100%; padding: 20px; }
-
-    .ascii-title {
-      margin: 0;
-      max-width: 96vw;
-      overflow: hidden;
-      color: #ff2538;
-      font: 800 clamp(7px, 1.8vw, 19px)/1.12 "Courier New", monospace;
-      white-space: pre;
-      text-shadow: 0 0 8px #ff1a2a88, 0 0 25px #d0001e66;
-      animation: red-flow 5s ease-in-out forwards;
-    }
-
-    .splash-image {
-      display: block;
-      width: min(320px, 58vw);
-      max-height: 45vh;
+      z-index: 0;
+      top: 50%;
+      width: min(19vw, 250px);
+      max-height: 65vh;
       object-fit: contain;
-      filter: drop-shadow(0 8px 18px #ff182522);
+      opacity: .78;
+      pointer-events: none;
+      transform: translateY(-50%);
     }
 
-    .splash-caption {
-      color: #b81f30;
-      font-size: 11px;
-      letter-spacing: .35em;
-      animation: pulse 1.4s ease-in-out infinite alternate;
+    .side-art.left { left: 0; }
+    .side-art.right { right: 0; }
+
+    .gothic-cross {
+      display: none;
+      position: fixed;
+      z-index: 0;
+      color: #aaa;
+      font-size: clamp(40px, 8vw, 110px);
+      opacity: .22;
+      pointer-events: none;
     }
 
-    @keyframes red-flow {
-      0% { color: #9e0718; transform: translateX(-24px); }
-      50% { color: #ff2638; transform: translateX(0); }
-      100% { color: #e51c30; transform: translateX(24px); }
+    .gothic-cross.one { left: 2%; top: 24%; }
+    .gothic-cross.two { right: 2%; top: 58%; }
+    .gothic-cross.three { left: 3%; bottom: 3%; }
+
+    .complaint-link {
+      display: inline-block;
+      color: var(--accent);
+      overflow-wrap: anywhere;
     }
 
-    @keyframes pulse {
-      from { opacity: .45; }
-      to { opacity: 1; }
+    body.theme-gothic {
+      --bg: #090909;
+      --panel: #151515;
+      --panel-soft: #202020;
+      --border: #555;
+      --text: #eee;
+      --muted: #aaa;
+      --accent: #dedede;
+      --line: #888;
+      background: #090909;
+      filter: grayscale(1) brightness(var(--brightness));
     }
 
-    .page-section { margin-top: 18px; scroll-margin-top: 90px; }
+    body.theme-gothic .gothic-cross { display: block; }
+
+    body.theme-anime {
+      --bg: #241408;
+      --panel: #321d0c;
+      --panel-soft: #45280e;
+      --border: #aa621e;
+      --text: #fff0d9;
+      --muted: #e4bd91;
+      --accent: #ff941f;
+      --line: #d77a27;
+      background: radial-gradient(ellipse at 50% 0%, #783b0b, transparent 55%), #241408;
+    }
+
+    body.theme-anime .side-art { display: block; }
+
+    body.theme-anime .topbar,
+    body.theme-anime .card,
+    body.theme-anime .site-menu {
+      background-color: #321d0c;
+    }
+
+    .animations-off *, .animations-off *::before, .animations-off *::after {
+      animation: none !important;
+      transition: none !important;
+    }
 
     @media (max-width: 760px) {
       .topbar { flex-wrap: wrap; gap: 10px; }
@@ -561,7 +490,7 @@
       .graph-tools { justify-content: flex-start; }
       .content-grid { grid-template-columns: 1fr; }
       .graph-shell { height: 58vh; min-height: 340px; }
-      .ascii-title { font-size: clamp(5px, 1.55vw, 12px); }
+      .side-art { width: 16vw; opacity: .35; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -575,124 +504,215 @@
 </head>
 
 <body>
-  <div id="splash" class="splash" aria-label="Загрузка сайта">
-    <div class="splash-content">
-      <pre class="ascii-title" aria-label="EMODE1K">
- _____ __  __  ___  ____  _____ _  __
-| ____|  \/  |/ _ \|  _ \| ____| |/ /
-|  _| | |\/| | | | | | |  _| | ' /
-| |___| |  | | |_| | |_| | |___| . \
-|_____|_|  |_|\___/|____/|_____|_|\_\
-      </pre>
-      <img
-        class="splash-image"
-        src="forgókereszt-at-the-cross.gif"
-        alt="Анимированная иллюстрация проекта"
-      >
-      <div class="splash-caption">ЗАГРУЗКА ПРОЕКТА</div>
-    </div>
-  </div>
+  <span class="gothic-cross one" aria-hidden="true">✝</span>
+  <span class="gothic-cross two" aria-hidden="true">✝</span>
+  <span class="gothic-cross three" aria-hidden="true">✝</span>
+
+  <img class="side-art left" alt="Аниме-персонаж"
+    src="https://static.jojowiki.com/images/thumb/3/3a/latest/20210430072039/Jotaro_SC_Infobox_Anime.png/400px-Jotaro_SC_Infobox_Anime.png">
+  <img class="side-art right" alt="Аниме-персонаж"
+    src="https://static.wikia.nocookie.net/jujutsu-kaisen/images/e/ef/Satoru_Gojo_%28Anime_2%29.png/revision/latest?cb=20250726003655">
 
   <header class="topbar">
     <div class="brand-area">
-      <button
-        id="menuButton"
-        class="menu-button"
-        type="button"
-        aria-label="Открыть меню"
-        aria-expanded="false"
-        aria-controls="siteMenu"
-      >
+      <button id="menuButton" class="menu-button" type="button"
+        aria-label="Открыть меню" aria-expanded="false" aria-controls="siteMenu">
         <span></span><span></span><span></span>
       </button>
 
       <a class="brand" href="#" aria-label="emode1k">
         <span class="brand-mark" aria-hidden="true">e</span>
         <span class="brand-word" aria-hidden="true">
-          <span style="--drip:8px;--delay:0s">E</span><span style="--drip:5px;--delay:.2s">m</span><span style="--drip:9px;--delay:.4s">o</span><span style="--drip:6px;--delay:.1s">d</span><span style="--drip:8px;--delay:.5s">e</span><span style="--drip:5px;--delay:.3s">1</span><span style="--drip:9px;--delay:.6s">k</span>
+          <span>E</span><span>m</span><span>o</span><span>d</span><span>e</span><span>1</span><span>k</span>
         </span>
       </a>
 
       <nav id="siteMenu" class="site-menu" aria-label="Главное меню" inert>
-        <a href="#articles">Статьи</a>
-        <a href="#settings">Настройки</a>
+        <button type="button" data-page="tree">Главная</button>
+        <button type="button" data-page="articles">Статьи</button>
+        <button type="button" data-page="settings">Настройки</button>
+        <button type="button" data-page="complaint">Сообщить об ошибке</button>
         <button id="menuLogoutButton" type="button">Выйти из профиля</button>
       </nav>
     </div>
 
     <div class="top-actions">
       <input id="search" class="search" type="search" placeholder="Поиск по дереву…" aria-label="Поиск по дереву">
-
       <div class="contact-wrap">
-        <button id="contactButton" class="button" type="button" aria-expanded="false" aria-controls="contactMenu">Связь с автором</button>
+        <button id="contactButton" class="button" type="button" aria-expanded="false">Связь с автором</button>
         <nav id="contactMenu" class="contact-menu hidden" aria-label="Профили автора">
           <a href="https://discord.gg/CWDxSzTxn" target="_blank" rel="noopener noreferrer">Discord — emode1k</a>
           <a href="https://t.me/emode1k" target="_blank" rel="noopener noreferrer">Telegram — emode1k</a>
           <a href="https://github.com/emode1k" target="_blank" rel="noopener noreferrer">GitHub — emode1k</a>
         </nav>
       </div>
-
       <button id="adminButton" class="button button-primary" type="button">Войти</button>
       <button id="logoutButton" class="button hidden" type="button">Выйти</button>
     </div>
   </header>
 
   <main>
-    <div class="heading-row">
-      <div>
-        <p class="eyebrow">Интерактивная карта проекта</p>
-        <h1>Дерево emode1k</h1>
-        <p class="subheading">Перетаскивай пустое место, чтобы двигать граф. Колесо мыши меняет масштаб. Узлы второго уровня и глубже раскрываются нажатием.</p>
-      </div>
-
-      <div class="graph-tools">
-        <span id="graphMeta" class="graph-meta"></span>
-        <button id="resetViewButton" class="button" type="button">Сбросить вид</button>
-      </div>
-    </div>
-
-    <div id="graph" class="graph-shell" aria-label="Перемещаемый граф проекта"></div>
-
-    <div class="content-grid">
-      <section class="card">
-        <h2 id="detailsTitle">Информация об узле</h2>
-        <div id="details" class="details">Загрузка дерева…</div>
-        <div id="adminNodeActions" class="button-row hidden">
-          <button id="editNodeButton" class="button" type="button">Изменить</button>
-          <button id="deleteNodeButton" class="button button-danger" type="button">Удалить ветку</button>
+    <section id="treePage" class="page">
+      <div class="heading-row">
+        <div>
+          <p class="eyebrow">Интерактивная карта проекта</p>
+          <h1>Дерево emode1k</h1>
+          <p class="subheading">Перетаскивай граф для перемещения. Колесо мыши меняет масштаб. Нажимай узлы, чтобы раскрывать ветки.</p>
         </div>
-      </section>
+        <div class="graph-tools">
+          <span id="graphMeta" class="graph-meta"></span>
+          <button id="resetViewButton" class="button" type="button">Сбросить вид</button>
+        </div>
+      </div>
 
-      <section id="adminPanel" class="card hidden">
-        <h2 id="formTitle">Добавить узел</h2>
-        <p class="muted">Новый узел станет дочерним для выбранного узла.</p>
-        <form id="nodeForm" class="form-grid">
-          <input id="nodeLabel" maxlength="80" required placeholder="Название">
-          <textarea id="nodeInfo" maxlength="2000" placeholder="Описание"></textarea>
-          <div class="button-row">
-            <button id="saveNodeButton" class="button button-primary" type="submit">Добавить</button>
-            <button id="cancelEditButton" class="button hidden" type="button">Отмена</button>
+      <div id="graph" class="graph-shell" aria-label="Дерево проекта"></div>
+
+      <div class="content-grid">
+        <section class="card">
+          <h2 id="detailsTitle">Информация об узле</h2>
+          <div id="details" class="details">Загрузка дерева…</div>
+          <div id="adminNodeActions" class="button-row hidden">
+            <button id="editNodeButton" class="button" type="button">Изменить</button>
+            <button id="deleteNodeButton" class="button button-danger" type="button">Удалить ветку</button>
           </div>
-        </form>
-        <p id="adminStatus" class="status" role="status"></p>
-      </section>
-    </div>
+        </section>
 
-    <section id="articles" class="card page-section">
-      <h2>Статьи</h2>
-      <p class="muted">Здесь можно разместить статьи проекта.</p>
+        <section id="adminPanel" class="card hidden">
+          <h2 id="nodeFormTitle">Добавить узел</h2>
+          <form id="nodeForm" class="form-grid">
+            <input id="nodeLabel" maxlength="80" required placeholder="Название">
+            <textarea id="nodeInfo" maxlength="2000" placeholder="Описание"></textarea>
+            <div class="button-row">
+              <button id="saveNodeButton" class="button button-primary" type="submit">Добавить</button>
+              <button id="cancelNodeButton" class="button hidden" type="button">Отмена</button>
+            </div>
+          </form>
+          <p id="adminStatus" class="status" role="status"></p>
+        </section>
+      </div>
     </section>
 
-    <section id="settings" class="card page-section">
-      <h2>Настройки</h2>
-      <p class="muted">Раздел настроек пока пуст.</p>
+    <section id="articlesPage" class="page hidden">
+      <button class="button back-button" data-back type="button">← Назад</button>
+      <h1 class="page-heading">Статьи</h1>
+
+      <section id="articleEditor" class="card hidden">
+        <h2 id="articleFormHeading">Новая статья</h2>
+        <form id="articleForm" class="form-grid">
+          <input id="articleTitle" maxlength="150" placeholder="Заголовок" required>
+          <textarea id="articleContent" maxlength="20000" placeholder="Текст статьи" required></textarea>
+          <div class="button-row">
+            <button id="saveArticleButton" class="button button-primary" type="submit">Опубликовать</button>
+            <button id="cancelArticleButton" class="button hidden" type="button">Отмена</button>
+          </div>
+        </form>
+        <p id="articleStatus" class="status" role="status"></p>
+      </section>
+      <div id="articlesList" class="article-list"></div>
+    </section>
+
+    <section id="settingsPage" class="page hidden">
+      <button class="button back-button" data-back type="button">← Назад</button>
+      <h1 class="page-heading">Настройки сайта</h1>
+
+      <section id="settingsEditor" class="card hidden">
+        <form id="settingsForm" class="form-grid">
+          <label class="setting-row">
+            Цвет интерфейса
+            <select id="colorSelect">
+              <option value="#ff2638">Красный — текущий</option>
+              <option value="#e53935">Красный</option>
+              <option value="#f44336">Алый</option>
+              <option value="#ff5722">Оранжево-красный</option>
+              <option value="#ff9800">Оранжевый</option>
+              <option value="#ffc107">Янтарный</option>
+              <option value="#ffeb3b">Жёлтый</option>
+              <option value="#cddc39">Лаймовый</option>
+              <option value="#8bc34a">Салатовый</option>
+              <option value="#4caf50">Зелёный</option>
+              <option value="#009688">Бирюзовый</option>
+              <option value="#00bcd4">Циан</option>
+              <option value="#03a9f4">Голубой</option>
+              <option value="#2196f3">Синий</option>
+              <option value="#3f51b5">Индиго</option>
+              <option value="#673ab7">Фиолетовый</option>
+              <option value="#9c27b0">Пурпурный</option>
+              <option value="#e91e63">Розовый</option>
+              <option value="#795548">Коричневый</option>
+              <option value="#9e9e9e">Серый</option>
+              <option value="#607d8b">Сине-серый</option>
+              <option value="#ffffff">Белый</option>
+              <option value="#d4af37">Золотой</option>
+              <option value="#00a86b">Изумрудный</option>
+              <option value="#7cfc00">Лайм</option>
+              <option value="#ff00ff">Фуксия</option>
+              <option value="#40e0d0">Бирюзовый светлый</option>
+              <option value="#6495ed">Васильковый</option>
+              <option value="#dc143c">Малиновый</option>
+              <option value="#ff7f50">Коралловый</option>
+            </select>
+          </label>
+
+          <label class="setting-row">
+            Общий стиль сайта
+            <select id="themeSelect">
+              <option value="standard">Стандартный</option>
+              <option value="gothic">Готик</option>
+              <option value="anime">Аниме</option>
+            </select>
+          </label>
+
+          <label class="setting-row">
+            Размер страницы
+            <div class="range-line">
+              <input id="pageScale" type="range" min="80" max="120" step="5" value="100">
+              <output id="pageScaleOutput">100%</output>
+            </div>
+          </label>
+
+          <label class="setting-row">
+            Яркость
+            <div class="range-line">
+              <input id="brightness" type="range" min="50" max="120" step="5" value="100">
+              <output id="brightnessOutput">100%</output>
+            </div>
+          </label>
+
+          <label class="setting-check">
+            <input id="animationsEnabled" type="checkbox" checked>
+            Включить анимации
+          </label>
+
+          <button class="button button-primary" type="submit">Сохранить для всех</button>
+        </form>
+        <p id="settingsStatus" class="status" role="status"></p>
+      </section>
+
+      <p id="settingsReadOnly" class="muted">Настройки доступны для просмотра. Войдите в аккаунт администратора, чтобы изменить их.</p>
     </section>
   </main>
 
+  <div id="complaintDialog" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="complaintTitle">
+    <section class="modal">
+      <h2 id="complaintTitle">Сообщить об ошибках или нарушениях</h2>
+      <p>Обращение будет подготовлено для отправки на:</p>
+      <a class="complaint-link" href="mailto:emode1koff@gmail.com">emode1koff@gmail.com</a>
+      <form id="complaintForm" class="form-grid">
+        <label for="complaintText">Текст обращения</label>
+        <textarea id="complaintText" maxlength="5000" required placeholder="Опишите ошибку или нарушение"></textarea>
+        <div class="button-row">
+          <button class="button button-primary" type="submit">Открыть почту</button>
+          <button id="closeComplaintButton" class="button" type="button">Закрыть</button>
+        </div>
+      </form>
+      <p class="muted">Нажатие откроет почтовое приложение. Если оно не настроено, скопируйте текст и отправьте письмо вручную.</p>
+    </section>
+  </div>
+
   <div id="loginDialog" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
-    <div class="modal">
+    <section class="modal">
       <h2 id="loginTitle">Вход администратора</h2>
-      <p class="notice">Вход выполняется через Supabase Auth. Пароль в HTML-файле не хранится.</p>
+      <p class="notice">Вход выполняется через Supabase Auth.</p>
       <form id="loginForm" class="form-grid">
         <input id="emailInput" type="email" autocomplete="username" placeholder="Почта администратора" required>
         <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Пароль Supabase" required>
@@ -702,44 +722,49 @@
         </div>
         <p id="loginStatus" class="status error" role="status"></p>
       </form>
-    </div>
+    </section>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = "https://ajydliryxxhqetfwefya.supabase.co";
     const SUPABASE_PUBLIC_KEY = "sb_publishable_itE-NyvxMgqHsbqn3Dp4sQ_2uZPoiUZ";
-    const TABLE_NAME = "nodes";
+    const ADMIN_EMAIL = "emode1koff@gmail.com";
     const ROOT_ID = "emode1k";
-    const NODE_WIDTH = 188;
-    const NODE_HEIGHT = 60;
-    const ROOT_STEP = 330;
-    const COMPACT_STEP = ROOT_STEP / 2.5;
-    const ROW_STEP = 82;
-
+    const NODE_W = 188, NODE_H = 60;
+    const ROOT_STEP = 330, COMPACT_STEP = ROOT_STEP / 2.5, ROW_STEP = 82;
     const $ = id => document.getElementById(id);
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
 
     let nodes = [];
     let selectedId = ROOT_ID;
     let isAdmin = false;
-    let editingId = null;
-    let searchText = "";
+    let editingNodeId = null;
+    let editingArticleId = null;
+    let query = "";
     let loading = false;
     let drag = null;
     let fitted = false;
-
+    let currentPage = "tree";
     const expanded = new Set();
     const view = { x: 0, y: 0, scale: 1 };
 
+    const colorOptions = [
+      "#ff2638","#e53935","#f44336","#ff5722","#ff9800","#ffc107",
+      "#ffeb3b","#cddc39","#8bc34a","#4caf50","#009688","#00bcd4",
+      "#03a9f4","#2196f3","#3f51b5","#673ab7","#9c27b0","#e91e63",
+      "#795548","#9e9e9e","#607d8b","#ffffff","#d4af37","#00a86b",
+      "#7cfc00","#ff00ff","#40e0d0","#6495ed","#dc143c","#ff7f50"
+    ];
+
     function escapeHtml(value) {
       return String(value).replace(/[&<>"']/g, char => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
       })[char]);
+    }
+
+    function isSiteAdmin(session) {
+      return session?.user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
     }
 
     function childrenOf(id) {
@@ -747,254 +772,174 @@
     }
 
     function descendantsOf(id) {
-      const result = new Set([id]);
-
+      const found = new Set([id]);
       function visit(parentId) {
         for (const child of childrenOf(parentId)) {
-          if (result.has(child.id)) continue;
-          result.add(child.id);
+          if (found.has(child.id)) continue;
+          found.add(child.id);
           visit(child.id);
         }
       }
-
       visit(id);
-      return result;
+      return found;
     }
 
     function depthOf(node, byId) {
-      let depth = 0;
-      let current = node;
-      const visited = new Set();
-
-      while (current.parent && byId.has(current.parent) && !visited.has(current.id)) {
-        visited.add(current.id);
-        depth += 1;
+      let depth = 0, current = node;
+      const seen = new Set();
+      while (current.parent && byId.has(current.parent) && !seen.has(current.id)) {
+        seen.add(current.id);
+        depth++;
         current = byId.get(current.parent);
       }
-
       return depth;
     }
 
-    function isVisible(node, byId) {
+    function visibleByExpansion(node, byId) {
       let current = node;
-
       while (current.parent && byId.has(current.parent)) {
         const parent = byId.get(current.parent);
         if (depthOf(parent, byId) >= 1 && !expanded.has(parent.id)) return false;
         current = parent;
       }
-
       return true;
     }
 
-    function getVisibleNodes(byId) {
-      if (!searchText) return nodes.filter(node => isVisible(node, byId));
-
-      const result = new Map();
-      const term = searchText.toLocaleLowerCase();
+    function visibleNodes(byId) {
+      if (!query) return nodes.filter(node => visibleByExpansion(node, byId));
+      const found = new Map();
+      const term = query.toLocaleLowerCase();
 
       for (const node of nodes) {
-        const text = `${node.label} ${node.info || ""}`.toLocaleLowerCase();
-        if (!text.includes(term)) continue;
-
-        result.set(node.id, node);
+        if (!`${node.label} ${node.info || ""}`.toLocaleLowerCase().includes(term)) continue;
+        found.set(node.id, node);
         let current = node;
-
         while (current.parent && byId.has(current.parent)) {
           current = byId.get(current.parent);
-          result.set(current.id, current);
+          found.set(current.id, current);
         }
       }
-
-      return [...result.values()];
+      return [...found.values()];
     }
 
-    function childrenForLayout(parentId, visibleIds) {
-      return nodes
-        .filter(node => node.parent === parentId && visibleIds.has(node.id))
+    function sortedChildren(parentId, visibleIds) {
+      return nodes.filter(n => n.parent === parentId && visibleIds.has(n.id))
         .sort((a, b) => a.label.localeCompare(b.label));
     }
 
-    function buildLayout(visible, byId) {
-      const visibleIds = new Set(visible.map(node => node.id));
-      const positions = new Map();
-      const root = byId.get(ROOT_ID);
+    function layout(visible, byId) {
+      const ids = new Set(visible.map(n => n.id));
+      const points = new Map();
+      if (!ids.has(ROOT_ID) || !byId.has(ROOT_ID)) return points;
+      points.set(ROOT_ID, { x: 0, y: 0 });
 
-      if (!root || !visibleIds.has(ROOT_ID)) return positions;
-      positions.set(ROOT_ID, { x: 0, y: 0 });
-
-      const directions = [
-        { x: -1, y: 0 },
-        { x: 0, y: 1 },
-        { x: 1, y: 0 }
-      ];
-
-      const rootChildren = childrenForLayout(ROOT_ID, visibleIds);
-
-      rootChildren.forEach((branch, branchIndex) => {
-        const direction = directions[branchIndex % 3];
-        const lane = Math.floor(branchIndex / 3);
-        const laneOffset = lane === 0 ? 0 : (lane % 2 ? 1 : -1) * Math.ceil(lane / 2);
-
+      const directions = [{ x: -1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 0 }];
+      sortedChildren(ROOT_ID, ids).forEach((branch, index) => {
+        const dir = directions[index % 3];
+        const lane = Math.floor(index / 3);
+        const offset = lane ? (lane % 2 ? 1 : -1) * Math.ceil(lane / 2) * ROW_STEP : 0;
         const branchPoint = {
-          x: direction.x * ROOT_STEP,
-          y: direction.y * ROOT_STEP + laneOffset * ROW_STEP
+          x: dir.x * ROOT_STEP,
+          y: dir.y * ROOT_STEP + offset
         };
+        points.set(branch.id, branchPoint);
 
-        positions.set(branch.id, branchPoint);
-
-        function placeDescendants(parent, parentPoint, depth) {
-          const children = childrenForLayout(parent.id, visibleIds);
+        function place(parent, point, depth) {
+          const children = sortedChildren(parent.id, ids);
           const step = depth === 1 ? ROOT_STEP : COMPACT_STEP;
 
-          children.forEach((child, index) => {
-            const offset = index - (children.length - 1) / 2;
-            const point = {
-              x: parentPoint.x + direction.x * step + (direction.y ? offset * ROW_STEP : 0),
-              y: parentPoint.y + direction.y * step + (direction.x ? offset * ROW_STEP : 0)
+          children.forEach((child, i) => {
+            const spread = (i - (children.length - 1) / 2) * ROW_STEP;
+            const next = {
+              x: point.x + dir.x * step + (dir.y ? spread : 0),
+              y: point.y + dir.y * step + (dir.x ? spread : 0)
             };
-
-            positions.set(child.id, point);
-            placeDescendants(child, point, depth + 1);
+            points.set(child.id, next);
+            place(child, next, depth + 1);
           });
         }
-
-        placeDescendants(branch, branchPoint, 1);
+        place(branch, branchPoint, 1);
       });
-
-      return positions;
+      return points;
     }
 
-    function edgeMarkup(parent, child) {
-      const dx = child.x - parent.x;
-      const dy = child.y - parent.y;
-      const distance = Math.hypot(dx, dy) || 1;
-      const ux = dx / distance;
-      const uy = dy / distance;
-
-      const startX = parent.x + ux * NODE_WIDTH / 2;
-      const startY = parent.y + uy * NODE_HEIGHT / 2;
-      const endX = child.x - ux * NODE_WIDTH / 2;
-      const endY = child.y - uy * NODE_HEIGHT / 2;
-
-      const bend = .45;
-      const c1x = startX + dx * bend;
-      const c1y = startY + dy * bend;
-      const c2x = endX - dx * bend;
-      const c2y = endY - dy * bend;
-
-      return `<path class="edge" d="M ${startX} ${startY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${endX} ${endY}"></path>`;
+    function makeEdge(a, b) {
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const length = Math.hypot(dx, dy) || 1;
+      const ux = dx / length, uy = dy / length;
+      const x1 = a.x + ux * NODE_W / 2, y1 = a.y + uy * NODE_H / 2;
+      const x2 = b.x - ux * NODE_W / 2, y2 = b.y - uy * NODE_H / 2;
+      return `<path class="edge" d="M${x1} ${y1} C${x1 + dx * .4} ${y1 + dy * .4},${x2 - dx * .4} ${y2 - dy * .4},${x2} ${y2}"/>`;
     }
 
     function draw() {
       const host = $("graph");
-
       if (loading) {
-        host.innerHTML = '<div class="empty-state">Загрузка дерева из облака…</div>';
-        $("graphMeta").textContent = "";
+        host.innerHTML = '<div class="empty-state">Загрузка дерева…</div>';
         return;
       }
 
-      const byId = new Map(nodes.map(node => [node.id, node]));
-      const visible = getVisibleNodes(byId);
-      $("graphMeta").textContent = `${visible.length} / ${nodes.length} узлов`;
+      const byId = new Map(nodes.map(n => [n.id, n]));
+      const shown = visibleNodes(byId);
+      $("graphMeta").textContent = `${shown.length} / ${nodes.length} узлов`;
 
-      if (!visible.length) {
+      if (!shown.length) {
         host.innerHTML = '<div class="empty-state">Дерево пусто или ничего не найдено.</div>';
         return;
       }
 
-      const positions = buildLayout(visible, byId);
-      const visibleIds = new Set(visible.map(node => node.id));
-      const points = [...positions.entries()].filter(([id]) => visibleIds.has(id));
-
-      const xs = points.map(([, point]) => point.x);
-      const ys = points.map(([, point]) => point.y);
-      const left = Math.min(...xs) - NODE_WIDTH;
-      const right = Math.max(...xs) + NODE_WIDTH;
-      const top = Math.min(...ys) - NODE_HEIGHT * 2;
-      const bottom = Math.max(...ys) + NODE_HEIGHT * 2;
-
-      const contentWidth = Math.max(900, right - left);
-      const contentHeight = Math.max(480, bottom - top);
-      const offsetX = -left + (contentWidth - (right - left)) / 2;
-      const offsetY = -top + (contentHeight - (bottom - top)) / 2;
+      const points = layout(shown, byId);
+      const xs = [...points.values()].map(p => p.x);
+      const ys = [...points.values()].map(p => p.y);
+      const minX = Math.min(...xs) - NODE_W, maxX = Math.max(...xs) + NODE_W;
+      const minY = Math.min(...ys) - NODE_H * 2, maxY = Math.max(...ys) + NODE_H * 2;
+      const width = Math.max(900, maxX - minX), height = Math.max(480, maxY - minY);
+      const ox = -minX + (width - (maxX - minX)) / 2;
+      const oy = -minY + (height - (maxY - minY)) / 2;
 
       let edges = "";
-      for (const node of visible) {
-        const parentPoint = positions.get(node.parent);
-        const childPoint = positions.get(node.id);
-        if (parentPoint && childPoint) edges += edgeMarkup(parentPoint, childPoint);
-      }
-
-      let nodeMarkup = "";
-
-      visible.forEach((node, index) => {
-        const point = positions.get(node.id);
-        if (!point) return;
-
-        const label = node.label.length > 24 ? node.label.slice(0, 23) + "…" : node.label;
-        const depth = depthOf(node, byId);
-        const canExpand = depth >= 1 && childrenOf(node.id).length > 0;
-        const indicator = canExpand ? (expanded.has(node.id) ? "−" : "+") : "";
-        const action = canExpand
-          ? (expanded.has(node.id) ? ", свернуть ветку" : ", раскрыть ветку")
-          : "";
-
-        nodeMarkup += `
-          <g class="node ${node.id === ROOT_ID ? "root" : ""} ${selectedId === node.id ? "selected" : ""}"
-             data-id="${escapeHtml(node.id)}"
-             transform="translate(${point.x + offsetX - NODE_WIDTH / 2},${point.y + offsetY - NODE_HEIGHT / 2})"
-             tabindex="0"
-             role="button"
-             aria-label="${escapeHtml(node.label + action)}"
-             style="animation-delay:${Math.min(index * 30, 300)}ms">
-            <rect width="${NODE_WIDTH}" height="${NODE_HEIGHT}" rx="12"></rect>
-            <circle class="dot" cx="16" cy="30" r="3"></circle>
-            <text x="98" y="35" text-anchor="middle">${escapeHtml(label)}</text>
-            <text class="expand-indicator" x="173" y="20" text-anchor="middle">${indicator}</text>
-          </g>`;
+      shown.forEach(n => {
+        const a = points.get(n.parent), b = points.get(n.id);
+        if (a && b) edges += makeEdge(a, b);
       });
 
-      host.innerHTML = `
-        <svg class="graph-svg" aria-label="Дерево проекта">
-          <g id="graphContent">
-            <g transform="translate(${offsetX} ${offsetY})">${edges}</g>
-            ${nodeMarkup}
-          </g>
-        </svg>`;
+      let nodeMarkup = "";
+      shown.forEach((n, i) => {
+        const p = points.get(n.id);
+        if (!p) return;
+        const label = n.label.length > 24 ? n.label.slice(0, 23) + "…" : n.label;
+        const expandable = depthOf(n, byId) >= 1 && childrenOf(n.id).length > 0;
+        const sign = expandable ? (expanded.has(n.id) ? "−" : "+") : "";
+        const action = expandable ? (expanded.has(n.id) ? ", свернуть" : ", раскрыть") : "";
 
-      const svg = host.querySelector("svg");
-      svg.setAttribute("viewBox", `0 0 ${host.clientWidth} ${host.clientHeight}`);
+        nodeMarkup += `<g class="node ${n.id === ROOT_ID ? "root" : ""} ${n.id === selectedId ? "selected" : ""}"
+          data-id="${escapeHtml(n.id)}" transform="translate(${p.x + ox - NODE_W / 2},${p.y + oy - NODE_H / 2})"
+          tabindex="0" role="button" aria-label="${escapeHtml(n.label + action)}"
+          style="animation-delay:${Math.min(i * 20, 250)}ms">
+          <rect width="${NODE_W}" height="${NODE_H}" rx="12"/>
+          <circle class="dot" cx="16" cy="30" r="3"/>
+          <text x="98" y="35" text-anchor="middle">${escapeHtml(label)}</text>
+          <text class="expand-indicator" x="173" y="20" text-anchor="middle">${sign}</text>
+        </g>`;
+      });
+
+      host.innerHTML = `<svg class="graph-svg" viewBox="0 0 ${host.clientWidth} ${host.clientHeight}">
+        <g id="graphContent"><g transform="translate(${ox} ${oy})">${edges}</g>${nodeMarkup}</g></svg>`;
 
       if (!fitted) {
-        view.scale = Math.max(
-          .35,
-          Math.min(
-            1,
-            (host.clientWidth - 40) / contentWidth,
-            (host.clientHeight - 40) / contentHeight
-          )
-        );
-        view.x = Math.max(20, (host.clientWidth - contentWidth * view.scale) / 2);
-        view.y = Math.max(20, (host.clientHeight - contentHeight * view.scale) / 2);
+        view.scale = Math.max(.35, Math.min(1,
+          (host.clientWidth - 40) / width, (host.clientHeight - 40) / height));
+        view.x = Math.max(20, (host.clientWidth - width * view.scale) / 2);
+        view.y = Math.max(20, (host.clientHeight - height * view.scale) / 2);
         fitted = true;
       }
+      $("graphContent").setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
 
-      $("graphContent").setAttribute(
-        "transform",
-        `translate(${view.x} ${view.y}) scale(${view.scale})`
-      );
-
-      host.querySelectorAll(".node").forEach(element => {
-        const activate = () => handleNodeClick(element.dataset.id);
-
-        element.addEventListener("click", activate);
-        element.addEventListener("keydown", event => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            activate();
-          }
+      host.querySelectorAll(".node").forEach(el => {
+        const activate = () => handleNodeClick(el.dataset.id);
+        el.addEventListener("click", activate);
+        el.addEventListener("keydown", e => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activate(); }
         });
       });
     }
@@ -1004,69 +949,90 @@
       $("details").textContent = "Загружаю дерево из Supabase…";
       draw();
 
-      const { data: rows, error } = await supabaseClient
-        .from(TABLE_NAME)
-        .select("id,parent_id,label,info")
-        .order("label");
+      const { data, error } = await db.from("nodes")
+        .select("id,parent_id,label,info").order("label");
 
       loading = false;
-
       if (error) {
         nodes = [];
         $("detailsTitle").textContent = "Ошибка загрузки";
-        $("details").textContent =
-          "Проверь таблицу nodes и политику чтения в Supabase. " + error.message;
+        $("details").textContent = error.message;
         draw();
         return;
       }
 
-      nodes = (rows || []).map(row => ({
-        id: row.id,
-        parent: row.parent_id,
-        label: row.label,
-        info: row.info || ""
+      nodes = (data || []).map(row => ({
+        id: row.id, parent: row.parent_id, label: row.label, info: row.info || ""
       }));
 
-      if (!nodes.some(node => node.id === ROOT_ID)) {
-        $("detailsTitle").textContent = "Корневой узел не найден";
-        $("details").textContent =
-          "Добавь запись emode1k в таблицу nodes с parent_id равным null.";
+      if (!nodes.some(n => n.id === ROOT_ID)) {
+        $("detailsTitle").textContent = "Корень не найден";
+        $("details").textContent = "Добавь emode1k в nodes с parent_id = null.";
         draw();
         return;
       }
 
-      if (!nodes.some(node => node.id === selectedId)) selectedId = ROOT_ID;
+      if (!nodes.some(n => n.id === selectedId)) selectedId = ROOT_ID;
       selectNode(selectedId);
     }
 
     function handleNodeClick(id) {
-      const node = nodes.find(item => item.id === id);
+      const node = nodes.find(n => n.id === id);
       if (!node) return;
+      const byId = new Map(nodes.map(n => [n.id, n]));
 
-      const byId = new Map(nodes.map(item => [item.id, item]));
-      const depth = depthOf(node, byId);
-
-      if (depth >= 1 && childrenOf(id).length) {
+      if (depthOf(node, byId) >= 1 && childrenOf(id).length) {
         if (expanded.has(id)) {
           expanded.delete(id);
           descendantsOf(id).forEach(childId => expanded.delete(childId));
-        } else {
-          expanded.add(id);
-        }
+        } else expanded.add(id);
       }
-
       selectNode(id);
     }
 
     function selectNode(id) {
-      const node = nodes.find(item => item.id === id);
+      const node = nodes.find(n => n.id === id);
       if (!node) return;
-
       selectedId = id;
       $("detailsTitle").textContent = node.label;
       $("details").textContent = node.info || "Описание не добавлено.";
       $("adminNodeActions").classList.toggle("hidden", !isAdmin || id === ROOT_ID);
       draw();
+    }
+
+    function resetNodeForm() {
+      editingNodeId = null;
+      $("nodeForm").reset();
+      $("nodeFormTitle").textContent = "Добавить узел";
+      $("saveNodeButton").textContent = "Добавить";
+      $("cancelNodeButton").classList.add("hidden");
+    }
+
+    function closeMenu() {
+      $("menuButton").setAttribute("aria-expanded", "false");
+      $("siteMenu").classList.remove("open");
+      $("siteMenu").inert = true;
+    }
+
+    function goTo(page) {
+      currentPage = page;
+      $("treePage").classList.toggle("hidden", page !== "tree");
+      $("articlesPage").classList.toggle("hidden", page !== "articles");
+      $("settingsPage").classList.toggle("hidden", page !== "settings");
+      closeMenu();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (page === "articles") loadArticles();
+      if (page === "settings") loadSettings();
+    }
+
+    function applySettings(s) {
+      document.documentElement.style.setProperty("--accent", s.accent_color || "#ff2638");
+      document.documentElement.style.setProperty("--line", (s.accent_color || "#ff2638") + "99");
+      document.documentElement.style.setProperty("--brightness", Number(s.brightness || 100) / 100);
+      document.documentElement.style.setProperty("--page-scale", Number(s.page_scale || 100) / 100);
+      document.body.classList.toggle("theme-gothic", s.theme === "gothic");
+      document.body.classList.toggle("theme-anime", s.theme === "anime");
+      document.body.classList.toggle("animations-off", s.animations_enabled === false);
     }
 
     function setAdmin(enabled) {
@@ -1075,104 +1041,75 @@
       $("adminButton").classList.toggle("hidden", enabled);
       $("logoutButton").classList.toggle("hidden", !enabled);
       $("adminNodeActions").classList.toggle("hidden", !enabled || selectedId === ROOT_ID);
+      $("articleEditor").classList.toggle("hidden", !enabled);
+      $("settingsEditor").classList.toggle("hidden", !enabled);
+      $("settingsReadOnly").classList.toggle("hidden", enabled);
       draw();
-    }
-
-    function resetForm() {
-      editingId = null;
-      $("nodeForm").reset();
-      $("formTitle").textContent = "Добавить узел";
-      $("saveNodeButton").textContent = "Добавить";
-      $("cancelEditButton").classList.add("hidden");
-    }
-
-    function closeSiteMenu() {
-      $("menuButton").setAttribute("aria-expanded", "false");
-      $("menuButton").setAttribute("aria-label", "Открыть меню");
-      $("siteMenu").classList.remove("open");
-      $("siteMenu").inert = true;
+      if (currentPage === "articles") loadArticles();
     }
 
     $("menuButton").addEventListener("click", () => {
       const open = $("menuButton").getAttribute("aria-expanded") !== "true";
-
       $("menuButton").setAttribute("aria-expanded", String(open));
-      $("menuButton").setAttribute("aria-label", open ? "Закрыть меню" : "Открыть меню");
       $("siteMenu").classList.toggle("open", open);
       $("siteMenu").inert = !open;
     });
 
-    $("siteMenu").addEventListener("click", event => {
-      if (event.target.closest("a")) closeSiteMenu();
+    $("siteMenu").addEventListener("click", e => {
+      const button = e.target.closest("[data-page]");
+      if (!button) return;
+      if (button.dataset.page === "complaint") {
+        closeMenu();
+        $("complaintDialog").classList.remove("hidden");
+      } else goTo(button.dataset.page);
     });
 
-    document.addEventListener("click", event => {
-      if (!event.target.closest(".brand-area")) closeSiteMenu();
+    document.querySelectorAll("[data-back]").forEach(el => el.addEventListener("click", () => goTo("tree")));
 
-      if (!event.target.closest(".contact-wrap")) {
+    $("contactButton").addEventListener("click", () => {
+      $("contactMenu").classList.toggle("hidden");
+      $("contactButton").setAttribute("aria-expanded", String(!$("contactMenu").classList.contains("hidden")));
+    });
+
+    document.addEventListener("click", e => {
+      if (!e.target.closest(".brand-area")) closeMenu();
+      if (!e.target.closest(".contact-wrap")) {
         $("contactMenu").classList.add("hidden");
         $("contactButton").setAttribute("aria-expanded", "false");
       }
     });
 
-    $("contactButton").addEventListener("click", event => {
-      event.stopPropagation();
-      const menu = $("contactMenu");
-      const open = menu.classList.contains("hidden");
-      menu.classList.toggle("hidden", !open);
-      $("contactButton").setAttribute("aria-expanded", String(open));
-    });
-
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape") {
-        closeSiteMenu();
-        $("contactMenu").classList.add("hidden");
-        $("contactButton").setAttribute("aria-expanded", "false");
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") {
+        closeMenu();
         $("loginDialog").classList.add("hidden");
+        $("complaintDialog").classList.add("hidden");
       }
     });
 
-    $("search").addEventListener("input", event => {
-      searchText = event.target.value.trim();
+    $("search").addEventListener("input", e => {
+      query = e.target.value.trim();
       fitted = false;
       draw();
     });
 
-    async function logOut() {
-      const { error } = await supabaseClient.auth.signOut();
-
-      if (error) {
-        $("adminStatus").textContent = "Ошибка выхода: " + error.message;
-        return false;
-      }
-
-      setAdmin(false);
-      resetForm();
-      return true;
+    async function logout() {
+      const { error } = await db.auth.signOut();
+      if (error) $("adminStatus").textContent = error.message;
+      else { setAdmin(false); resetNodeForm(); }
     }
 
     $("menuLogoutButton").addEventListener("click", async () => {
-      closeSiteMenu();
-
-      if (!isAdmin) {
-        $("loginDialog").classList.remove("hidden");
-        $("emailInput").focus();
-        return;
-      }
-
-      await logOut();
+      closeMenu();
+      if (isAdmin) return logout();
+      $("loginDialog").classList.remove("hidden");
+      $("emailInput").focus();
     });
+    $("logoutButton").addEventListener("click", logout);
 
     $("adminButton").addEventListener("click", async () => {
-      const { data, error } = await supabaseClient.auth.getSession();
-
-      if (error) $("loginStatus").textContent = error.message;
-
-      if (data?.session) {
-        setAdmin(true);
-        return;
-      }
-
+      const { data } = await db.auth.getSession();
+      if (data?.session && isSiteAdmin(data.session)) return setAdmin(true);
       $("loginDialog").classList.remove("hidden");
       $("emailInput").focus();
     });
@@ -1183,144 +1120,105 @@
       $("loginStatus").textContent = "";
     });
 
-    $("loginForm").addEventListener("submit", async event => {
-      event.preventDefault();
+    $("loginForm").addEventListener("submit", async e => {
+      e.preventDefault();
       $("loginStatus").textContent = "Проверяю вход…";
-
-      const { error } = await supabaseClient.auth.signInWithPassword({
+      const { data, error } = await db.auth.signInWithPassword({
         email: $("emailInput").value.trim(),
         password: $("passwordInput").value
       });
 
       if (error) {
-        $("loginStatus").textContent = "Не удалось войти: " + error.message;
+        $("loginStatus").textContent = error.message;
         return;
       }
-
+      if (!isSiteAdmin(data.session)) {
+        await db.auth.signOut();
+        $("loginStatus").textContent = "Этот аккаунт не является администратором.";
+        return;
+      }
       $("loginDialog").classList.add("hidden");
       $("loginForm").reset();
-      $("loginStatus").textContent = "";
       setAdmin(true);
     });
 
-    $("logoutButton").addEventListener("click", logOut);
+    db.auth.onAuthStateChange((_event, session) => setAdmin(isSiteAdmin(session)));
 
-    supabaseClient.auth.onAuthStateChange((_event, session) => {
-      setAdmin(Boolean(session));
-    });
-
-    $("nodeForm").addEventListener("submit", async event => {
-      event.preventDefault();
+    $("nodeForm").addEventListener("submit", async e => {
+      e.preventDefault();
       if (!isAdmin) return;
-
       const label = $("nodeLabel").value.trim();
       const info = $("nodeInfo").value.trim();
-
-      if (!label) {
-        $("adminStatus").textContent = "Укажи название узла.";
-        return;
-      }
+      let result, savedId = editingNodeId;
 
       $("saveNodeButton").disabled = true;
-      $("adminStatus").textContent = "Сохраняю…";
-
-      let error;
-      let savedId = editingId;
-
-      if (editingId) {
-        const result = await supabaseClient
-          .from(TABLE_NAME)
-          .update({ label, info })
-          .eq("id", editingId);
-        error = result.error;
+      if (editingNodeId) {
+        result = await db.from("nodes").update({ label, info }).eq("id", editingNodeId);
       } else {
-        const parentId = nodes.some(node => node.id === selectedId) ? selectedId : ROOT_ID;
         savedId = "node-" + crypto.randomUUID();
-
-        const result = await supabaseClient
-          .from(TABLE_NAME)
-          .insert({ id: savedId, parent_id: parentId, label, info });
-        error = result.error;
+        const parentId = nodes.some(n => n.id === selectedId) ? selectedId : ROOT_ID;
+        result = await db.from("nodes").insert({ id: savedId, parent_id: parentId, label, info });
       }
-
       $("saveNodeButton").disabled = false;
 
-      if (error) {
-        $("adminStatus").textContent = "Ошибка сохранения: " + error.message;
+      if (result.error) {
+        $("adminStatus").textContent = result.error.message;
         return;
       }
-
-      resetForm();
+      resetNodeForm();
       fitted = false;
       await loadTree();
-
       if (savedId) selectNode(savedId);
-      $("adminStatus").textContent = "Изменения сохранены в Supabase.";
+      $("adminStatus").textContent = "Сохранено.";
     });
 
     $("editNodeButton").addEventListener("click", () => {
-      if (!isAdmin || !selectedId || selectedId === ROOT_ID) return;
-
-      const node = nodes.find(item => item.id === selectedId);
-      if (!node) return;
-
-      editingId = node.id;
+      const node = nodes.find(n => n.id === selectedId);
+      if (!isAdmin || !node || node.id === ROOT_ID) return;
+      editingNodeId = node.id;
       $("nodeLabel").value = node.label;
       $("nodeInfo").value = node.info || "";
-      $("formTitle").textContent = "Редактировать узел";
+      $("nodeFormTitle").textContent = "Редактировать узел";
       $("saveNodeButton").textContent = "Сохранить";
-      $("cancelEditButton").classList.remove("hidden");
-      $("nodeLabel").focus();
+      $("cancelNodeButton").classList.remove("hidden");
     });
 
-    $("cancelEditButton").addEventListener("click", resetForm);
+    $("cancelNodeButton").addEventListener("click", resetNodeForm);
 
     async function deleteBranch(id) {
-      const branch = descendantsOf(id);
-      const pending = new Set(branch);
-      const deletionOrder = [];
+      const pending = descendantsOf(id);
+      const removed = new Set(pending);
+      const order = [];
 
       while (pending.size) {
-        const leaves = [...pending].filter(parentId =>
-          childrenOf(parentId).every(child => !pending.has(child.id))
+        const leaves = [...pending].filter(parent =>
+          childrenOf(parent).every(child => !pending.has(child.id))
         );
-
-        if (!leaves.length) throw new Error("В структуре обнаружен цикл.");
-
-        deletionOrder.push(...leaves);
-        leaves.forEach(childId => pending.delete(childId));
+        if (!leaves.length) throw new Error("Цикл в структуре дерева.");
+        order.push(...leaves);
+        leaves.forEach(nodeId => pending.delete(nodeId));
       }
 
-      for (const nodeId of deletionOrder) {
-        const { error } = await supabaseClient
-          .from(TABLE_NAME)
-          .delete()
-          .eq("id", nodeId);
-
+      for (const nodeId of order) {
+        const { error } = await db.from("nodes").delete().eq("id", nodeId);
         if (error) throw error;
       }
-
-      return branch;
+      return removed;
     }
 
     $("deleteNodeButton").addEventListener("click", async () => {
-      if (!isAdmin || !selectedId || selectedId === ROOT_ID) return;
-
-      const node = nodes.find(item => item.id === selectedId);
-      if (!node || !confirm(`Удалить «${node.label}» и все вложенные узлы?`)) return;
+      const node = nodes.find(n => n.id === selectedId);
+      if (!isAdmin || !node || node.id === ROOT_ID) return;
+      if (!confirm(`Удалить «${node.label}» и все вложенные узлы?`)) return;
 
       $("deleteNodeButton").disabled = true;
-      $("adminStatus").textContent = "Удаляю ветку…";
-
       try {
-        const removedIds = await deleteBranch(node.id);
-        removedIds.forEach(id => expanded.delete(id));
-
+        const removed = await deleteBranch(node.id);
+        removed.forEach(id => expanded.delete(id));
         selectedId = ROOT_ID;
         fitted = false;
         await loadTree();
         selectNode(ROOT_ID);
-        $("adminStatus").textContent = "Ветка удалена из Supabase.";
       } catch (error) {
         $("adminStatus").textContent = "Ошибка удаления: " + error.message;
       } finally {
@@ -1328,72 +1226,225 @@
       }
     });
 
-    $("graph").addEventListener("pointerdown", event => {
-      if (event.target.closest(".node") || event.button !== 0) return;
+    function resetArticleForm() {
+      editingArticleId = null;
+      $("articleForm").reset();
+      $("articleFormHeading").textContent = "Новая статья";
+      $("saveArticleButton").textContent = "Опубликовать";
+      $("cancelArticleButton").classList.add("hidden");
+    }
 
-      drag = {
-        pointerId: event.pointerId,
-        startX: event.clientX,
-        startY: event.clientY,
-        x: view.x,
-        y: view.y
+    async function loadArticles() {
+      $("articlesList").textContent = "Загружаю статьи…";
+      const { data, error } = await db.from("articles")
+        .select("id,title,content,updated_at").order("updated_at", { ascending: false });
+
+      if (error) {
+        $("articlesList").textContent = "Ошибка загрузки: " + error.message;
+        return;
+      }
+
+      $("articlesList").replaceChildren();
+      if (!data?.length) {
+        $("articlesList").textContent = "Статей пока нет.";
+        return;
+      }
+
+      data.forEach(article => {
+        const card = document.createElement("article");
+        card.className = "card article-card";
+        const title = document.createElement("h2");
+        title.textContent = article.title;
+        const content = document.createElement("div");
+        content.className = "article-content";
+        content.textContent = article.content;
+        card.append(title, content);
+
+        if (isAdmin) {
+          const actions = document.createElement("div");
+          actions.className = "article-actions";
+          const edit = document.createElement("button");
+          edit.className = "button";
+          edit.textContent = "Изменить";
+          edit.type = "button";
+          edit.addEventListener("click", () => {
+            editingArticleId = article.id;
+            $("articleTitle").value = article.title;
+            $("articleContent").value = article.content;
+            $("articleFormHeading").textContent = "Редактировать статью";
+            $("saveArticleButton").textContent = "Сохранить";
+            $("cancelArticleButton").classList.remove("hidden");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          });
+
+          const remove = document.createElement("button");
+          remove.className = "button button-danger";
+          remove.textContent = "Удалить";
+          remove.type = "button";
+          remove.addEventListener("click", async () => {
+            if (!confirm(`Удалить «${article.title}»?`)) return;
+            const { error: err } = await db.from("articles").delete().eq("id", article.id);
+            if (err) $("articleStatus").textContent = err.message;
+            else loadArticles();
+          });
+
+          actions.append(edit, remove);
+          card.append(actions);
+        }
+        $("articlesList").append(card);
+      });
+    }
+
+    $("articleForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      if (!isAdmin) return;
+      const title = $("articleTitle").value.trim();
+      const content = $("articleContent").value.trim();
+
+      const result = editingArticleId
+        ? await db.from("articles").update({
+            title, content, updated_at: new Date().toISOString()
+          }).eq("id", editingArticleId)
+        : await db.from("articles").insert({
+            id: "article-" + crypto.randomUUID(), title, content
+          });
+
+      if (result.error) {
+        $("articleStatus").textContent = result.error.message;
+        return;
+      }
+      resetArticleForm();
+      $("articleStatus").textContent = "Статья сохранена.";
+      await loadArticles();
+    });
+
+    $("cancelArticleButton").addEventListener("click", resetArticleForm);
+
+    async function loadSettings() {
+      const { data, error } = await db.from("site_settings")
+        .select("accent_color,theme,page_scale,brightness,animations_enabled")
+        .eq("id", 1).maybeSingle();
+
+      if (error) {
+        $("settingsStatus").textContent = "Ошибка загрузки: " + error.message;
+        return;
+      }
+
+      const settings = data || {
+        accent_color: "#ff2638", theme: "standard", page_scale: 100,
+        brightness: 100, animations_enabled: true
       };
 
+      applySettings(settings);
+      $("colorSelect").value = settings.accent_color;
+      $("themeSelect").value = settings.theme;
+      $("pageScale").value = settings.page_scale;
+      $("pageScaleOutput").value = settings.page_scale + "%";
+      $("brightness").value = settings.brightness;
+      $("brightnessOutput").value = settings.brightness + "%";
+      $("animationsEnabled").checked = settings.animations_enabled;
+    }
+
+    $("pageScale").addEventListener("input", e => {
+      $("pageScaleOutput").value = e.target.value + "%";
+      document.documentElement.style.setProperty("--page-scale", Number(e.target.value) / 100);
+    });
+
+    $("brightness").addEventListener("input", e => {
+      $("brightnessOutput").value = e.target.value + "%";
+      document.documentElement.style.setProperty("--brightness", Number(e.target.value) / 100);
+    });
+
+    $("colorSelect").addEventListener("input", e => {
+      document.documentElement.style.setProperty("--accent", e.target.value);
+      document.documentElement.style.setProperty("--line", e.target.value + "99");
+    });
+
+    $("themeSelect").addEventListener("change", e => {
+      document.body.classList.toggle("theme-gothic", e.target.value === "gothic");
+      document.body.classList.toggle("theme-anime", e.target.value === "anime");
+    });
+
+    $("settingsForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      if (!isAdmin) return;
+
+      const settings = {
+        id: 1,
+        accent_color: $("colorSelect").value,
+        theme: $("themeSelect").value,
+        page_scale: Number($("pageScale").value),
+        brightness: Number($("brightness").value),
+        animations_enabled: $("animationsEnabled").checked
+      };
+
+      const { error } = await db.from("site_settings").upsert(settings);
+      if (error) {
+        $("settingsStatus").textContent = "Ошибка сохранения: " + error.message;
+        return;
+      }
+      applySettings(settings);
+      $("settingsStatus").textContent = "Настройки сохранены для всех посетителей.";
+    });
+
+    $("complaintForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const body = $("complaintText").value.trim();
+      const subject = encodeURIComponent("Сообщение с сайта emode1k");
+      const text = encodeURIComponent(body);
+      location.href = `mailto:emode1koff@gmail.com?subject=${subject}&body=${text}`;
+    });
+
+    $("closeComplaintButton").addEventListener("click", () => {
+      $("complaintDialog").classList.add("hidden");
+    });
+
+    $("graph").addEventListener("pointerdown", e => {
+      if (e.target.closest(".node") || e.button !== 0) return;
+      drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, x: view.x, y: view.y };
       $("graph").classList.add("dragging");
-      $("graph").setPointerCapture(event.pointerId);
+      $("graph").setPointerCapture(e.pointerId);
     });
 
-    $("graph").addEventListener("pointermove", event => {
-      if (!drag || event.pointerId !== drag.pointerId) return;
-
-      view.x = drag.x + event.clientX - drag.startX;
-      view.y = drag.y + event.clientY - drag.startY;
-
-      const group = $("graphContent");
-      if (group) group.setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
+    $("graph").addEventListener("pointermove", e => {
+      if (!drag || e.pointerId !== drag.id) return;
+      view.x = drag.x + e.clientX - drag.sx;
+      view.y = drag.y + e.clientY - drag.sy;
+      $("graphContent")?.setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
     });
 
-    function stopDragging(event) {
-      if (!drag || event.pointerId !== drag.pointerId) return;
+    function stopDrag(e) {
+      if (!drag || e.pointerId !== drag.id) return;
       drag = null;
       $("graph").classList.remove("dragging");
     }
+    $("graph").addEventListener("pointerup", stopDrag);
+    $("graph").addEventListener("pointercancel", stopDrag);
 
-    $("graph").addEventListener("pointerup", stopDragging);
-    $("graph").addEventListener("pointercancel", stopDragging);
-
-    $("graph").addEventListener("wheel", event => {
-      event.preventDefault();
-
+    $("graph").addEventListener("wheel", e => {
+      e.preventDefault();
       const rect = $("graph").getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      const oldScale = view.scale;
-      const nextScale = Math.max(.35, Math.min(2.2, oldScale * (event.deltaY < 0 ? 1.1 : .9)));
-
-      view.x = x - (x - view.x) * nextScale / oldScale;
-      view.y = y - (y - view.y) * nextScale / oldScale;
-      view.scale = nextScale;
-
-      const group = $("graphContent");
-      if (group) group.setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
+      const x = e.clientX - rect.left, y = e.clientY - rect.top;
+      const old = view.scale;
+      const next = Math.max(.35, Math.min(2.2, old * (e.deltaY < 0 ? 1.1 : .9)));
+      view.x = x - (x - view.x) * next / old;
+      view.y = y - (y - view.y) * next / old;
+      view.scale = next;
+      $("graphContent")?.setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
     }, { passive: false });
 
     $("resetViewButton").addEventListener("click", () => {
-      view.x = 0;
-      view.y = 0;
-      view.scale = 1;
-      fitted = false;
-      draw();
+      view.x = 0; view.y = 0; view.scale = 1; fitted = false; draw();
     });
 
-    window.addEventListener("resize", () => {
-      fitted = false;
-      draw();
-    });
+    window.addEventListener("resize", () => { fitted = false; draw(); });
 
-    window.setTimeout(() => $("splash").classList.add("finished"), 4300);
-    loadTree();
+    (async function init() {
+      const { data } = await db.auth.getSession();
+      setAdmin(isSiteAdmin(data?.session));
+      await loadSettings();
+      await loadTree();
+    })();
   </script>
 </body>
 </html>
