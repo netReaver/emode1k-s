@@ -26,7 +26,9 @@
       min-height: 100vh;
       margin: 0;
       color: var(--text);
-      background: radial-gradient(ellipse at 50% 4%, #281118 0, transparent 48%), var(--bg);
+      background:
+        radial-gradient(ellipse at 50% 4%, #281118 0, transparent 48%),
+        var(--bg);
       font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system,
         BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -60,6 +62,105 @@
       border-bottom: 1px solid #ffffff12;
       background: #080709ed;
       backdrop-filter: blur(16px);
+    }
+
+    .brand-area {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .menu-button {
+      display: grid;
+      width: 40px;
+      height: 40px;
+      align-content: center;
+      justify-items: center;
+      gap: 5px;
+      padding: 8px;
+      border: 1px solid #70404d;
+      border-radius: 11px;
+      color: #ff5268;
+      background: linear-gradient(145deg, #1c1218, #100d12);
+      box-shadow: inset 0 1px #ffffff0c, 0 0 12px #ff26381c;
+      cursor: pointer;
+    }
+
+    .menu-button:hover {
+      border-color: #ff5268;
+      box-shadow: 0 0 16px #ff263833;
+    }
+
+    .menu-button span {
+      display: block;
+      width: 19px;
+      height: 2px;
+      border-radius: 2px;
+      background: currentColor;
+      transition: transform .28s ease, opacity .2s ease, width .28s ease;
+    }
+
+    .menu-button[aria-expanded="true"] span:first-child {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .menu-button[aria-expanded="true"] span:nth-child(2) {
+      width: 0;
+      opacity: 0;
+    }
+
+    .menu-button[aria-expanded="true"] span:last-child {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .site-menu {
+      position: absolute;
+      top: calc(100% + 13px);
+      left: 0;
+      z-index: 35;
+      display: grid;
+      gap: 4px;
+      width: 220px;
+      padding: 7px;
+      border: 1px solid #70404d;
+      border-radius: 13px;
+      background: #141116;
+      box-shadow: 0 16px 45px #0009, 0 0 18px #ff26381c;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-8px) scale(.98);
+      transform-origin: top left;
+      transition: opacity .22s ease, transform .22s ease, visibility .22s;
+    }
+
+    .site-menu.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    .site-menu a,
+    .site-menu button {
+      display: block;
+      width: 100%;
+      padding: 10px 12px;
+      border: 0;
+      border-radius: 8px;
+      color: var(--text);
+      background: transparent;
+      font: inherit;
+      text-align: left;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .site-menu a:hover,
+    .site-menu button:hover {
+      color: #ffc0c6;
+      background: #ff263812;
     }
 
     .brand {
@@ -448,8 +549,11 @@
       to { opacity: 1; }
     }
 
+    .page-section { margin-top: 18px; scroll-margin-top: 90px; }
+
     @media (max-width: 760px) {
       .topbar { flex-wrap: wrap; gap: 10px; }
+      .brand-area { flex: 1; }
       .top-actions { width: 100%; flex-wrap: wrap; }
       .search { width: 100%; }
       .contact-wrap { margin-left: auto; }
@@ -480,24 +584,41 @@
 | |___| |  | | |_| | |_| | |___| . \
 |_____|_|  |_|\___/|____/|_____|_|\_\
       </pre>
-
       <img
         class="splash-image"
         src="forgókereszt-at-the-cross.gif"
         alt="Анимированная иллюстрация проекта"
       >
-
       <div class="splash-caption">ЗАГРУЗКА ПРОЕКТА</div>
     </div>
   </div>
 
   <header class="topbar">
-    <a class="brand" href="#" aria-label="Emode1k">
-      <span class="brand-mark" aria-hidden="true">e</span>
-      <span class="brand-word" aria-hidden="true">
-        <span style="--drip:8px;--delay:0s">E</span><span style="--drip:5px;--delay:.2s">m</span><span style="--drip:9px;--delay:.4s">o</span><span style="--drip:6px;--delay:.1s">d</span><span style="--drip:8px;--delay:.5s">e</span><span style="--drip:5px;--delay:.3s">1</span><span style="--drip:9px;--delay:.6s">k</span>
-      </span>
-    </a>
+    <div class="brand-area">
+      <button
+        id="menuButton"
+        class="menu-button"
+        type="button"
+        aria-label="Открыть меню"
+        aria-expanded="false"
+        aria-controls="siteMenu"
+      >
+        <span></span><span></span><span></span>
+      </button>
+
+      <a class="brand" href="#" aria-label="emode1k">
+        <span class="brand-mark" aria-hidden="true">e</span>
+        <span class="brand-word" aria-hidden="true">
+          <span style="--drip:8px;--delay:0s">E</span><span style="--drip:5px;--delay:.2s">m</span><span style="--drip:9px;--delay:.4s">o</span><span style="--drip:6px;--delay:.1s">d</span><span style="--drip:8px;--delay:.5s">e</span><span style="--drip:5px;--delay:.3s">1</span><span style="--drip:9px;--delay:.6s">k</span>
+        </span>
+      </a>
+
+      <nav id="siteMenu" class="site-menu" aria-label="Главное меню" inert>
+        <a href="#articles">Статьи</a>
+        <a href="#settings">Настройки</a>
+        <button id="menuLogoutButton" type="button">Выйти из профиля</button>
+      </nav>
+    </div>
 
     <div class="top-actions">
       <input id="search" class="search" type="search" placeholder="Поиск по дереву…" aria-label="Поиск по дереву">
@@ -556,6 +677,16 @@
         <p id="adminStatus" class="status" role="status"></p>
       </section>
     </div>
+
+    <section id="articles" class="card page-section">
+      <h2>Статьи</h2>
+      <p class="muted">Здесь можно разместить статьи проекта.</p>
+    </section>
+
+    <section id="settings" class="card page-section">
+      <h2>Настройки</h2>
+      <p class="muted">Раздел настроек пока пуст.</p>
+    </section>
   </main>
 
   <div id="loginDialog" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
@@ -616,18 +747,18 @@
     }
 
     function descendantsOf(id) {
-      const found = new Set([id]);
+      const result = new Set([id]);
 
       function visit(parentId) {
         for (const child of childrenOf(parentId)) {
-          if (found.has(child.id)) continue;
-          found.add(child.id);
+          if (result.has(child.id)) continue;
+          result.add(child.id);
           visit(child.id);
         }
       }
 
       visit(id);
-      return found;
+      return result;
     }
 
     function depthOf(node, byId) {
@@ -649,7 +780,6 @@
 
       while (current.parent && byId.has(current.parent)) {
         const parent = byId.get(current.parent);
-
         if (depthOf(parent, byId) >= 1 && !expanded.has(parent.id)) return false;
         current = parent;
       }
@@ -664,8 +794,8 @@
       const term = searchText.toLocaleLowerCase();
 
       for (const node of nodes) {
-        const contents = `${node.label} ${node.info || ""}`.toLocaleLowerCase();
-        if (!contents.includes(term)) continue;
+        const text = `${node.label} ${node.info || ""}`.toLocaleLowerCase();
+        if (!text.includes(term)) continue;
 
         result.set(node.id, node);
         let current = node;
@@ -679,73 +809,81 @@
       return [...result.values()];
     }
 
-    function orderedChildren(parentId, visibleSet) {
+    function childrenForLayout(parentId, visibleIds) {
       return nodes
-        .filter(node => node.parent === parentId && visibleSet.has(node.id))
+        .filter(node => node.parent === parentId && visibleIds.has(node.id))
         .sort((a, b) => a.label.localeCompare(b.label));
     }
 
-    function getLayout(visible, byId) {
-      const visibleSet = new Set(visible.map(node => node.id));
-      const points = new Map([[ROOT_ID, { x: 0, y: 0 }]]);
+    function buildLayout(visible, byId) {
+      const visibleIds = new Set(visible.map(node => node.id));
+      const positions = new Map();
+      const root = byId.get(ROOT_ID);
+
+      if (!root || !visibleIds.has(ROOT_ID)) return positions;
+      positions.set(ROOT_ID, { x: 0, y: 0 });
+
       const directions = [
         { x: -1, y: 0 },
         { x: 0, y: 1 },
         { x: 1, y: 0 }
       ];
 
-      const rootChildren = orderedChildren(ROOT_ID, visibleSet);
+      const rootChildren = childrenForLayout(ROOT_ID, visibleIds);
 
-      rootChildren.forEach((branch, index) => {
-        const direction = directions[index % directions.length];
-        const run = Math.floor(index / directions.length);
-        const spread = run === 0 ? 0 : (run % 2 ? 1 : -1) * Math.ceil(run / 2);
+      rootChildren.forEach((branch, branchIndex) => {
+        const direction = directions[branchIndex % 3];
+        const lane = Math.floor(branchIndex / 3);
+        const laneOffset = lane === 0 ? 0 : (lane % 2 ? 1 : -1) * Math.ceil(lane / 2);
+
         const branchPoint = {
           x: direction.x * ROOT_STEP,
-          y: direction.y * ROOT_STEP + spread * ROW_STEP
+          y: direction.y * ROOT_STEP + laneOffset * ROW_STEP
         };
 
-        points.set(branch.id, branchPoint);
+        positions.set(branch.id, branchPoint);
 
-        function placeChildren(parentId, parentPoint, depth) {
-          const children = orderedChildren(parentId, visibleSet);
+        function placeDescendants(parent, parentPoint, depth) {
+          const children = childrenForLayout(parent.id, visibleIds);
           const step = depth === 1 ? ROOT_STEP : COMPACT_STEP;
 
-          children.forEach((child, childIndex) => {
-            const offset = childIndex - (children.length - 1) / 2;
+          children.forEach((child, index) => {
+            const offset = index - (children.length - 1) / 2;
             const point = {
               x: parentPoint.x + direction.x * step + (direction.y ? offset * ROW_STEP : 0),
               y: parentPoint.y + direction.y * step + (direction.x ? offset * ROW_STEP : 0)
             };
 
-            points.set(child.id, point);
-            placeChildren(child.id, point, depth + 1);
+            positions.set(child.id, point);
+            placeDescendants(child, point, depth + 1);
           });
         }
 
-        placeChildren(branch.id, branchPoint, 1);
+        placeDescendants(branch, branchPoint, 1);
       });
 
-      if (byId.has(ROOT_ID) && visibleSet.has(ROOT_ID)) {
-        points.set(ROOT_ID, { x: 0, y: 0 });
-      }
-
-      return points;
+      return positions;
     }
 
-    function makeEdge(parent, child) {
+    function edgeMarkup(parent, child) {
       const dx = child.x - parent.x;
       const dy = child.y - parent.y;
-      const length = Math.hypot(dx, dy) || 1;
-      const ux = dx / length;
-      const uy = dy / length;
-      const x1 = parent.x + ux * (NODE_WIDTH / 2);
-      const y1 = parent.y + uy * (NODE_HEIGHT / 2);
-      const x2 = child.x - ux * (NODE_WIDTH / 2);
-      const y2 = child.y - uy * (NODE_HEIGHT / 2);
-      const bend = .45;
+      const distance = Math.hypot(dx, dy) || 1;
+      const ux = dx / distance;
+      const uy = dy / distance;
 
-      return `<path class="edge" d="M ${x1} ${y1} C ${x1 + dx * bend} ${y1 + dy * bend}, ${x2 - dx * bend} ${y2 - dy * bend}, ${x2} ${y2}"></path>`;
+      const startX = parent.x + ux * NODE_WIDTH / 2;
+      const startY = parent.y + uy * NODE_HEIGHT / 2;
+      const endX = child.x - ux * NODE_WIDTH / 2;
+      const endY = child.y - uy * NODE_HEIGHT / 2;
+
+      const bend = .45;
+      const c1x = startX + dx * bend;
+      const c1y = startY + dy * bend;
+      const c2x = endX - dx * bend;
+      const c2y = endY - dy * bend;
+
+      return `<path class="edge" d="M ${startX} ${startY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${endX} ${endY}"></path>`;
     }
 
     function draw() {
@@ -766,32 +904,33 @@
         return;
       }
 
-      const points = getLayout(visible, byId);
-      const visibleSet = new Set(visible.map(node => node.id));
-      const validPoints = [...points.entries()].filter(([id]) => visibleSet.has(id));
-      const xs = validPoints.map(([, point]) => point.x);
-      const ys = validPoints.map(([, point]) => point.y);
+      const positions = buildLayout(visible, byId);
+      const visibleIds = new Set(visible.map(node => node.id));
+      const points = [...positions.entries()].filter(([id]) => visibleIds.has(id));
 
+      const xs = points.map(([, point]) => point.x);
+      const ys = points.map(([, point]) => point.y);
       const left = Math.min(...xs) - NODE_WIDTH;
       const right = Math.max(...xs) + NODE_WIDTH;
       const top = Math.min(...ys) - NODE_HEIGHT * 2;
       const bottom = Math.max(...ys) + NODE_HEIGHT * 2;
-      const width = Math.max(900, right - left);
-      const height = Math.max(480, bottom - top);
 
-      const offsetX = -left + (width - (right - left)) / 2;
-      const offsetY = -top + (height - (bottom - top)) / 2;
+      const contentWidth = Math.max(900, right - left);
+      const contentHeight = Math.max(480, bottom - top);
+      const offsetX = -left + (contentWidth - (right - left)) / 2;
+      const offsetY = -top + (contentHeight - (bottom - top)) / 2;
 
       let edges = "";
       for (const node of visible) {
-        const parent = points.get(node.parent);
-        const child = points.get(node.id);
-        if (parent && child) edges += makeEdge(parent, child);
+        const parentPoint = positions.get(node.parent);
+        const childPoint = positions.get(node.id);
+        if (parentPoint && childPoint) edges += edgeMarkup(parentPoint, childPoint);
       }
 
       let nodeMarkup = "";
+
       visible.forEach((node, index) => {
-        const point = points.get(node.id);
+        const point = positions.get(node.id);
         if (!point) return;
 
         const label = node.label.length > 24 ? node.label.slice(0, 23) + "…" : node.label;
@@ -829,13 +968,16 @@
       svg.setAttribute("viewBox", `0 0 ${host.clientWidth} ${host.clientHeight}`);
 
       if (!fitted) {
-        view.scale = Math.max(.35, Math.min(
-          1,
-          (host.clientWidth - 40) / width,
-          (host.clientHeight - 40) / height
-        ));
-        view.x = Math.max(20, (host.clientWidth - width * view.scale) / 2);
-        view.y = Math.max(20, (host.clientHeight - height * view.scale) / 2);
+        view.scale = Math.max(
+          .35,
+          Math.min(
+            1,
+            (host.clientWidth - 40) / contentWidth,
+            (host.clientHeight - 40) / contentHeight
+          )
+        );
+        view.x = Math.max(20, (host.clientWidth - contentWidth * view.scale) / 2);
+        view.y = Math.max(20, (host.clientHeight - contentHeight * view.scale) / 2);
         fitted = true;
       }
 
@@ -904,7 +1046,7 @@
       const byId = new Map(nodes.map(item => [item.id, item]));
       const depth = depthOf(node, byId);
 
-      if (depth >= 1 && childrenOf(node.id).length) {
+      if (depth >= 1 && childrenOf(id).length) {
         if (expanded.has(id)) {
           expanded.delete(id);
           descendantsOf(id).forEach(childId => expanded.delete(childId));
@@ -944,6 +1086,35 @@
       $("cancelEditButton").classList.add("hidden");
     }
 
+    function closeSiteMenu() {
+      $("menuButton").setAttribute("aria-expanded", "false");
+      $("menuButton").setAttribute("aria-label", "Открыть меню");
+      $("siteMenu").classList.remove("open");
+      $("siteMenu").inert = true;
+    }
+
+    $("menuButton").addEventListener("click", () => {
+      const open = $("menuButton").getAttribute("aria-expanded") !== "true";
+
+      $("menuButton").setAttribute("aria-expanded", String(open));
+      $("menuButton").setAttribute("aria-label", open ? "Закрыть меню" : "Открыть меню");
+      $("siteMenu").classList.toggle("open", open);
+      $("siteMenu").inert = !open;
+    });
+
+    $("siteMenu").addEventListener("click", event => {
+      if (event.target.closest("a")) closeSiteMenu();
+    });
+
+    document.addEventListener("click", event => {
+      if (!event.target.closest(".brand-area")) closeSiteMenu();
+
+      if (!event.target.closest(".contact-wrap")) {
+        $("contactMenu").classList.add("hidden");
+        $("contactButton").setAttribute("aria-expanded", "false");
+      }
+    });
+
     $("contactButton").addEventListener("click", event => {
       event.stopPropagation();
       const menu = $("contactMenu");
@@ -952,15 +1123,9 @@
       $("contactButton").setAttribute("aria-expanded", String(open));
     });
 
-    document.addEventListener("click", event => {
-      if (!event.target.closest(".contact-wrap")) {
-        $("contactMenu").classList.add("hidden");
-        $("contactButton").setAttribute("aria-expanded", "false");
-      }
-    });
-
     document.addEventListener("keydown", event => {
       if (event.key === "Escape") {
+        closeSiteMenu();
         $("contactMenu").classList.add("hidden");
         $("contactButton").setAttribute("aria-expanded", "false");
         $("loginDialog").classList.add("hidden");
@@ -971,6 +1136,31 @@
       searchText = event.target.value.trim();
       fitted = false;
       draw();
+    });
+
+    async function logOut() {
+      const { error } = await supabaseClient.auth.signOut();
+
+      if (error) {
+        $("adminStatus").textContent = "Ошибка выхода: " + error.message;
+        return false;
+      }
+
+      setAdmin(false);
+      resetForm();
+      return true;
+    }
+
+    $("menuLogoutButton").addEventListener("click", async () => {
+      closeSiteMenu();
+
+      if (!isAdmin) {
+        $("loginDialog").classList.remove("hidden");
+        $("emailInput").focus();
+        return;
+      }
+
+      await logOut();
     });
 
     $("adminButton").addEventListener("click", async () => {
@@ -1013,17 +1203,7 @@
       setAdmin(true);
     });
 
-    $("logoutButton").addEventListener("click", async () => {
-      const { error } = await supabaseClient.auth.signOut();
-
-      if (error) {
-        $("adminStatus").textContent = "Ошибка выхода: " + error.message;
-        return;
-      }
-
-      setAdmin(false);
-      resetForm();
-    });
+    $("logoutButton").addEventListener("click", logOut);
 
     supabaseClient.auth.onAuthStateChange((_event, session) => {
       setAdmin(Boolean(session));
@@ -1095,10 +1275,10 @@
 
     $("cancelEditButton").addEventListener("click", resetForm);
 
-    async function removeBranch(id) {
+    async function deleteBranch(id) {
       const branch = descendantsOf(id);
       const pending = new Set(branch);
-      const order = [];
+      const deletionOrder = [];
 
       while (pending.size) {
         const leaves = [...pending].filter(parentId =>
@@ -1107,11 +1287,11 @@
 
         if (!leaves.length) throw new Error("В структуре обнаружен цикл.");
 
-        order.push(...leaves);
+        deletionOrder.push(...leaves);
         leaves.forEach(childId => pending.delete(childId));
       }
 
-      for (const nodeId of order) {
+      for (const nodeId of deletionOrder) {
         const { error } = await supabaseClient
           .from(TABLE_NAME)
           .delete()
@@ -1133,8 +1313,8 @@
       $("adminStatus").textContent = "Удаляю ветку…";
 
       try {
-        const removed = await removeBranch(node.id);
-        removed.forEach(id => expanded.delete(id));
+        const removedIds = await deleteBranch(node.id);
+        removedIds.forEach(id => expanded.delete(id));
 
         selectedId = ROOT_ID;
         fitted = false;
