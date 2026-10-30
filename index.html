@@ -17,23 +17,65 @@
       --text: #eee8ed;
       --muted: #a69ba6;
       --accent: #ff2638;
-      --line: #75515e;
       --brightness: 1;
       --page-scale: 1;
+      --fx: brightness(var(--brightness));
+      --line: color-mix(in srgb, var(--accent) 55%, var(--border));
+      --glow: color-mix(in srgb, var(--accent) 16%, transparent);
+      --hover: color-mix(in srgb, var(--accent) 10%, var(--panel-soft));
+    }
+
+    html.theme-gothic {
+      --bg: #090909;
+      --panel: #151515;
+      --panel-soft: #202020;
+      --border: #555;
+      --text: #eee;
+      --muted: #aaa;
+      --accent: #dedede;
+      --fx: grayscale(1) brightness(var(--brightness));
+    }
+
+    html.theme-anime {
+      --bg: #241408;
+      --panel: #321d0c;
+      --panel-soft: #45280e;
+      --border: #aa621e;
+      --text: #fff0d9;
+      --muted: #e4bd91;
+      --accent: #ff941f;
+      --glow: color-mix(in srgb, var(--accent) 30%, transparent);
     }
 
     * { box-sizing: border-box; }
+
+    html { background: var(--bg); }
 
     body {
       min-height: 100vh;
       margin: 0;
       color: var(--text);
-      background:
-        radial-gradient(ellipse at 50% 4%, #281118 0, transparent 48%),
-        var(--bg);
+      background: var(--bg);
       font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system,
         BlinkMacSystemFont, "Segoe UI", sans-serif;
-      filter: brightness(var(--brightness));
+    }
+
+    .decor {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background: radial-gradient(ellipse at 50% 4%, var(--glow), transparent 48%), var(--bg);
+      filter: var(--fx);
+    }
+
+    #app {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      filter: var(--fx);
+      zoom: var(--page-scale);
     }
 
     button, input, textarea, select { font: inherit; }
@@ -47,6 +89,9 @@
     }
 
     input, textarea, select { padding: 10px 12px; }
+    input[type="range"] { padding: 0; border: 0; background: transparent; accent-color: var(--accent); }
+    input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); }
+    input[type="color"] { width: 64px; height: 40px; padding: 3px; cursor: pointer; }
 
     input:focus, textarea:focus, select:focus,
     button:focus-visible, a:focus-visible {
@@ -63,8 +108,8 @@
       display: flex;
       align-items: center;
       gap: 18px;
-      border-bottom: 1px solid #ffffff12;
-      background: #080709ed;
+      border-bottom: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+      background: color-mix(in srgb, var(--bg) 93%, transparent);
       backdrop-filter: blur(16px);
     }
 
@@ -86,7 +131,7 @@
       border: 1px solid var(--border);
       border-radius: 11px;
       color: var(--accent);
-      background: linear-gradient(145deg, #1c1218, #100d12);
+      background: linear-gradient(145deg, var(--panel-soft), var(--panel));
       cursor: pointer;
     }
 
@@ -98,15 +143,9 @@
       transition: transform .25s ease, opacity .2s ease;
     }
 
-    .menu-button[aria-expanded="true"] span:first-child {
-      transform: translateY(7px) rotate(45deg);
-    }
-
+    .menu-button[aria-expanded="true"] span:first-child { transform: translateY(7px) rotate(45deg); }
     .menu-button[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
-
-    .menu-button[aria-expanded="true"] span:last-child {
-      transform: translateY(-7px) rotate(-45deg);
-    }
+    .menu-button[aria-expanded="true"] span:last-child { transform: translateY(-7px) rotate(-45deg); }
 
     .site-menu {
       position: absolute;
@@ -147,7 +186,8 @@
       cursor: pointer;
     }
 
-    .site-menu button:hover { color: var(--accent); background: #ffffff0b; }
+    .site-menu button:hover,
+    .contact-menu a:hover { color: var(--accent); background: color-mix(in srgb, var(--text) 5%, transparent); }
 
     .brand {
       display: inline-flex;
@@ -168,18 +208,12 @@
       border: 1px solid var(--accent);
       border-radius: 11px;
       color: var(--accent);
-      background: #13090c;
-      box-shadow: 0 0 16px #ff263833;
+      background: color-mix(in srgb, var(--accent) 8%, var(--bg));
+      box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 22%, transparent);
       font-size: 23px;
     }
 
-    .brand-word {
-      display: inline-flex;
-      color: #f3e8e9;
-      font-size: 17px;
-    }
-
-    .brand-word span { color: var(--accent); }
+    .brand-word { color: var(--accent); font-size: 17px; }
 
     .top-actions {
       display: flex;
@@ -198,15 +232,16 @@
       transition: transform .2s ease, border-color .2s ease, background .2s ease;
     }
 
-    .button:hover {
+    .button:hover:not(:disabled) {
       transform: translateY(-1px);
       border-color: var(--accent);
-      background: #292027;
+      background: var(--hover);
     }
 
-    .button:disabled { opacity: .55; cursor: wait; }
+    .button:disabled { opacity: .5; cursor: not-allowed; }
     .button-primary { border-color: var(--accent); }
     .button-danger { border-color: #8a4651; color: #ffc1c8; }
+    .button-icon { min-width: 40px; padding: 9px 0; }
 
     .contact-wrap { position: relative; }
 
@@ -231,13 +266,10 @@
       text-decoration: none;
     }
 
-    .contact-menu a:hover { color: var(--accent); background: #ffffff0b; }
-
     main {
       width: min(1500px, 100%);
       margin: 0 auto;
       padding: 28px clamp(14px, 3vw, 34px) 54px;
-      zoom: var(--page-scale);
     }
 
     .page { min-height: 70vh; }
@@ -267,7 +299,7 @@
     .graph-tools {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
       justify-content: flex-end;
     }
@@ -282,8 +314,8 @@
       border: 1px solid var(--border);
       border-radius: 18px;
       background:
-        radial-gradient(ellipse at 50% 0%, #38141d66, transparent 55%),
-        #100d12;
+        radial-gradient(ellipse at 50% 0%, var(--glow), transparent 55%),
+        color-mix(in srgb, var(--bg) 55%, var(--panel));
       box-shadow: 0 22px 75px #0007;
       cursor: grab;
       touch-action: none;
@@ -294,21 +326,21 @@
     svg.graph-svg {
       position: absolute;
       inset: 0;
-      z-index: 1;
       width: 100%;
       height: 100%;
-      overflow: visible;
       user-select: none;
     }
 
-    .edge { fill: none; stroke: var(--line); stroke-width: 2; stroke-opacity: .8; }
-    .node { cursor: pointer; }
-    .node rect { fill: #19151c; stroke: var(--border); stroke-width: 1.6; }
-    .node.root rect { fill: #30151b; stroke: var(--accent); stroke-width: 2; }
+    .edge { fill: none; stroke: var(--line); stroke-width: 2; stroke-opacity: .85; }
+    .node { cursor: pointer; outline: none; }
+    .node rect { fill: var(--panel-soft); stroke: var(--border); stroke-width: 1.6; }
+    .node.root rect { fill: color-mix(in srgb, var(--accent) 18%, var(--panel)); stroke: var(--accent); stroke-width: 2; }
     .node:hover rect, .node.selected rect { stroke: var(--accent); }
+    .node:focus-visible rect { stroke: var(--accent); stroke-width: 3; }
+    .node.match rect { stroke: var(--accent); stroke-dasharray: 5 3; }
     .node text { fill: var(--text); font-size: 13px; font-weight: 600; pointer-events: none; }
     .node .dot { fill: var(--accent); }
-    .node .expand-indicator { fill: var(--accent); font-size: 12px; }
+    .node .expand-indicator { fill: var(--accent); font-size: 14px; }
 
     .empty-state {
       position: absolute;
@@ -332,13 +364,16 @@
       padding: 18px;
       border: 1px solid var(--border);
       border-radius: 16px;
-      background: linear-gradient(145deg, var(--panel), #110f14);
+      background: linear-gradient(145deg, var(--panel), color-mix(in srgb, var(--panel) 70%, var(--bg)));
       box-shadow: 0 10px 32px #0005;
     }
 
     .details, .article-content { white-space: pre-wrap; overflow-wrap: anywhere; }
+    .node-path { margin: -6px 0 10px; color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
     .muted { color: var(--muted); }
+    .small { font-size: 13px; }
     .form-grid { display: grid; gap: 10px; }
+    .field-row { display: grid; grid-template-columns: 1fr 130px; gap: 10px; }
     textarea { width: 100%; min-height: 120px; resize: vertical; }
     .button-row, .article-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 
@@ -350,7 +385,7 @@
       overflow-wrap: anywhere;
     }
 
-    .error { color: #ffabb3; }
+    .status.error, .error { color: #ffabb3; }
 
     .notice {
       margin: 10px 0;
@@ -360,6 +395,7 @@
       color: #f3dda2;
       background: #382f191c;
       font-size: 13px;
+      overflow-wrap: anywhere;
     }
 
     .modal-backdrop {
@@ -380,31 +416,35 @@
       padding: 20px;
       border: 1px solid var(--border);
       border-radius: 16px;
+      color: var(--text);
       background: var(--panel);
       box-shadow: 0 24px 80px #0009;
+      filter: var(--fx);
     }
+
+    .modal a { color: var(--accent); }
 
     .page-heading { margin: 0 0 18px; }
     .back-button { margin-bottom: 16px; }
     .article-list { display: grid; gap: 12px; margin-top: 16px; }
-    .article-card h2 { margin-bottom: 8px; }
+    .article-card h2 { margin-bottom: 4px; }
+    .article-date { margin: 0 0 10px; color: var(--muted); font-size: 13px; }
+    .settings-card { max-width: 680px; }
     .setting-row { display: grid; gap: 6px; }
     .setting-check { display: flex; align-items: center; gap: 10px; }
-    .range-line { display: flex; align-items: center; gap: 12px; }
+    .range-line, .color-line { display: flex; align-items: center; gap: 12px; }
     .range-line input { flex: 1; }
-    input[type="range"] { accent-color: var(--accent); }
+    .range-line output { min-width: 48px; text-align: right; color: var(--muted); }
     select { width: 100%; }
 
     .side-art {
       display: none;
-      position: fixed;
-      z-index: 0;
+      position: absolute;
       top: 50%;
       width: min(19vw, 250px);
       max-height: 65vh;
       object-fit: contain;
       opacity: .75;
-      pointer-events: none;
       transform: translateY(-50%);
     }
 
@@ -413,48 +453,22 @@
 
     .gothic-cross {
       display: none;
-      position: fixed;
-      z-index: 0;
+      position: absolute;
       color: #aaa;
       font-size: clamp(40px, 8vw, 110px);
       opacity: .22;
-      pointer-events: none;
     }
 
     .gothic-cross.one { left: 2%; top: 24%; }
     .gothic-cross.two { right: 2%; top: 58%; }
     .gothic-cross.three { left: 3%; bottom: 3%; }
 
-    body.theme-gothic {
-      --bg: #090909;
-      --panel: #151515;
-      --panel-soft: #202020;
-      --border: #555;
-      --text: #eee;
-      --muted: #aaa;
-      --accent: #dedede;
-      --line: #888;
-      background: #090909;
-      filter: grayscale(1) brightness(var(--brightness));
-    }
+    html.theme-gothic .gothic-cross { display: block; }
+    html.theme-anime .side-art { display: block; }
 
-    body.theme-gothic .gothic-cross { display: block; }
-
-    body.theme-anime {
-      --bg: #241408;
-      --panel: #321d0c;
-      --panel-soft: #45280e;
-      --border: #aa621e;
-      --text: #fff0d9;
-      --muted: #e4bd91;
-      --accent: #ff941f;
-      --line: #d77a27;
-      background: radial-gradient(ellipse at 50% 0%, #783b0b, transparent 55%), #241408;
-    }
-
-    body.theme-anime .side-art { display: block; }
-
-    .animations-off *, .animations-off *::before, .animations-off *::after {
+    html.animations-off *,
+    html.animations-off *::before,
+    html.animations-off *::after {
       animation: none !important;
       transition: none !important;
     }
@@ -468,211 +482,305 @@
       .heading-row { align-items: flex-start; flex-direction: column; }
       .graph-tools { justify-content: flex-start; }
       .content-grid { grid-template-columns: 1fr; }
+      .field-row { grid-template-columns: 1fr; }
       .graph-shell { height: 58vh; min-height: 340px; }
       .side-art { width: 16vw; opacity: .3; }
     }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: .01ms !important;
-        transition-duration: .01ms !important;
-      }
-    }
   </style>
+
+  <script>
+    (() => {
+      const KEYS = { site: "emode1k:site-settings", personal: "emode1k:personal-settings" };
+      const THEMES = ["standard", "gothic", "anime"];
+      const THEME_ACCENT = { standard: "#ff2638", gothic: "#dedede", anime: "#ff941f" };
+
+      let reduceMotion = false;
+      try { reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches; } catch {}
+
+      const DEFAULTS = Object.freeze({
+        accent_color: "auto",
+        theme: "standard",
+        page_scale: 100,
+        brightness: 100,
+        animations_enabled: !reduceMotion
+      });
+
+      function clampInt(value, min, max, fallback) {
+        const n = Number(value);
+        return Number.isFinite(n) ? Math.min(max, Math.max(min, Math.round(n))) : fallback;
+      }
+
+      function sanitize(raw) {
+        const s = { ...DEFAULTS };
+        if (!raw || typeof raw !== "object") return s;
+        const color = String(raw.accent_color ?? "").trim().toLowerCase();
+        if (color === "auto" || /^#[0-9a-f]{6}$/.test(color)) s.accent_color = color;
+        if (THEMES.includes(raw.theme)) s.theme = raw.theme;
+        s.page_scale = clampInt(raw.page_scale, 80, 120, DEFAULTS.page_scale);
+        s.brightness = clampInt(raw.brightness, 50, 120, DEFAULTS.brightness);
+        if (typeof raw.animations_enabled === "boolean") s.animations_enabled = raw.animations_enabled;
+        return s;
+      }
+
+      function read(key) {
+        try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
+      }
+
+      function write(key, value) {
+        try {
+          if (value == null) localStorage.removeItem(key);
+          else localStorage.setItem(key, JSON.stringify(value));
+          return true;
+        } catch { return false; }
+      }
+
+      function apply(settings) {
+        const s = sanitize(settings);
+        const root = document.documentElement;
+        root.classList.toggle("theme-gothic", s.theme === "gothic");
+        root.classList.toggle("theme-anime", s.theme === "anime");
+        root.classList.toggle("animations-off", !s.animations_enabled);
+        if (s.accent_color === "auto") root.style.removeProperty("--accent");
+        else root.style.setProperty("--accent", s.accent_color);
+        root.style.setProperty("--brightness", String(s.brightness / 100));
+        root.style.setProperty("--page-scale", String(s.page_scale / 100));
+        return s;
+      }
+
+      window.SiteSettings = { KEYS, THEMES, THEME_ACCENT, DEFAULTS, sanitize, read, write, apply };
+
+      const personal = read(KEYS.personal);
+      apply(personal || read(KEYS.site));
+    })();
+  </script>
 </head>
 
 <body>
-  <span class="gothic-cross one" aria-hidden="true">✝</span>
-  <span class="gothic-cross two" aria-hidden="true">✝</span>
-  <span class="gothic-cross three" aria-hidden="true">✝</span>
+  <div class="decor" aria-hidden="true">
+    <span class="gothic-cross one">✝</span>
+    <span class="gothic-cross two">✝</span>
+    <span class="gothic-cross three">✝</span>
+    <img class="side-art left" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()"
+      src="https://static.jojowiki.com/images/thumb/3/3a/latest/20210430072039/Jotaro_SC_Infobox_Anime.png/400px-Jotaro_SC_Infobox_Anime.png">
+    <img class="side-art right" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()"
+      src="https://static.wikia.nocookie.net/jujutsu-kaisen/images/e/ef/Satoru_Gojo_%28Anime_2%29.png/revision/latest?cb=20250726003655">
+  </div>
 
-  <img class="side-art left" alt="Джотаро Куджо"
-    src="https://static.jojowiki.com/images/thumb/3/3a/latest/20210430072039/Jotaro_SC_Infobox_Anime.png/400px-Jotaro_SC_Infobox_Anime.png">
-  <img class="side-art right" alt="Годжо Сатору"
-    src="https://static.wikia.nocookie.net/jujutsu-kaisen/images/e/ef/Satoru_Gojo_%28Anime_2%29.png/revision/latest?cb=20250726003655">
+  <div id="app">
+    <header class="topbar">
+      <div class="brand-area">
+        <button id="menuButton" class="menu-button" type="button"
+          aria-label="Открыть меню" aria-expanded="false" aria-controls="siteMenu">
+          <span></span><span></span><span></span>
+        </button>
 
-  <header class="topbar">
-    <div class="brand-area">
-      <button id="menuButton" class="menu-button" type="button"
-        aria-label="Открыть меню" aria-expanded="false" aria-controls="siteMenu">
-        <span></span><span></span><span></span>
-      </button>
+        <a id="brandLink" class="brand" href="#" aria-label="emode1k, на главную">
+          <span class="brand-mark" aria-hidden="true">e</span>
+          <span class="brand-word" aria-hidden="true">Emode1k</span>
+        </a>
 
-      <a class="brand" href="#" aria-label="emode1k">
-        <span class="brand-mark" aria-hidden="true">e</span>
-        <span class="brand-word" aria-hidden="true">
-          <span>E</span><span>m</span><span>o</span><span>d</span><span>e</span><span>1</span><span>k</span>
-        </span>
-      </a>
-
-      <nav id="siteMenu" class="site-menu" aria-label="Главное меню" inert>
-        <button type="button" data-page="tree">Главная</button>
-        <button type="button" data-page="articles">Статьи</button>
-        <button type="button" data-page="settings">Настройки</button>
-        <button type="button" data-page="complaint">Сообщить об ошибке</button>
-        <button id="menuLogoutButton" type="button">Выйти из профиля</button>
-      </nav>
-    </div>
-
-    <div class="top-actions">
-      <input id="search" class="search" type="search" placeholder="Поиск по дереву…" aria-label="Поиск по дереву">
-      <div class="contact-wrap">
-        <button id="contactButton" class="button" type="button" aria-expanded="false">Связь с автором</button>
-        <nav id="contactMenu" class="contact-menu hidden" aria-label="Профили автора">
-          <a href="https://discord.gg/CWDxSzTxn" target="_blank" rel="noopener noreferrer">Discord — emode1k</a>
-          <a href="https://t.me/emode1k" target="_blank" rel="noopener noreferrer">Telegram — emode1k</a>
-          <a href="https://github.com/emode1k" target="_blank" rel="noopener noreferrer">GitHub — emode1k</a>
+        <nav id="siteMenu" class="site-menu" aria-label="Главное меню" inert>
+          <button type="button" data-page="tree">Главная</button>
+          <button type="button" data-page="articles">Статьи</button>
+          <button type="button" data-page="settings">Настройки</button>
+          <button type="button" data-page="complaint">Сообщить об ошибке</button>
+          <button id="menuAuthButton" type="button">Войти</button>
         </nav>
       </div>
-      <button id="adminButton" class="button button-primary" type="button">Войти</button>
-      <button id="logoutButton" class="button hidden" type="button">Выйти</button>
-    </div>
-  </header>
 
-  <main>
-    <section id="treePage" class="page">
-      <div class="heading-row">
-        <div>
-          <p class="eyebrow">Интерактивная карта проекта</p>
-          <h1>Дерево emode1k</h1>
-          <p class="subheading">Перетаскивай граф для перемещения. Колесо мыши меняет масштаб. Нажимай узлы, чтобы раскрывать ветки.</p>
+      <div class="top-actions">
+        <input id="search" class="search" type="search" placeholder="Поиск по дереву…" aria-label="Поиск по дереву">
+        <div class="contact-wrap">
+          <button id="contactButton" class="button" type="button" aria-expanded="false" aria-controls="contactMenu">Связь с автором</button>
+          <nav id="contactMenu" class="contact-menu hidden" aria-label="Профили автора">
+            <a href="https://discord.gg/CWDxSzTxn" target="_blank" rel="noopener noreferrer">Discord – emode1k</a>
+            <a href="https://t.me/emode1k" target="_blank" rel="noopener noreferrer">Telegram – emode1k</a>
+            <a href="https://github.com/emode1k" target="_blank" rel="noopener noreferrer">GitHub – emode1k</a>
+          </nav>
         </div>
-        <div class="graph-tools">
-          <span id="graphMeta" class="graph-meta"></span>
-          <button id="resetViewButton" class="button" type="button">Сбросить вид</button>
-        </div>
+        <button id="adminButton" class="button button-primary" type="button">Войти</button>
+        <button id="logoutButton" class="button hidden" type="button">Выйти</button>
       </div>
+    </header>
 
-      <div id="graph" class="graph-shell" aria-label="Дерево проекта"></div>
-
-      <div class="content-grid">
-        <section class="card">
-          <h2 id="detailsTitle">Информация об узле</h2>
-          <div id="details" class="details">Загрузка дерева…</div>
-          <div id="adminNodeActions" class="button-row hidden">
-            <button id="editNodeButton" class="button" type="button">Изменить</button>
-            <button id="deleteNodeButton" class="button button-danger" type="button">Удалить ветку</button>
+    <main>
+      <section id="treePage" class="page">
+        <div class="heading-row">
+          <div>
+            <p class="eyebrow">Интерактивная карта проекта</p>
+            <h1>Дерево emode1k</h1>
+            <p class="subheading">Перетаскивай граф мышью или пальцем. Колесо мыши и кнопки масштаба приближают и отдаляют. Нажатие на узел раскрывает ветку.</p>
           </div>
-        </section>
+          <div class="graph-tools">
+            <span id="graphMeta" class="graph-meta"></span>
+            <button id="zoomOutButton" class="button button-icon" type="button" aria-label="Отдалить">−</button>
+            <button id="zoomInButton" class="button button-icon" type="button" aria-label="Приблизить">+</button>
+            <button id="resetViewButton" class="button" type="button">Сбросить вид</button>
+          </div>
+        </div>
 
-        <section id="adminPanel" class="card hidden">
-          <h2 id="nodeFormTitle">Добавить узел</h2>
-          <form id="nodeForm" class="form-grid">
-            <input id="nodeLabel" maxlength="80" required placeholder="Название">
-            <textarea id="nodeInfo" maxlength="2000" placeholder="Описание"></textarea>
+        <p id="treeNotice" class="notice hidden" role="status"></p>
+        <div id="graph" class="graph-shell" aria-label="Дерево проекта"></div>
+
+        <div class="content-grid">
+          <section class="card">
+            <h2 id="detailsTitle">Информация об узле</h2>
+            <p id="detailsPath" class="node-path"></p>
+            <div id="details" class="details">Загрузка дерева…</div>
+            <div id="adminNodeActions" class="button-row hidden">
+              <button id="editNodeButton" class="button" type="button">Изменить</button>
+              <button id="deleteNodeButton" class="button button-danger" type="button">Удалить ветку</button>
+            </div>
+          </section>
+
+          <section id="adminPanel" class="card hidden">
+            <h2 id="nodeFormTitle">Добавить узел</h2>
+            <p id="nodeParentHint" class="muted small"></p>
+            <form id="nodeForm" class="form-grid">
+              <input id="nodeLabel" maxlength="80" required placeholder="Название">
+              <textarea id="nodeInfo" maxlength="2000" placeholder="Описание"></textarea>
+              <div id="layoutFields" class="field-row hidden">
+                <label class="setting-row">
+                  Сторона ветки
+                  <select id="nodeSide">
+                    <option value="">Автоматически</option>
+                    <option value="left">Слева</option>
+                    <option value="bottom">Снизу</option>
+                    <option value="right">Справа</option>
+                  </select>
+                </label>
+                <label class="setting-row">
+                  Порядок
+                  <input id="nodePosition" type="number" step="1" value="0">
+                </label>
+              </div>
+              <p id="layoutHint" class="muted small hidden">Сторона учитывается у веток первого уровня. Порядок сортирует соседние узлы, меньшее число идёт раньше.</p>
+              <div class="button-row">
+                <button id="saveNodeButton" class="button button-primary" type="submit">Добавить</button>
+                <button id="cancelNodeButton" class="button hidden" type="button">Отмена</button>
+              </div>
+            </form>
+            <p id="adminStatus" class="status" role="status"></p>
+          </section>
+        </div>
+      </section>
+
+      <section id="articlesPage" class="page hidden">
+        <button class="button back-button" data-back type="button">← Назад</button>
+        <h1 class="page-heading">Статьи</h1>
+
+        <section id="articleEditor" class="card hidden">
+          <h2 id="articleFormHeading">Новая статья</h2>
+          <form id="articleForm" class="form-grid">
+            <input id="articleTitle" maxlength="150" placeholder="Заголовок" required>
+            <textarea id="articleContent" maxlength="20000" placeholder="Текст статьи" required></textarea>
             <div class="button-row">
-              <button id="saveNodeButton" class="button button-primary" type="submit">Добавить</button>
-              <button id="cancelNodeButton" class="button hidden" type="button">Отмена</button>
+              <button id="saveArticleButton" class="button button-primary" type="submit">Опубликовать</button>
+              <button id="cancelArticleButton" class="button hidden" type="button">Отмена</button>
             </div>
           </form>
-          <p id="adminStatus" class="status" role="status"></p>
+          <p id="articleStatus" class="status" role="status"></p>
         </section>
-      </div>
-    </section>
-
-    <section id="articlesPage" class="page hidden">
-      <button class="button back-button" data-back type="button">← Назад</button>
-      <h1 class="page-heading">Статьи</h1>
-
-      <section id="articleEditor" class="card hidden">
-        <h2 id="articleFormHeading">Новая статья</h2>
-        <form id="articleForm" class="form-grid">
-          <input id="articleTitle" maxlength="150" placeholder="Заголовок" required>
-          <textarea id="articleContent" maxlength="20000" placeholder="Текст статьи" required></textarea>
-          <div class="button-row">
-            <button id="saveArticleButton" class="button button-primary" type="submit">Опубликовать</button>
-            <button id="cancelArticleButton" class="button hidden" type="button">Отмена</button>
-          </div>
-        </form>
-        <p id="articleStatus" class="status" role="status"></p>
+        <div id="articlesList" class="article-list"></div>
       </section>
-      <div id="articlesList" class="article-list"></div>
-    </section>
 
-    <section id="settingsPage" class="page hidden">
-      <button class="button back-button" data-back type="button">← Назад</button>
-      <h1 class="page-heading">Настройки сайта</h1>
+      <section id="settingsPage" class="page hidden">
+        <button class="button back-button" data-back type="button">← Назад</button>
+        <h1 class="page-heading">Настройки сайта</h1>
 
-      <section id="settingsEditor" class="card">
-        <form id="settingsForm" class="form-grid">
-          <label class="setting-row">
-            Цвет интерфейса
-            <select id="colorSelect">
-              <option value="#ff2638">Красный — текущий</option>
-              <option value="#e53935">Красный</option>
-              <option value="#f44336">Алый</option>
-              <option value="#ff5722">Оранжево-красный</option>
-              <option value="#ff9800">Оранжевый</option>
-              <option value="#ffc107">Янтарный</option>
-              <option value="#ffeb3b">Жёлтый</option>
-              <option value="#cddc39">Лаймовый</option>
-              <option value="#8bc34a">Салатовый</option>
-              <option value="#4caf50">Зелёный</option>
-              <option value="#009688">Бирюзовый</option>
-              <option value="#00bcd4">Циан</option>
-              <option value="#03a9f4">Голубой</option>
-              <option value="#2196f3">Синий</option>
-              <option value="#3f51b5">Индиго</option>
-              <option value="#673ab7">Фиолетовый</option>
-              <option value="#9c27b0">Пурпурный</option>
-              <option value="#e91e63">Розовый</option>
-              <option value="#795548">Коричневый</option>
-              <option value="#9e9e9e">Серый</option>
-              <option value="#607d8b">Сине-серый</option>
-              <option value="#ffffff">Белый</option>
-              <option value="#d4af37">Золотой</option>
-              <option value="#00a86b">Изумрудный</option>
-              <option value="#7cfc00">Лайм</option>
-              <option value="#ff00ff">Фуксия</option>
-              <option value="#40e0d0">Светлая бирюза</option>
-              <option value="#6495ed">Васильковый</option>
-              <option value="#dc143c">Малиновый</option>
-              <option value="#ff7f50">Коралловый</option>
-            </select>
-          </label>
+        <section class="card settings-card">
+          <form id="settingsForm" class="form-grid">
+            <label class="setting-row">
+              Цвет интерфейса
+              <select id="colorSelect">
+                <option value="auto">Цвет темы</option>
+                <option value="#ff2638">Красный emode1k</option>
+                <option value="#e53935">Красный</option>
+                <option value="#f44336">Алый</option>
+                <option value="#ff5722">Оранжево-красный</option>
+                <option value="#ff9800">Оранжевый</option>
+                <option value="#ffc107">Янтарный</option>
+                <option value="#ffeb3b">Жёлтый</option>
+                <option value="#cddc39">Лаймовый</option>
+                <option value="#8bc34a">Салатовый</option>
+                <option value="#4caf50">Зелёный</option>
+                <option value="#009688">Бирюзовый</option>
+                <option value="#00bcd4">Циан</option>
+                <option value="#03a9f4">Голубой</option>
+                <option value="#2196f3">Синий</option>
+                <option value="#3f51b5">Индиго</option>
+                <option value="#673ab7">Фиолетовый</option>
+                <option value="#9c27b0">Пурпурный</option>
+                <option value="#e91e63">Розовый</option>
+                <option value="#795548">Коричневый</option>
+                <option value="#9e9e9e">Серый</option>
+                <option value="#607d8b">Сине-серый</option>
+                <option value="#ffffff">Белый</option>
+                <option value="#d4af37">Золотой</option>
+                <option value="#00a86b">Изумрудный</option>
+                <option value="#7cfc00">Лайм</option>
+                <option value="#ff00ff">Фуксия</option>
+                <option value="#40e0d0">Светлая бирюза</option>
+                <option value="#6495ed">Васильковый</option>
+                <option value="#dc143c">Малиновый</option>
+                <option value="#ff7f50">Коралловый</option>
+                <option value="custom">Свой цвет…</option>
+              </select>
+            </label>
 
-          <label class="setting-row">
-            Общий стиль сайта
-            <select id="themeSelect">
-              <option value="standard">Стандартный</option>
-              <option value="gothic">Готик</option>
-              <option value="anime">Аниме</option>
-            </select>
-          </label>
-
-          <label class="setting-row">
-            Размер страницы
-            <div class="range-line">
-              <input id="pageScale" type="range" min="80" max="120" step="5" value="100">
-              <output id="pageScaleOutput">100%</output>
+            <div id="colorCustomRow" class="color-line hidden">
+              <input id="colorCustom" type="color" value="#ff2638" aria-label="Свой цвет">
+              <span class="muted small">Любой оттенок, применяется сразу</span>
             </div>
-          </label>
 
-          <label class="setting-row">
-            Яркость
-            <div class="range-line">
-              <input id="brightness" type="range" min="50" max="120" step="5" value="100">
-              <output id="brightnessOutput">100%</output>
+            <label class="setting-row">
+              Общий стиль сайта
+              <select id="themeSelect">
+                <option value="standard">Стандартный</option>
+                <option value="gothic">Готик</option>
+                <option value="anime">Аниме</option>
+              </select>
+            </label>
+
+            <label class="setting-row">
+              Размер страницы
+              <span class="range-line">
+                <input id="pageScale" type="range" min="80" max="120" step="5" value="100">
+                <output id="pageScaleOutput">100%</output>
+              </span>
+            </label>
+
+            <label class="setting-row">
+              Яркость
+              <span class="range-line">
+                <input id="brightness" type="range" min="50" max="120" step="5" value="100">
+                <output id="brightnessOutput">100%</output>
+              </span>
+            </label>
+
+            <label class="setting-check">
+              <input id="animationsEnabled" type="checkbox" checked>
+              Включить анимации
+            </label>
+
+            <div class="button-row">
+              <button class="button button-primary" type="submit">Сохранить для себя</button>
+              <button id="saveSiteSettingsButton" class="button hidden" type="button">Сохранить для всех</button>
+              <button id="revertSettingsButton" class="button" type="button">Отменить изменения</button>
+              <button id="resetPersonalButton" class="button" type="button">Вернуть общие</button>
             </div>
-          </label>
-
-          <label class="setting-check">
-            <input id="animationsEnabled" type="checkbox" checked>
-            Включить анимации
-          </label>
-
-          <button class="button button-primary" type="submit">Сохранить настройки для всех</button>
-        </form>
-        <p id="settingsStatus" class="status" role="status"></p>
+          </form>
+          <p id="settingsSource" class="muted small"></p>
+          <p id="settingsStatus" class="status" role="status"></p>
+        </section>
       </section>
-    </section>
-  </main>
+    </main>
+  </div>
 
   <div id="complaintDialog" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="complaintTitle">
     <section class="modal">
       <h2 id="complaintTitle">Сообщить об ошибках или нарушениях</h2>
-      <p>Обращение будет подготовлено для отправки на:</p>
-      <a href="mailto:emode1koff@gmail.com">emode1koff@gmail.com</a>
+      <p>Обращение будет подготовлено для отправки на адрес <a href="mailto:emode1koff@gmail.com">emode1koff@gmail.com</a></p>
       <form id="complaintForm" class="form-grid">
         <label for="complaintText">Текст обращения</label>
         <textarea id="complaintText" maxlength="5000" required placeholder="Опишите ошибку или нарушение"></textarea>
@@ -681,7 +789,7 @@
           <button id="closeComplaintButton" class="button" type="button">Закрыть</button>
         </div>
       </form>
-      <p class="muted">Откроется почтовое приложение с заполненным адресом. Письмо нужно отправить вручную.</p>
+      <p class="muted small">Откроется почтовое приложение с заполненным адресом. Письмо нужно отправить вручную.</p>
     </section>
   </div>
 
@@ -693,10 +801,10 @@
         <input id="emailInput" type="email" autocomplete="username" placeholder="Почта администратора" required>
         <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Пароль Supabase" required>
         <div class="button-row">
-          <button class="button button-primary" type="submit">Войти</button>
+          <button id="loginSubmit" class="button button-primary" type="submit">Войти</button>
           <button id="closeLoginButton" class="button" type="button">Отмена</button>
         </div>
-        <p id="loginStatus" class="status error" role="status"></p>
+        <p id="loginStatus" class="status" role="status"></p>
       </form>
     </section>
   </div>
@@ -707,27 +815,50 @@
     const SUPABASE_PUBLIC_KEY = "sb_publishable_itE-NyvxMgqHsbqn3Dp4sQ_2uZPoiUZ";
     const ADMIN_EMAIL = "emode1koff@gmail.com";
     const ROOT_ID = "emode1k";
+
     const NODE_W = 188, NODE_H = 60;
-    const ROOT_STEP = 330, COMPACT_STEP = ROOT_STEP / 2.5, ROW_STEP = 82;
+    const FIRST_X = 300, LEVEL_X = 240, ROW_H = 78;
+    const FIRST_Y = 150, LEVEL_Y = 110, COL_W = 208;
+    const MIN_SCALE = 0.25, MAX_SCALE = 2.2;
+    const SIDES = ["left", "bottom", "right"];
+    const PAGES = ["tree", "articles", "settings"];
+
     const $ = id => document.getElementById(id);
-    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
+    const S = window.SiteSettings;
+    const SETTING_FIELDS = Object.keys(S.DEFAULTS);
+    const db = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY) : null;
+    const graphHost = $("graph");
 
     let nodes = [];
+    let byId = new Map();
+    let kids = new Map();
+    let depth = new Map();
+    let hasLayoutColumns = false;
     let selectedId = ROOT_ID;
     let isAdmin = false;
     let editingNodeId = null;
     let editingArticleId = null;
     let query = "";
-    let loading = false;
-    let drag = null;
+    let queryTerm = "";
+    let loading = true;
+    let loadError = "";
     let fitted = false;
+    let viewTouched = false;
+    let lastLayout = null;
     let currentPage = "tree";
+    let articlesRequest = 0;
+    let drag = null;
+    let suppressClick = false;
+    let lastFocus = null;
     const expanded = new Set();
     const view = { x: 0, y: 0, scale: 1 };
 
-    function isSiteAdmin(session) {
-      return session?.user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-    }
+    let siteSettings = S.sanitize(S.read(S.KEYS.site));
+    let personalSettings = readPersonal();
+    let draft = null;
+    let draftDirty = false;
+
+    /* ---------- Общие помощники ---------- */
 
     function escapeHtml(value) {
       return String(value).replace(/[&<>"']/g, c => ({
@@ -735,226 +866,656 @@
       })[c]);
     }
 
-    function childrenOf(id) { return nodes.filter(n => n.parent === id); }
+    function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
+
+    function animationsOn() {
+      return !document.documentElement.classList.contains("animations-off");
+    }
+
+    function scrollBehavior() { return animationsOn() ? "smooth" : "auto"; }
+
+    function setStatus(id, text, isError = false) {
+      const el = $(id);
+      el.textContent = text;
+      el.classList.toggle("error", isError);
+    }
+
+    function errorText(error) { return error?.message || String(error); }
+
+    function makeId(prefix) {
+      const c = globalThis.crypto;
+      if (c && typeof c.randomUUID === "function") return prefix + c.randomUUID();
+      let random = Math.random().toString(16).slice(2) + Math.random().toString(16).slice(2);
+      if (c && typeof c.getRandomValues === "function") {
+        random = Array.from(c.getRandomValues(new Uint8Array(12)),
+          b => b.toString(16).padStart(2, "0")).join("");
+      }
+      return `${prefix}${Date.now().toString(36)}-${random}`;
+    }
+
+    function hashString(text) {
+      let h = 2166136261;
+      for (let i = 0; i < text.length; i++) {
+        h ^= text.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
+    }
+
+    function isSiteAdmin(session) {
+      return session?.user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    }
+
+    /* ---------- Индекс дерева ---------- */
+
+    function compareNodes(a, b) {
+      return a.position - b.position || a.label.localeCompare(b.label, "ru");
+    }
+
+    function sideOf(node) {
+      return SIDES.includes(node.side) ? node.side : SIDES[hashString(node.id) % SIDES.length];
+    }
+
+    function rebuildIndex() {
+      byId = new Map(nodes.map(n => [n.id, n]));
+      kids = new Map();
+      for (const n of nodes) {
+        if (n.parent == null || n.parent === n.id) continue;
+        if (!kids.has(n.parent)) kids.set(n.parent, []);
+        kids.get(n.parent).push(n);
+      }
+      for (const list of kids.values()) list.sort(compareNodes);
+
+      depth = new Map();
+      if (!byId.has(ROOT_ID)) return;
+      depth.set(ROOT_ID, 0);
+      const queue = [ROOT_ID];
+      for (let i = 0; i < queue.length; i++) {
+        const id = queue[i];
+        for (const child of kids.get(id) || []) {
+          if (depth.has(child.id)) continue;
+          depth.set(child.id, depth.get(id) + 1);
+          queue.push(child.id);
+        }
+      }
+    }
+
+    function childrenOf(id) { return kids.get(id) || []; }
 
     function descendantsOf(id) {
       const result = new Set([id]);
-      function walk(parentId) {
-        for (const child of childrenOf(parentId)) {
+      const stack = [id];
+      while (stack.length) {
+        for (const child of childrenOf(stack.pop())) {
           if (result.has(child.id)) continue;
           result.add(child.id);
-          walk(child.id);
+          stack.push(child.id);
         }
       }
-      walk(id);
       return result;
     }
 
-    function depthOf(node, byId) {
-      let depth = 0, current = node;
-      const seen = new Set();
-      while (current.parent && byId.has(current.parent) && !seen.has(current.id)) {
-        seen.add(current.id);
-        depth++;
+    function ancestorsOf(id) {
+      const list = [];
+      const seen = new Set([id]);
+      let current = byId.get(id);
+      while (current && current.id !== ROOT_ID && current.parent != null
+        && byId.has(current.parent) && !seen.has(current.parent)) {
+        seen.add(current.parent);
+        list.push(current.parent);
         current = byId.get(current.parent);
       }
-      return depth;
+      return list;
     }
 
-    function visibleByExpansion(node, byId) {
-      let current = node;
-      while (current.parent && byId.has(current.parent)) {
-        const parent = byId.get(current.parent);
-        if (depthOf(parent, byId) >= 1 && !expanded.has(parent.id)) return false;
-        current = parent;
+    function isExpandable(id) {
+      return (depth.get(id) ?? 0) >= 1 && childrenOf(id).length > 0;
+    }
+
+    function matches(node) {
+      return `${node.label} ${node.info}`.toLocaleLowerCase("ru").includes(queryTerm);
+    }
+
+    function computeShown() {
+      const shown = new Set();
+      if (!depth.has(ROOT_ID)) return shown;
+
+      if (query) {
+        for (const n of nodes) {
+          if (!depth.has(n.id) || !matches(n)) continue;
+          shown.add(n.id);
+          ancestorsOf(n.id).forEach(id => shown.add(id));
+        }
+        return shown;
       }
-      return true;
+
+      const stack = [ROOT_ID];
+      while (stack.length) {
+        const id = stack.pop();
+        shown.add(id);
+        if (id !== ROOT_ID && !expanded.has(id)) continue;
+        for (const child of childrenOf(id)) if (!shown.has(child.id)) stack.push(child.id);
+      }
+      return shown;
     }
 
-    function getVisibleNodes(byId) {
-      if (!query) return nodes.filter(n => visibleByExpansion(n, byId));
-      const found = new Map();
-      const term = query.toLocaleLowerCase();
+    /* ---------- Раскладка ---------- */
 
-      for (const node of nodes) {
-        if (!`${node.label} ${node.info || ""}`.toLocaleLowerCase().includes(term)) continue;
-        found.set(node.id, node);
-        let current = node;
-        while (current.parent && byId.has(current.parent)) {
-          current = byId.get(current.parent);
-          found.set(current.id, current);
+    function computeLayout(shown) {
+      const pos = new Map();
+      const breadth = new Map();
+      const visibleKids = id => childrenOf(id).filter(c => shown.has(c.id));
+
+      function measure(id) {
+        let total = 0;
+        for (const child of visibleKids(id)) total += measure(child.id);
+        const value = Math.max(1, total);
+        breadth.set(id, value);
+        return value;
+      }
+
+      function place(node, level, start, out) {
+        out.push({ id: node.id, level, across: start + breadth.get(node.id) / 2 });
+        let cursor = start;
+        for (const child of visibleKids(node.id)) {
+          place(child, level + 1, cursor, out);
+          cursor += breadth.get(child.id);
         }
       }
-      return [...found.values()];
-    }
 
-    function sortedChildren(parentId, ids) {
-      return nodes.filter(n => n.parent === parentId && ids.has(n.id))
-        .sort((a, b) => a.label.localeCompare(b.label));
-    }
-
-    function makeLayout(shown, byId) {
-      const ids = new Set(shown.map(n => n.id));
-      const points = new Map();
-      if (!ids.has(ROOT_ID) || !byId.has(ROOT_ID)) return points;
-      points.set(ROOT_ID, { x: 0, y: 0 });
-
-      const directions = [{ x: -1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 0 }];
-
-      sortedChildren(ROOT_ID, ids).forEach((branch, i) => {
-        const dir = directions[i % 3];
-        const lane = Math.floor(i / 3);
-        const offset = lane ? (lane % 2 ? 1 : -1) * Math.ceil(lane / 2) * ROW_STEP : 0;
-        const first = { x: dir.x * ROOT_STEP, y: dir.y * ROOT_STEP + offset };
-        points.set(branch.id, first);
-
-        function place(parent, point, depth) {
-          const children = sortedChildren(parent.id, ids);
-          const step = depth === 1 ? ROOT_STEP : COMPACT_STEP;
-          children.forEach((child, j) => {
-            const spread = (j - (children.length - 1) / 2) * ROW_STEP;
-            const next = {
-              x: point.x + dir.x * step + (dir.y ? spread : 0),
-              y: point.y + dir.y * step + (dir.x ? spread : 0)
-            };
-            points.set(child.id, next);
-            place(child, next, depth + 1);
-          });
+      function placeSide(branches) {
+        const total = branches.reduce((sum, b) => sum + measure(b.id), 0);
+        const out = [];
+        let cursor = -total / 2;
+        for (const b of branches) {
+          place(b, 1, cursor, out);
+          cursor += breadth.get(b.id);
         }
-        place(branch, first, 1);
-      });
-      return points;
+        return out;
+      }
+
+      pos.set(ROOT_ID, { x: 0, y: 0, side: "root" });
+      const groups = { left: [], bottom: [], right: [] };
+      for (const branch of visibleKids(ROOT_ID)) groups[sideOf(branch)].push(branch);
+
+      let lowest = NODE_H / 2;
+      for (const side of ["left", "right"]) {
+        const dir = side === "left" ? -1 : 1;
+        for (const p of placeSide(groups[side])) {
+          const y = p.across * ROW_H;
+          pos.set(p.id, { x: dir * (FIRST_X + (p
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    "use strict";
+
+    const SUPABASE_URL = "https://ajydliryxxhqetfwefya.supabase.co";
+    const SUPABASE_PUBLIC_KEY = "sb_publishable_itE-NyvxMgqHsbqn3Dp4sQ_2uZPoiUZ";
+    const ADMIN_EMAIL = "emode1koff@gmail.com";
+    const ROOT_ID = "emode1k";
+
+    const NODE_W = 188, NODE_H = 60;
+    const FIRST_X = 300, LEVEL_X = 240, ROW_H = 78;
+    const FIRST_Y = 150, LEVEL_Y = 110, COL_W = 208;
+    const MIN_SCALE = 0.25, MAX_SCALE = 2.2;
+    const SIDES = ["left", "bottom", "right"];
+    const PAGES = ["tree", "articles", "settings"];
+    const RLS_HINT = "База не изменила ни одной строки. Проверьте RLS-политики для этой таблицы.";
+
+    const $ = id => document.getElementById(id);
+    const S = window.SiteSettings;
+    const SETTING_FIELDS = Object.keys(S.DEFAULTS);
+    const graphHost = $("graph");
+
+    let db = null;
+    try {
+      if (window.supabase) db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
+    } catch (err) {
+      console.error(err);
     }
 
-    function edgePath(a, b) {
-      const dx = b.x - a.x, dy = b.y - a.y;
-      const length = Math.hypot(dx, dy) || 1;
-      const ux = dx / length, uy = dy / length;
-      const x1 = a.x + ux * NODE_W / 2, y1 = a.y + uy * NODE_H / 2;
-      const x2 = b.x - ux * NODE_W / 2, y2 = b.y - uy * NODE_H / 2;
-      return `<path class="edge" d="M${x1} ${y1} C${x1 + dx * .4} ${y1 + dy * .4},${x2 - dx * .4} ${y2 - dy * .4},${x2} ${y2}"/>`;
+    let nodes = [];
+    let byId = new Map();
+    let kids = new Map();
+    let depth = new Map();
+    let hasLayoutColumns = false;
+    let selectedId = ROOT_ID;
+    let isAdmin = false;
+    let adminReady = false;
+    let editingNodeId = null;
+    let editingArticleId = null;
+    let articles = [];
+    let query = "";
+    let queryTerm = "";
+    let loading = Boolean(db);
+    let loadError = db ? "" : "Библиотека Supabase не загрузилась. Проверьте интернет или отключите блокировщик для cdn.jsdelivr.net.";
+    let treeRequest = 0;
+    let articlesRequest = 0;
+    let fitted = false;
+    let viewTouched = false;
+    let lastLayout = null;
+    let currentPage = "tree";
+    let suppressClick = false;
+    let gesture = null;
+    let lastFocus = null;
+    let searchTimer = 0;
+    const pointers = new Map();
+    const expanded = new Set();
+    const view = { x: 0, y: 0, scale: 1 };
+
+    let siteSettings = S.sanitize(S.read(S.KEYS.site));
+    let personalSettings = readPersonal();
+    let draft = { ...effectiveSettings() };
+    let draftDirty = false;
+
+    /* ---------- Помощники ---------- */
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[c]);
     }
 
-    function draw() {
-      const host = $("graph");
-      if (loading) {
-        host.innerHTML = '<div class="empty-state">Загрузка дерева…</div>';
+    function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
+    function round(n) { return Math.round(n * 10) / 10; }
+
+    function animationsOn() {
+      return !document.documentElement.classList.contains("animations-off");
+    }
+
+    function scrollBehavior() { return animationsOn() ? "smooth" : "auto"; }
+
+    function setStatus(id, text, isError = false) {
+      const el = $(id);
+      el.textContent = text;
+      el.classList.toggle("error", isError);
+    }
+
+    function errorText(error) { return error?.message || String(error); }
+
+    function makeId(prefix) {
+      const c = globalThis.crypto;
+      if (c && typeof c.randomUUID === "function") return prefix + c.randomUUID();
+      let random = Math.random().toString(16).slice(2) + Math.random().toString(16).slice(2);
+      if (c && typeof c.getRandomValues === "function") {
+        random = Array.from(c.getRandomValues(new Uint8Array(12)),
+          b => b.toString(16).padStart(2, "0")).join("");
+      }
+      return `${prefix}${Date.now().toString(36)}-${random}`;
+    }
+
+    function hashString(text) {
+      let h = 2166136261;
+      for (let i = 0; i < text.length; i++) {
+        h ^= text.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
+    }
+
+    function shorten(text, max = 22) {
+      const chars = Array.from(text);
+      return chars.length > max ? chars.slice(0, max - 1).join("") + "…" : text;
+    }
+
+    function formatDate(value) {
+      const d = new Date(value);
+      return Number.isNaN(d.getTime()) ? "" : d.toLocaleString("ru-RU", { dateStyle: "long", timeStyle: "short" });
+    }
+
+    function isSiteAdmin(session) {
+      return session?.user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    }
+
+    /* ---------- Индекс дерева ---------- */
+
+    function normalizeNode(row) {
+      const position = Number(row.position);
+      return {
+        id: String(row.id),
+        parent: row.parent_id == null ? null : String(row.parent_id),
+        label: String(row.label ?? "").trim() || "Без названия",
+        info: String(row.info ?? ""),
+        side: SIDES.includes(row.side) ? row.side : null,
+        position: Number.isFinite(position) ? position : 0
+      };
+    }
+
+    function compareNodes(a, b) {
+      return a.position - b.position || a.label.localeCompare(b.label, "ru");
+    }
+
+    function sideOf(node) {
+      return node.side || SIDES[hashString(node.id) % SIDES.length];
+    }
+
+    function rebuildIndex() {
+      byId = new Map(nodes.map(n => [n.id, n]));
+      kids = new Map();
+      for (const n of nodes) {
+        if (n.id === ROOT_ID || n.parent == null || n.parent === n.id) continue;
+        if (!kids.has(n.parent)) kids.set(n.parent, []);
+        kids.get(n.parent).push(n);
+      }
+      for (const list of kids.values()) list.sort(compareNodes);
+
+      depth = new Map();
+      if (!byId.has(ROOT_ID)) return;
+      depth.set(ROOT_ID, 0);
+      const queue = [ROOT_ID];
+      for (let i = 0; i < queue.length; i++) {
+        const id = queue[i];
+        for (const child of kids.get(id) || []) {
+          if (depth.has(child.id)) continue;
+          depth.set(child.id, depth.get(id) + 1);
+          queue.push(child.id);
+        }
+      }
+    }
+
+    function childrenOf(id) { return kids.get(id) || []; }
+
+    function descendantsOf(id) {
+      const result = new Set([id]);
+      const stack = [id];
+      while (stack.length) {
+        for (const child of childrenOf(stack.pop())) {
+          if (result.has(child.id)) continue;
+          result.add(child.id);
+          stack.push(child.id);
+        }
+      }
+      return result;
+    }
+
+    function ancestorsOf(id) {
+      const list = [];
+      const seen = new Set([id]);
+      let current = byId.get(id);
+      while (current && current.id !== ROOT_ID && current.parent != null
+        && byId.has(current.parent) && !seen.has(current.parent)) {
+        seen.add(current.parent);
+        list.push(current.parent);
+        current = byId.get(current.parent);
+      }
+      return list;
+    }
+
+    function isExpandable(id) {
+      return (depth.get(id) ?? 0) >= 1 && childrenOf(id).length > 0;
+    }
+
+    function matches(node) {
+      return `${node.label}\n${node.info}`.toLocaleLowerCase("ru").includes(queryTerm);
+    }
+
+    function revealNode(id) {
+      for (const a of ancestorsOf(id)) if (a !== ROOT_ID) expanded.add(a);
+      selectedId = id;
+    }
+
+    function computeShown() {
+      const shown = new Set();
+      let matchCount = 0;
+      if (!depth.has(ROOT_ID)) return { shown, matchCount };
+
+      if (query) {
+        for (const id of depth.keys()) {
+          if (!matches(byId.get(id))) continue;
+          matchCount++;
+          shown.add(id);
+          ancestorsOf(id).forEach(a => shown.add(a));
+        }
+        return { shown, matchCount };
+      }
+
+      const stack = [ROOT_ID];
+      while (stack.length) {
+        const id = stack.pop();
+        shown.add(id);
+        if (id !== ROOT_ID && !expanded.has(id)) continue;
+        for (const child of childrenOf(id)) if (!shown.has(child.id)) stack.push(child.id);
+      }
+      return { shown, matchCount };
+    }
+
+    /* ---------- Раскладка ---------- */
+
+    function computeLayout(shown) {
+      const pos = new Map();
+      const breadth = new Map();
+      const visibleKids = id => childrenOf(id).filter(c => shown.has(c.id));
+
+      function measure(id) {
+        let total = 0;
+        for (const child of visibleKids(id)) total += measure(child.id);
+        const value = Math.max(1, total);
+        breadth.set(id, value);
+        return value;
+      }
+
+      function place(node, level, start, out) {
+        out.push({ id: node.id, level, across: start + breadth.get(node.id) / 2 });
+        let cursor = start;
+        for (const child of visibleKids(node.id)) {
+          place(child, level + 1, cursor, out);
+          cursor += breadth.get(child.id);
+        }
+      }
+
+      function placeGroup(branches) {
+        const total = branches.reduce((sum, b) => sum + measure(b.id), 0);
+        const out = [];
+        let cursor = -total / 2;
+        for (const b of branches) {
+          place(b, 1, cursor, out);
+          cursor += breadth.get(b.id);
+        }
+        return out;
+      }
+
+      pos.set(ROOT_ID, { x: 0, y: 0, side: "root" });
+      const groups = { left: [], bottom: [], right: [] };
+      for (const branch of visibleKids(ROOT_ID)) groups[sideOf(branch)].push(branch);
+
+      let lowest = -Infinity;
+      for (const side of ["left", "right"]) {
+        const dir = side === "left" ? -1 : 1;
+        for (const p of placeGroup(groups[side])) {
+          const y = p.across * ROW_H;
+          pos.set(p.id, { x: dir * (FIRST_X + (p.level - 1) * LEVEL_X), y, side });
+          lowest = Math.max(lowest, y);
+        }
+      }
+
+      const bottom = placeGroup(groups.bottom);
+      if (bottom.length) {
+        const half = Math.max(...bottom.map(p => Math.abs(p.across))) * COL_W;
+        const collides = lowest > -Infinity && half + NODE_W / 2 > FIRST_X - NODE_W / 2 - 12;
+        const startY = collides ? Math.max(FIRST_Y, lowest + NODE_H + 48) : FIRST_Y;
+        for (const p of bottom) {
+          pos.set(p.id, { x: p.across * COL_W, y: startY + (p.level - 1) * LEVEL_Y, side: "bottom" });
+        }
+      }
+
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      for (const p of pos.values()) {
+        minX = Math.min(minX, p.x - NODE_W / 2);
+        maxX = Math.max(maxX, p.x + NODE_W / 2);
+        minY = Math.min(minY, p.y - NODE_H / 2);
+        maxY = Math.max(maxY, p.y + NODE_H / 2);
+      }
+      return { pos, minX, maxX, minY, maxY };
+    }
+
+    function edgePath(a, b, side) {
+      if (side === "bottom") {
+        const y1 = a.y + NODE_H / 2, y2 = b.y - NODE_H / 2, my = (y1 + y2) / 2;
+        return `M${round(a.x)} ${round(y1)} C${round(a.x)} ${round(my)} ${round(b.x)} ${round(my)} ${round(b.x)} ${round(y2)}`;
+      }
+      const dir = side === "left" ? -1 : 1;
+      const x1 = a.x + dir * NODE_W / 2, x2 = b.x - dir * NODE_W / 2, mx = (x1 + x2) / 2;
+      return `M${round(x1)} ${round(a.y)} C${round(mx)} ${round(a.y)} ${round(mx)} ${round(b.y)} ${round(x2)} ${round(b.y)}`;
+    }
+
+    /* ---------- Отрисовка графа ---------- */
+
+    function applyView() {
+      graphHost.querySelector("#viewport")?.setAttribute("transform",
+        `translate(${round(view.x)} ${round(view.y)}) scale(${view.scale})`);
+    }
+
+    function fitView() {
+      const w = graphHost.clientWidth, h = graphHost.clientHeight;
+      if (!lastLayout || !w || !h) return;
+      const { minX, maxX, minY, maxY } = lastLayout;
+      const bw = maxX - minX + 60, bh = maxY - minY + 60;
+      view.scale = clamp(Math.min(w / bw, h / bh, 1), MIN_SCALE, MAX_SCALE);
+      view.x = w / 2 - (minX + maxX) / 2 * view.scale;
+      view.y = h / 2 - (minY + maxY) / 2 * view.scale;
+      fitted = true;
+    }
+
+    function render(options = {}) {
+      if (currentPage !== "tree") return;
+      const meta = $("graphMeta");
+
+      if (loading || loadError) {
+        lastLayout = null;
+        meta.textContent = "";
+        graphHost.innerHTML = `<div class="empty-state">${escapeHtml(loading ? "Загрузка дерева…" : loadError)}</div>`;
         return;
       }
 
-      const byId = new Map(nodes.map(n => [n.id, n]));
-      const shown = getVisibleNodes(byId);
-      $("graphMeta").textContent = `${shown.length} / ${nodes.length} узлов`;
+      const { shown, matchCount } = computeShown();
+      meta.textContent = query
+        ? `Совпадений ${matchCount}, показано ${shown.size} из ${depth.size}`
+        : `${shown.size} из ${depth.size} узлов`;
 
-      if (!shown.length) {
-        host.innerHTML = '<div class="empty-state">Дерево пусто или ничего не найдено.</div>';
+      if (!shown.size) {
+        lastLayout = null;
+        graphHost.innerHTML = `<div class="empty-state">${query ? "По этому запросу ничего не найдено." : "Дерево пусто."}</div>`;
         return;
       }
 
-      const points = makeLayout(shown, byId);
-      const xs = [...points.values()].map(p => p.x), ys = [...points.values()].map(p => p.y);
-      const minX = Math.min(...xs) - NODE_W, maxX = Math.max(...xs) + NODE_W;
-      const minY = Math.min(...ys) - NODE_H * 2, maxY = Math.max(...ys) + NODE_H * 2;
-      const width = Math.max(900, maxX - minX), height = Math.max(480, maxY - minY);
-      const ox = -minX + (width - (maxX - minX)) / 2;
-      const oy = -minY + (height - (maxY - minY)) / 2;
+      const layout = computeLayout(shown);
+      lastLayout = layout;
 
       let edges = "";
-      shown.forEach(n => {
-        const a = points.get(n.parent), b = points.get(n.id);
-        if (a && b) edges += edgePath(a, b);
-      });
-
       let markup = "";
-      shown.forEach(n => {
-        const p = points.get(n.id);
-        if (!p) return;
-        const label = n.label.length > 24 ? n.label.slice(0, 23) + "…" : n.label;
-        const expandable = depthOf(n, byId) >= 1 && childrenOf(n.id).length > 0;
-        const sign = expandable ? (expanded.has(n.id) ? "−" : "+") : "";
-        markup += `<g class="node ${n.id === ROOT_ID ? "root" : ""} ${n.id === selectedId ? "selected" : ""}"
-          data-id="${escapeHtml(n.id)}" transform="translate(${p.x + ox - NODE_W / 2},${p.y + oy - NODE_H / 2})"
-          tabindex="0" role="button" aria-label="${escapeHtml(n.label)}">
+      for (const id of shown) {
+        const node = byId.get(id);
+        const p = layout.pos.get(id);
+        if (!node || !p) continue;
+
+        if (id !== ROOT_ID) {
+          const parentPoint = layout.pos.get(node.parent);
+          if (parentPoint) edges += `<path class="edge" d="${edgePath(parentPoint, p, p.side)}"/>`;
+        }
+
+        const expandable = !query && isExpandable(id);
+        const open = expanded.has(id);
+        const classes = ["node"];
+        if (id === ROOT_ID) classes.push("root");
+        if (id === selectedId) classes.push("selected");
+        if (query && matches(node)) classes.push("match");
+        const aria = node.label + (expandable ? (open ? ", развёрнуто" : ", свёрнуто") : "");
+
+        markup += `<g class="${classes.join(" ")}" data-id="${escapeHtml(id)}"
+          transform="translate(${round(p.x - NODE_W / 2)} ${round(p.y - NODE_H / 2)})"
+          tabindex="0" role="button" aria-label="${escapeHtml(aria)}"${expandable ? ` aria-expanded="${open}"` : ""}>
+          <title>${escapeHtml(node.label)}</title>
           <rect width="${NODE_W}" height="${NODE_H}" rx="12"/>
           <circle class="dot" cx="16" cy="30" r="3"/>
-          <text x="98" y="35" text-anchor="middle">${escapeHtml(label)}</text>
-          <text class="expand-indicator" x="173" y="20" text-anchor="middle">${sign}</text>
+          <text x="${NODE_W / 2 + 4}" y="35" text-anchor="middle">${escapeHtml(shorten(node.label))}</text>
+          <text class="expand-indicator" x="${NODE_W - 15}" y="21" text-anchor="middle">${expandable ? (open ? "−" : "+") : ""}</text>
         </g>`;
-      });
-
-      host.innerHTML = `<svg class="graph-svg" viewBox="0 0 ${host.clientWidth} ${host.clientHeight}">
-        <g id="graphContent"><g transform="translate(${ox} ${oy})">${edges}</g>${markup}</g></svg>`;
-
-      if (!fitted) {
-        view.scale = Math.max(.35, Math.min(1,
-          (host.clientWidth - 40) / width, (host.clientHeight - 40) / height));
-        view.x = Math.max(20, (host.clientWidth - width * view.scale) / 2);
-        view.y = Math.max(20, (host.clientHeight - height * view.scale) / 2);
-        fitted = true;
       }
 
-      $("graphContent").setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
-      host.querySelectorAll(".node").forEach(el => {
-        const activate = () => clickNode(el.dataset.id);
-        el.addEventListener("click", activate);
-        el.addEventListener("keydown", e => {
-          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activate(); }
-        });
-      });
+      graphHost.innerHTML = `<svg class="graph-svg" xmlns="http://www.w3.org/2000/svg">
+        <g id="viewport"><g class="edges">${edges}</g>${markup}</g></svg>`;
+
+      if (options.anchor && fitted) {
+        const p = layout.pos.get(options.anchor.id);
+        if (p) {
+          view.x = options.anchor.x - p.x * view.scale;
+          view.y = options.anchor.y - p.y * view.scale;
+        }
+      }
+      if (!fitted) fitView();
+      applyView();
     }
 
-    async function loadTree() {
-      loading = true;
-      $("details").textContent = "Загружаю дерево из Supabase…";
-      draw();
-      const { data, error } = await db.from("nodes")
-        .select("id,parent_id,label,info").order("label");
-      loading = false;
-
-      if (error) {
-        nodes = [];
-        $("detailsTitle").textContent = "Ошибка загрузки";
-        $("details").textContent = error.message;
-        draw();
-        return;
-      }
-
-      nodes = (data || []).map(row => ({
-        id: row.id, parent: row.parent_id, label: row.label, info: row.info || ""
-      }));
-
-      if (!nodes.some(n => n.id === ROOT_ID)) {
-        $("detailsTitle").textContent = "Корень не найден";
-        $("details").textContent = "Добавь узел emode1k с parent_id равным null.";
-        draw();
-        return;
-      }
-
-      if (!nodes.some(n => n.id === selectedId)) selectedId = ROOT_ID;
-      selectNode(selectedId);
+    function focusGraphNode(id) {
+      const el = graphHost.querySelector(`.node[data-id="${CSS.escape(id)}"]`);
+      el?.focus({ preventScroll: true });
     }
 
-    function clickNode(id) {
-      const node = nodes.find(n => n.id === id);
+    /* ---------- Узлы и детали ---------- */
+
+    function clickNode(id, viaKeyboard) {
+      const node = byId.get(id);
       if (!node) return;
-      const byId = new Map(nodes.map(n => [n.id, n]));
-      if (depthOf(node, byId) >= 1 && childrenOf(id).length) {
-        if (expanded.has(id)) {
-          expanded.delete(id);
-          descendantsOf(id).forEach(child => expanded.delete(child));
-        } else expanded.add(id);
-      }
-      selectNode(id);
-    }
+      let anchor = null;
 
-    function selectNode(id) {
-      const node = nodes.find(n => n.id === id);
-      if (!node) return;
+      if (!query && isExpandable(id)) {
+        const p = lastLayout?.pos.get(id);
+        if (p) anchor = { id, x: view.x + p.x * view.scale, y: view.y + p.y * view.scale };
+        if (expanded.has(id)) descendantsOf(id).forEach(d => expanded.delete(d));
+        else expanded.add(id);
+      }
+
       selectedId = id;
+      updateDetails();
+      updateNodeFormUi();
+      render({ anchor });
+      if (viaKeyboard) focusGraphNode(id);
+    }
+
+    function updateDetails() {
+      const node = byId.get(selectedId);
+      const pathEl = $("detailsPath");
+
+      if (!node || !depth.has(node.id)) {
+        $("detailsTitle").textContent = loading ? "Информация об узле" : "Дерево недоступно";
+        $("details").textContent = loading ? "Загрузка дерева…" : (loadError || "Узел не найден.");
+        pathEl.classList.add("hidden");
+        $("adminNodeActions").classList.add("hidden");
+        return;
+      }
+
       $("detailsTitle").textContent = node.label;
-      $("details").textContent = node.info || "Описание не добавлено.";
-      $("adminNodeActions").classList.toggle("hidden", !isAdmin || id === ROOT_ID);
-      draw();
+      const path = ancestorsOf(node.id).reverse().map(id => byId.get(id).label);
+      pathEl.textContent = path.join(" › ");
+      pathEl.classList.toggle("hidden", !path.length);
+      $("details").textContent = node.info.trim() ? node.info : "Описание не добавлено.";
+      $("adminNodeActions").classList.toggle("hidden", !isAdmin || node.id === ROOT_ID);
+    }
+
+    function updateNodeFormUi() {
+      const showLayout = isAdmin && hasLayoutColumns;
+      $("layoutFields").classList.toggle("hidden", !showLayout);
+      $("layoutHint").classList.toggle("hidden", !showLayout);
+
+      const target = editingNodeId ? byId.get(editingNodeId) : (byId.get(selectedId) || byId.get(ROOT_ID));
+      $("nodeParentHint").textContent = !target ? ""
+        : editingNodeId ? `Редактируется узел "${target.label}".`
+        : `Новый узел появится внутри "${target.label}".`;
+      $("saveNodeButton").disabled = !depth.has(ROOT_ID);
+    }
+
+    function updateNotice() {
+      const messages = [];
+      if (isAdmin && !loading && !loadError && depth.size) {
+        const orphans = nodes.length - depth.size;
+        if (orphans > 0) {
+          messages.push(`Узлов вне дерева ${orphans}. Их parent_id ведёт на несуществующий узел или образует цикл, поэтому они не показаны.`);
+        }
+        if (!hasLayoutColumns) {
+          messages.push("В таблице nodes нет колонок side и position, сторона веток выбирается автоматически.");
+        }
+      }
+      $("treeNotice").textContent = messages.join(" ");
+      $("treeNotice").classList.toggle("hidden", !messages.length);
     }
 
     function resetNodeForm() {
@@ -963,224 +1524,182 @@
       $("nodeFormTitle").textContent = "Добавить узел";
       $("saveNodeButton").textContent = "Добавить";
       $("cancelNodeButton").classList.add("hidden");
+      updateNodeFormUi();
     }
 
-    function applySettings(s) {
-      const accent = s.accent_color || "#ff2638";
-      document.documentElement.style.setProperty("--accent", accent);
-      document.documentElement.style.setProperty("--line", accent + "99");
-      document.documentElement.style.setProperty("--brightness", Number(s.brightness ?? 100) / 100);
-      document.documentElement.style.setProperty("--page-scale", Number(s.page_scale ?? 100) / 100);
-      document.body.classList.toggle("theme-gothic", s.theme === "gothic");
-      document.body.classList.toggle("theme-anime", s.theme === "anime");
-      document.body.classList.toggle("animations-off", s.animations_enabled === false);
+    /* ---------- Загрузка дерева ---------- */
+
+    function isMissingColumn(error) {
+      return error?.code === "42703" || /column .* does not exist/i.test(error?.message || "");
     }
 
-    function setAdmin(enabled) {
-      isAdmin = enabled;
-      $("adminPanel").classList.toggle("hidden", !enabled);
-      $("adminButton").classList.toggle("hidden", enabled);
-      $("logoutButton").classList.toggle("hidden", !enabled);
-      $("adminNodeActions").classList.toggle("hidden", !enabled || selectedId === ROOT_ID);
-      $("articleEditor").classList.toggle("hidden", !enabled);
-      draw();
-      if (currentPage === "articles") loadArticles();
-    }
-
-    function closeMenu() {
-      $("menuButton").setAttribute("aria-expanded", "false");
-      $("siteMenu").classList.remove("open");
-      $("siteMenu").inert = true;
-    }
-
-    function goTo(page) {
-      currentPage = page;
-      $("treePage").classList.toggle("hidden", page !== "tree");
-      $("articlesPage").classList.toggle("hidden", page !== "articles");
-      $("settingsPage").classList.toggle("hidden", page !== "settings");
-      closeMenu();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      if (page === "articles") loadArticles();
-      if (page === "settings") loadSettings();
-    }
-
-    $("menuButton").addEventListener("click", () => {
-      const open = $("menuButton").getAttribute("aria-expanded") !== "true";
-      $("menuButton").setAttribute("aria-expanded", String(open));
-      $("siteMenu").classList.toggle("open", open);
-      $("siteMenu").inert = !open;
-    });
-
-    $("siteMenu").addEventListener("click", e => {
-      const button = e.target.closest("[data-page]");
-      if (!button) return;
-      if (button.dataset.page === "complaint") {
-        closeMenu();
-        $("complaintDialog").classList.remove("hidden");
-      } else goTo(button.dataset.page);
-    });
-
-    document.querySelectorAll("[data-back]").forEach(el =>
-      el.addEventListener("click", () => goTo("tree"))
-    );
-
-    $("contactButton").addEventListener("click", () => {
-      $("contactMenu").classList.toggle("hidden");
-      $("contactButton").setAttribute("aria-expanded",
-        String(!$("contactMenu").classList.contains("hidden")));
-    });
-
-    document.addEventListener("click", e => {
-      if (!e.target.closest(".brand-area")) closeMenu();
-      if (!e.target.closest(".contact-wrap")) {
-        $("contactMenu").classList.add("hidden");
-        $("contactButton").setAttribute("aria-expanded", "false");
+    async function fetchNodes() {
+      try {
+        let result = await db.from("nodes").select("id,parent_id,label,info,side,position");
+        if (result.error && isMissingColumn(result.error)) {
+          hasLayoutColumns = false;
+          result = await db.from("nodes").select("id,parent_id,label,info");
+        } else {
+          hasLayoutColumns = !result.error;
+        }
+        return result;
+      } catch (error) {
+        return { data: null, error };
       }
-    });
-
-    document.addEventListener("keydown", e => {
-      if (e.key === "Escape") {
-        closeMenu();
-        $("loginDialog").classList.add("hidden");
-        $("complaintDialog").classList.add("hidden");
-      }
-    });
-
-    $("search").addEventListener("input", e => {
-      query = e.target.value.trim();
-      fitted = false;
-      draw();
-    });
-
-    async function logout() {
-      const { error } = await db.auth.signOut();
-      if (error) $("adminStatus").textContent = error.message;
-      else { setAdmin(false); resetNodeForm(); }
     }
 
-    $("menuLogoutButton").addEventListener("click", async () => {
-      closeMenu();
-      if (isAdmin) return logout();
-      $("loginDialog").classList.remove("hidden");
-      $("emailInput").focus();
-    });
+    async function loadTree(revealId = null) {
+      if (!db) {
+        updateDetails();
+        render();
+        return;
+      }
 
-    $("logoutButton").addEventListener("click", logout);
+      const token = ++treeRequest;
+      loading = !nodes.length;
+      if (loading) { render(); updateDetails(); }
 
-    $("adminButton").addEventListener("click", async () => {
-      const { data } = await db.auth.getSession();
-      if (data?.session && isSiteAdmin(data.session)) return setAdmin(true);
-      $("loginDialog").classList.remove("hidden");
-      $("emailInput").focus();
-    });
-
-    $("closeLoginButton").addEventListener("click", () => {
-      $("loginDialog").classList.add("hidden");
-      $("loginForm").reset();
-      $("loginStatus").textContent = "";
-    });
-
-    $("loginForm").addEventListener("submit", async e => {
-      e.preventDefault();
-      const { data, error } = await db.auth.signInWithPassword({
-        email: $("emailInput").value.trim(),
-        password: $("passwordInput").value
-      });
+      const { data, error } = await fetchNodes();
+      if (token !== treeRequest) return;
+      loading = false;
 
       if (error) {
-        $("loginStatus").textContent = error.message;
-        return;
+        nodes = [];
+        loadError = "Не удалось загрузить дерево. " + errorText(error);
+      } else {
+        nodes = (data || []).map(normalizeNode);
+        loadError = nodes.some(n => n.id === ROOT_ID) ? ""
+          : `В таблице nodes нет корневого узла с id "${ROOT_ID}". Добавьте его с parent_id, равным null.`;
       }
-      if (!isSiteAdmin(data.session)) {
-        await db.auth.signOut();
-        $("loginStatus").textContent = "У этой учётной записи нет прав администратора.";
-        return;
-      }
-      $("loginDialog").classList.add("hidden");
-      $("loginForm").reset();
-      setAdmin(true);
-    });
 
-    db.auth.onAuthStateChange((_event, session) => setAdmin(isSiteAdmin(session)));
+      rebuildIndex();
+      for (const id of [...expanded]) if (!depth.has(id)) expanded.delete(id);
+      if (revealId && depth.has(revealId)) revealNode(revealId);
+      if (!depth.has(selectedId)) selectedId = ROOT_ID;
+      if (editingNodeId && !depth.has(editingNodeId)) resetNodeForm();
+
+      updateDetails();
+      updateNodeFormUi();
+      updateNotice();
+      render();
+    }
+
+    /* ---------- Редактирование узлов ---------- */
 
     $("nodeForm").addEventListener("submit", async e => {
       e.preventDefault();
-      if (!isAdmin) return;
+      if (!isAdmin || !db) return;
+
       const label = $("nodeLabel").value.trim();
       const info = $("nodeInfo").value.trim();
-      let result, savedId = editingNodeId;
+      if (!label) return setStatus("adminStatus", "Название не может быть пустым.", true);
 
-      $("saveNodeButton").disabled = true;
-      if (editingNodeId) {
-        result = await db.from("nodes").update({ label, info }).eq("id", editingNodeId);
-      } else {
-        savedId = "node-" + crypto.randomUUID();
-        const parentId = nodes.some(n => n.id === selectedId) ? selectedId : ROOT_ID;
-        result = await db.from("nodes").insert({ id: savedId, parent_id: parentId, label, info });
+      const payload = { label, info };
+      if (hasLayoutColumns) {
+        const position = Number($("nodePosition").value);
+        payload.side = $("nodeSide").value || null;
+        payload.position = Number.isFinite(position) ? Math.trunc(position) : 0;
       }
-      $("saveNodeButton").disabled = false;
 
-      if (result.error) {
-        $("adminStatus").textContent = result.error.message;
-        return;
+      const button = $("saveNodeButton");
+      button.disabled = true;
+      setStatus("adminStatus", "Сохраняю…");
+
+      try {
+        let savedId;
+        if (editingNodeId) {
+          savedId = editingNodeId;
+          const { data, error } = await db.from("nodes").update(payload).eq("id", savedId).select("id");
+          if (error) throw error;
+          if (!data?.length) throw new Error(RLS_HINT);
+        } else {
+          savedId = makeId("node-");
+          const parentId = depth.has(selectedId) ? selectedId : ROOT_ID;
+          const { error } = await db.from("nodes").insert({ id: savedId, parent_id: parentId, ...payload });
+          if (error) throw error;
+        }
+        resetNodeForm();
+        if (!viewTouched) fitted = false;
+        await loadTree(savedId);
+        setStatus("adminStatus", "Сохранено.");
+      } catch (err) {
+        setStatus("adminStatus", "Не удалось сохранить. " + errorText(err), true);
+      } finally {
+        button.disabled = false;
+        updateNodeFormUi();
       }
-      resetNodeForm();
-      fitted = false;
-      await loadTree();
-      if (savedId) selectNode(savedId);
-      $("adminStatus").textContent = "Сохранено.";
     });
 
     $("editNodeButton").addEventListener("click", () => {
-      const node = nodes.find(n => n.id === selectedId);
+      const node = byId.get(selectedId);
       if (!isAdmin || !node || node.id === ROOT_ID) return;
       editingNodeId = node.id;
       $("nodeLabel").value = node.label;
-      $("nodeInfo").value = node.info || "";
+      $("nodeInfo").value = node.info;
+      $("nodeSide").value = node.side || "";
+      $("nodePosition").value = String(node.position);
       $("nodeFormTitle").textContent = "Редактировать узел";
       $("saveNodeButton").textContent = "Сохранить";
       $("cancelNodeButton").classList.remove("hidden");
+      setStatus("adminStatus", "");
+      updateNodeFormUi();
+      $("nodeLabel").focus();
     });
 
-    $("cancelNodeButton").addEventListener("click", resetNodeForm);
+    $("cancelNodeButton").addEventListener("click", () => {
+      resetNodeForm();
+      setStatus("adminStatus", "");
+    });
 
     async function deleteBranch(id) {
-      const pending = descendantsOf(id);
-      const removed = new Set(pending);
-      const order = [];
-
-      while (pending.size) {
-        const leaves = [...pending].filter(parent =>
-          childrenOf(parent).every(child => !pending.has(child.id))
-        );
-        if (!leaves.length) throw new Error("Цикл в структуре дерева.");
-        order.push(...leaves);
-        leaves.forEach(nodeId => pending.delete(nodeId));
+      const ids = [...descendantsOf(id)];
+      const levels = new Map();
+      for (const nodeId of ids) {
+        const d = depth.get(nodeId) ?? 0;
+        if (!levels.has(d)) levels.set(d, []);
+        levels.get(d).push(nodeId);
       }
 
-      for (const nodeId of order) {
-        const { error } = await db.from("nodes").delete().eq("id", nodeId);
-        if (error) throw error;
+      for (const d of [...levels.keys()].sort((a, b) => b - a)) {
+        const level = levels.get(d);
+        for (let i = 0; i < level.length; i += 100) {
+          const part = level.slice(i, i + 100);
+          const { data, error } = await db.from("nodes").delete().in("id", part).select("id");
+          if (error) throw error;
+          if (!data?.length) throw new Error(RLS_HINT);
+        }
       }
-      return removed;
+      ids.forEach(nodeId => expanded.delete(nodeId));
     }
 
     $("deleteNodeButton").addEventListener("click", async () => {
-      const node = nodes.find(n => n.id === selectedId);
-      if (!isAdmin || !node || node.id === ROOT_ID) return;
-      if (!confirm(`Удалить «${node.label}» и все вложенные узлы?`)) return;
+      const node = byId.get(selectedId);
+      if (!isAdmin || !db || !node || node.id === ROOT_ID) return;
+
+      const total = descendantsOf(node.id).size;
+      const question = total > 1
+        ? `Удалить "${node.label}" и все вложенные узлы? Всего будет удалено ${total}.`
+        : `Удалить "${node.label}"?`;
+      if (!confirm(question)) return;
+
+      const button = $("deleteNodeButton");
+      button.disabled = true;
+      setStatus("adminStatus", "Удаляю…");
 
       try {
-        const removed = await deleteBranch(node.id);
-        removed.forEach(id => expanded.delete(id));
-        selectedId = ROOT_ID;
-        fitted = false;
+        await deleteBranch(node.id);
+        selectedId = node.parent && depth.has(node.parent) ? node.parent : ROOT_ID;
+        setStatus("adminStatus", "Ветка удалена.");
+      } catch (err) {
+        setStatus("adminStatus", "Удаление прервано. " + errorText(err), true);
+      } finally {
+        button.disabled = false;
+        if (!viewTouched) fitted = false;
         await loadTree();
-        selectNode(ROOT_ID);
-      } catch (error) {
-        $("adminStatus").textContent = error.message;
       }
     });
+
+    /* ---------- Статьи ---------- */
 
     function resetArticleForm() {
       editingArticleId = null;
@@ -1190,31 +1709,60 @@
       $("cancelArticleButton").classList.add("hidden");
     }
 
-    async function loadArticles() {
-      $("articlesList").textContent = "Загружаю статьи…";
-      const { data, error } = await db.from("articles")
-        .select("id,title,content,updated_at").order("updated_at", { ascending: false });
+    function startEditArticle(article) {
+      editingArticleId = article.id;
+      $("articleTitle").value = article.title;
+      $("articleContent").value = article.content ?? "";
+      $("articleFormHeading").textContent = "Редактировать статью";
+      $("saveArticleButton").textContent = "Сохранить";
+      $("cancelArticleButton").classList.remove("hidden");
+      setStatus("articleStatus", "");
+      $("articleEditor").scrollIntoView({ behavior: scrollBehavior(), block: "start" });
+      $("articleTitle").focus({ preventScroll: true });
+    }
 
-      if (error) {
-        $("articlesList").textContent = "Ошибка загрузки: " + error.message;
+    async function deleteArticle(article) {
+      if (!confirm(`Удалить статью "${article.title}"?`)) return;
+      try {
+        const { data, error } = await db.from("articles").delete().eq("id", article.id).select("id");
+        if (error) throw error;
+        if (!data?.length) throw new Error(RLS_HINT);
+        if (editingArticleId === article.id) resetArticleForm();
+        setStatus("articleStatus", "Статья удалена.");
+        await loadArticles();
+      } catch (err) {
+        setStatus("articleStatus", "Не удалось удалить. " + errorText(err), true);
+      }
+    }
+
+    function renderArticles() {
+      const host = $("articlesList");
+      host.replaceChildren();
+      if (!articles.length) {
+        host.textContent = "Статей пока нет.";
         return;
       }
 
-      $("articlesList").replaceChildren();
-      if (!data?.length) {
-        $("articlesList").textContent = "Статей пока нет.";
-        return;
-      }
-
-      data.forEach(article => {
+      for (const article of articles) {
         const card = document.createElement("article");
         card.className = "card article-card";
+
         const title = document.createElement("h2");
         title.textContent = article.title;
+        card.append(title);
+
+        const date = formatDate(article.updated_at);
+        if (date) {
+          const p = document.createElement("p");
+          p.className = "article-date";
+          p.textContent = "Обновлено " + date;
+          card.append(p);
+        }
+
         const content = document.createElement("div");
         content.className = "article-content";
-        content.textContent = article.content;
-        card.append(title, content);
+        content.textContent = article.content ?? "";
+        card.append(content);
 
         if (isAdmin) {
           const actions = document.createElement("div");
@@ -1224,189 +1772,661 @@
           edit.className = "button";
           edit.type = "button";
           edit.textContent = "Изменить";
-          edit.addEventListener("click", () => {
-            editingArticleId = article.id;
-            $("articleTitle").value = article.title;
-            $("articleContent").value = article.content;
-            $("articleFormHeading").textContent = "Редактировать статью";
-            $("saveArticleButton").textContent = "Сохранить";
-            $("cancelArticleButton").classList.remove("hidden");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          });
+          edit.addEventListener("click", () => startEditArticle(article));
 
           const remove = document.createElement("button");
           remove.className = "button button-danger";
           remove.type = "button";
           remove.textContent = "Удалить";
-          remove.addEventListener("click", async () => {
-            if (!confirm(`Удалить «${article.title}»?`)) return;
-            const { error: err } = await db.from("articles").delete().eq("id", article.id);
-            if (err) $("articleStatus").textContent = err.message;
-            else loadArticles();
-          });
+          remove.addEventListener("click", () => deleteArticle(article));
 
           actions.append(edit, remove);
           card.append(actions);
         }
+        host.append(card);
+      }
+    }
 
-        $("articlesList").append(card);
-      });
+    async function loadArticles() {
+      const host = $("articlesList");
+      if (!db) {
+        host.textContent = "Статьи недоступны без подключения к Supabase.";
+        return;
+      }
+
+      const token = ++articlesRequest;
+      if (!host.childElementCount) host.textContent = "Загружаю статьи…";
+
+      let result;
+      try {
+        result = await db.from("articles")
+          .select("id,title,content,updated_at")
+          .order("updated_at", { ascending: false });
+      } catch (error) {
+        result = { error };
+      }
+      if (token !== articlesRequest) return;
+
+      if (result.error) {
+        host.textContent = "Ошибка загрузки статей. " + errorText(result.error);
+        return;
+      }
+      articles = result.data || [];
+      renderArticles();
     }
 
     $("articleForm").addEventListener("submit", async e => {
       e.preventDefault();
-      if (!isAdmin) return;
+      if (!isAdmin || !db) return;
+
       const title = $("articleTitle").value.trim();
       const content = $("articleContent").value.trim();
+      if (!title || !content) return setStatus("articleStatus", "Нужны заголовок и текст.", true);
 
-      const result = editingArticleId
-        ? await db.from("articles").update({
-            title, content, updated_at: new Date().toISOString()
-          }).eq("id", editingArticleId)
-        : await db.from("articles").insert({
-            id: "article-" + crypto.randomUUID(), title, content
-          });
+      const button = $("saveArticleButton");
+      button.disabled = true;
+      setStatus("articleStatus", "Сохраняю…");
+      const now = new Date().toISOString();
 
-      if (result.error) {
-        $("articleStatus").textContent = result.error.message;
-        return;
+      try {
+        if (editingArticleId) {
+          const { data, error } = await db.from("articles")
+            .update({ title, content, updated_at: now })
+            .eq("id", editingArticleId).select("id");
+          if (error) throw error;
+          if (!data?.length) throw new Error(RLS_HINT);
+        } else {
+          const { error } = await db.from("articles")
+            .insert({ id: makeId("article-"), title, content, updated_at: now });
+          if (error) throw error;
+        }
+        resetArticleForm();
+        setStatus("articleStatus", "Статья сохранена.");
+        await loadArticles();
+      } catch (err) {
+        setStatus("articleStatus", "Не удалось сохранить статью. " + errorText(err), true);
+      } finally {
+        button.disabled = false;
       }
-
-      resetArticleForm();
-      $("articleStatus").textContent = "Статья сохранена.";
-      await loadArticles();
     });
 
-    $("cancelArticleButton").addEventListener("click", resetArticleForm);
+    $("cancelArticleButton").addEventListener("click", () => {
+      resetArticleForm();
+      setStatus("articleStatus", "");
+    });
 
-    async function loadSettings() {
-      const { data, error } = await db.from("site_settings")
-        .select("accent_color,theme,page_scale,brightness,animations_enabled")
-        .eq("id", 1).maybeSingle();
+    /* ---------- Настройки ---------- */
 
-      if (error) {
-        $("settingsStatus").textContent = "Ошибка загрузки настроек: " + error.message;
-        return;
-      }
-
-      const s = data || {
-        accent_color: "#ff2638",
-        theme: "standard",
-        page_scale: 100,
-        brightness: 100,
-        animations_enabled: true
-      };
-
-      applySettings(s);
-      $("colorSelect").value = s.accent_color;
-      $("themeSelect").value = s.theme;
-      $("pageScale").value = s.page_scale;
-      $("pageScaleOutput").value = s.page_scale + "%";
-      $("brightness").value = s.brightness;
-      $("brightnessOutput").value = s.brightness + "%";
-      $("animationsEnabled").checked = s.animations_enabled;
+    function readPersonal() {
+      const raw = S.read(S.KEYS.personal);
+      return raw ? S.sanitize(raw) : null;
     }
 
-    $("pageScale").addEventListener("input", e => {
-      $("pageScaleOutput").value = e.target.value + "%";
-      document.documentElement.style.setProperty("--page-scale", Number(e.target.value) / 100);
-    });
+    function effectiveSettings() { return personalSettings || siteSettings; }
 
-    $("brightness").addEventListener("input", e => {
-      $("brightnessOutput").value = e.target.value + "%";
-      document.documentElement.style.setProperty("--brightness", Number(e.target.value) / 100);
-    });
+    function sameSettings(a, b) { return SETTING_FIELDS.every(k => a[k] === b[k]); }
 
-    $("colorSelect").addEventListener("input", e => {
-      document.documentElement.style.setProperty("--accent", e.target.value);
-      document.documentElement.style.setProperty("--line", e.target.value + "99");
-    });
+    function isHex(value) { return /^#[0-9a-f]{6}$/.test(value); }
 
-    $("themeSelect").addEventListener("change", e => {
-      document.body.classList.toggle("theme-gothic", e.target.value === "gothic");
-      document.body.classList.toggle("theme-anime", e.target.value === "anime");
-    });
+    function hasColorOption(value) {
+      return value !== "custom" && [...$("colorSelect").options].some(o => o.value === value);
+    }
 
-    $("settingsForm").addEventListener("submit", async e => {
-      e.preventDefault();
+    function updateOutputs() {
+      $("pageScaleOutput").value = `${$("pageScale").value}%`;
+      $("brightnessOutput").value = `${$("brightness").value}%`;
+    }
 
-      const s = {
-        id: 1,
-        accent_color: $("colorSelect").value,
+    function fillForm(s) {
+      const color = s.accent_color;
+      $("colorSelect").value = color === "auto" || hasColorOption(color) ? color : "custom";
+      $("colorCustom").value = isHex(color) ? color : S.THEME_ACCENT[s.theme];
+      $("colorCustomRow").classList.toggle("hidden", $("colorSelect").value !== "custom");
+      $("themeSelect").value = s.theme;
+      $("pageScale").value = String(s.page_scale);
+      $("brightness").value = String(s.brightness);
+      $("animationsEnabled").checked = s.animations_enabled;
+      updateOutputs();
+      draft = { ...s };
+      draftDirty = false;
+    }
+
+    function readForm() {
+      const selected = $("colorSelect").value;
+      return S.sanitize({
+        accent_color: selected === "custom" ? $("colorCustom").value : selected,
         theme: $("themeSelect").value,
         page_scale: Number($("pageScale").value),
         brightness: Number($("brightness").value),
         animations_enabled: $("animationsEnabled").checked
-      };
+      });
+    }
 
-      const { error } = await db.from("site_settings").upsert(s);
-      if (error) {
-        $("settingsStatus").textContent = "Ошибка сохранения: " + error.message;
+    function updateSettingsUi() {
+      $("saveSiteSettingsButton").classList.toggle("hidden", !(isAdmin && db));
+      $("revertSettingsButton").disabled = !draftDirty;
+      $("resetPersonalButton").disabled = !personalSettings;
+
+      let text = personalSettings
+        ? "Сейчас действуют ваши личные настройки. Они хранятся только в этом браузере."
+        : "Сейчас действуют общие настройки сайта.";
+      if (draftDirty) text += " Изменения показаны как предпросмотр и отменятся, если уйти со страницы без сохранения.";
+      $("settingsSource").textContent = text;
+    }
+
+    function revertDraft() {
+      const s = effectiveSettings();
+      fillForm(s);
+      S.apply(s);
+      updateSettingsUi();
+    }
+
+    function onSettingsInput(e) {
+      if (e.target === $("colorSelect")) {
+        const custom = $("colorSelect").value === "custom";
+        $("colorCustomRow").classList.toggle("hidden", !custom);
+        if (custom) $("colorCustom").value = isHex(draft.accent_color) ? draft.accent_color : S.THEME_ACCENT[draft.theme];
+      }
+      draft = readForm();
+      S.apply(draft);
+      draftDirty = !sameSettings(draft, effectiveSettings());
+      updateOutputs();
+      setStatus("settingsStatus", "");
+      updateSettingsUi();
+    }
+
+    $("settingsForm").addEventListener("input", onSettingsInput);
+    $("settingsForm").addEventListener("change", onSettingsInput);
+
+    $("settingsForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const s = readForm();
+
+      if (sameSettings(s, siteSettings)) {
+        S.write(S.KEYS.personal, null);
+        personalSettings = null;
+        setStatus("settingsStatus", "Выбор совпадает с общими настройками, личная копия не нужна.");
+      } else {
+        const ok = S.write(S.KEYS.personal, s);
+        personalSettings = s;
+        if (ok) setStatus("settingsStatus", "Сохранено для этого браузера.");
+        else setStatus("settingsStatus", "Браузер запретил сохранение. Настройки будут действовать до перезагрузки страницы.", true);
+      }
+
+      S.apply(effectiveSettings());
+      fillForm(effectiveSettings());
+      updateSettingsUi();
+    });
+
+    $("saveSiteSettingsButton").addEventListener("click", async () => {
+      if (!isAdmin || !db) return;
+      const s = readForm();
+      const button = $("saveSiteSettingsButton");
+      button.disabled = true;
+      setStatus("settingsStatus", "Сохраняю общие настройки…");
+
+      try {
+        const { data, error } = await db.from("site_settings").upsert({ id: 1, ...s }).select("id");
+        if (error) throw error;
+        if (!data?.length) throw new Error(RLS_HINT);
+
+        siteSettings = s;
+        S.write(S.KEYS.site, s);
+        S.write(S.KEYS.personal, null);
+        personalSettings = null;
+        S.apply(s);
+        fillForm(s);
+        setStatus("settingsStatus", "Общие настройки сохранены. Ваша личная копия сброшена, теперь вы видите сайт так же, как все.");
+      } catch (err) {
+        setStatus("settingsStatus", "Не удалось сохранить общие настройки. " + errorText(err), true);
+      } finally {
+        button.disabled = false;
+        updateSettingsUi();
+      }
+    });
+
+    $("revertSettingsButton").addEventListener("click", () => {
+      revertDraft();
+      setStatus("settingsStatus", "Изменения отменены.");
+    });
+
+    $("resetPersonalButton").addEventListener("click", () => {
+      S.write(S.KEYS.personal, null);
+      personalSettings = null;
+      S.apply(siteSettings);
+      fillForm(siteSettings);
+      updateSettingsUi();
+      setStatus("settingsStatus", "Личные настройки удалены, действуют общие.");
+    });
+
+    async function loadSiteSettings() {
+      if (!db) return;
+      let result;
+      try {
+        result = await db.from("site_settings").select(SETTING_FIELDS.join(",")).eq("id", 1).maybeSingle();
+      } catch (error) {
+        result = { error };
+      }
+
+      if (result.error) {
+        if (currentPage === "settings") {
+          setStatus("settingsStatus", "Не удалось получить общие настройки, показана сохранённая копия. " + errorText(result.error), true);
+        }
         return;
       }
 
-      applySettings(s);
-      $("settingsStatus").textContent = "Общие настройки сохранены для всех посетителей.";
+      siteSettings = S.sanitize(result.data);
+      S.write(S.KEYS.site, siteSettings);
+      if (!draftDirty) {
+        S.apply(effectiveSettings());
+        fillForm(effectiveSettings());
+      }
+      updateSettingsUi();
+    }
+
+    window.addEventListener("storage", e => {
+      if (e.key !== null && e.key !== S.KEYS.personal && e.key !== S.KEYS.site) return;
+      siteSettings = S.sanitize(S.read(S.KEYS.site));
+      personalSettings = readPersonal();
+      if (!draftDirty) {
+        S.apply(effectiveSettings());
+        fillForm(effectiveSettings());
+      }
+      updateSettingsUi();
     });
+
+    /* ---------- Вход и права ---------- */
+
+    function setAdmin(enabled) {
+      enabled = Boolean(enabled);
+      if (adminReady && enabled === isAdmin) return;
+      adminReady = true;
+      isAdmin = enabled;
+
+      $("adminPanel").classList.toggle("hidden", !enabled);
+      $("articleEditor").classList.toggle("hidden", !enabled);
+      $("adminButton").classList.toggle("hidden", enabled);
+      $("logoutButton").classList.toggle("hidden", !enabled);
+      $("menuAuthButton").textContent = enabled ? "Выйти из профиля" : "Войти";
+
+      if (!enabled) {
+        resetNodeForm();
+        resetArticleForm();
+      }
+      updateDetails();
+      updateNodeFormUi();
+      updateNotice();
+      updateSettingsUi();
+      if (currentPage === "articles") loadArticles();
+    }
+
+    async function openLogin() {
+      if (db) {
+        const { data } = await db.auth.getSession();
+        if (isSiteAdmin(data?.session)) return setAdmin(true);
+      }
+      setStatus("loginStatus", db ? "" : "Supabase недоступен, вход невозможен.", !db);
+      openDialog("loginDialog", "emailInput");
+    }
+
+    async function logout() {
+      if (!db) return;
+      const { error } = await db.auth.signOut();
+      if (error) {
+        setStatus("adminStatus", "Не удалось выйти. " + errorText(error), true);
+        return;
+      }
+      setAdmin(false);
+    }
+
+    $("adminButton").addEventListener("click", openLogin);
+    $("logoutButton").addEventListener("click", logout);
+
+    $("menuAuthButton").addEventListener("click", () => {
+      setMenu(false);
+      if (isAdmin) logout();
+      else openLogin();
+    });
+
+    $("loginForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      if (!db) return setStatus("loginStatus", "Supabase недоступен, вход невозможен.", true);
+
+      const button = $("loginSubmit");
+      button.disabled = true;
+      setStatus("loginStatus", "Проверяю…");
+
+      try {
+        const { data, error } = await db.auth.signInWithPassword({
+          email: $("emailInput").value.trim(),
+          password: $("passwordInput").value
+        });
+        if (error) throw error;
+        if (!isSiteAdmin(data.session)) {
+          await db.auth.signOut();
+          throw new Error("У этой учётной записи нет прав администратора.");
+        }
+        $("loginForm").reset();
+        setStatus("loginStatus", "");
+        closeDialog("loginDialog");
+        setAdmin(true);
+      } catch (err) {
+        const text = errorText(err);
+        setStatus("loginStatus", /invalid login credentials/i.test(text) ? "Неверная почта или пароль." : text, true);
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    $("closeLoginButton").addEventListener("click", () => {
+      $("loginForm").reset();
+      setStatus("loginStatus", "");
+      closeDialog("loginDialog");
+    });
+
+    /* ---------- Диалоги, меню, навигация ---------- */
+
+    function openDialog(id, focusId) {
+      setMenu(false);
+      setContacts(false);
+      lastFocus = document.activeElement;
+      $(id).classList.remove("hidden");
+      $("app").inert = true;
+      setTimeout(() => $(focusId)?.focus(), 0);
+    }
+
+    function closeDialog(id) {
+      const dialog = $(id);
+      if (dialog.classList.contains("hidden")) return;
+      dialog.classList.add("hidden");
+      if (!document.querySelector(".modal-backdrop:not(.hidden)")) $("app").inert = false;
+      if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
+      lastFocus = null;
+    }
+
+    document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
+      let downOnBackdrop = false;
+      backdrop.addEventListener("pointerdown", e => { downOnBackdrop = e.target === backdrop; });
+      backdrop.addEventListener("click", e => {
+        if (downOnBackdrop && e.target === backdrop) closeDialog(backdrop.id);
+        downOnBackdrop = false;
+      });
+    });
+
+    function setMenu(open) {
+      $("menuButton").setAttribute("aria-expanded", String(open));
+      $("menuButton").setAttribute("aria-label", open ? "Закрыть меню" : "Открыть меню");
+      $("siteMenu").classList.toggle("open", open);
+      $("siteMenu").inert = !open;
+    }
+
+    function setContacts(open) {
+      $("contactMenu").classList.toggle("hidden", !open);
+      $("contactButton").setAttribute("aria-expanded", String(open));
+    }
+
+    $("menuButton").addEventListener("click", () => {
+      setMenu($("menuButton").getAttribute("aria-expanded") !== "true");
+    });
+
+    $("siteMenu").addEventListener("click", e => {
+      const button = e.target.closest("[data-page]");
+      if (!button) return;
+      if (button.dataset.page === "complaint") openDialog("complaintDialog", "complaintText");
+      else goTo(button.dataset.page);
+    });
+
+    $("contactButton").addEventListener("click", () => {
+      setContacts($("contactMenu").classList.contains("hidden"));
+    });
+
+    document.addEventListener("click", e => {
+      if (!e.target.closest(".brand-area")) setMenu(false);
+      if (!e.target.closest(".contact-wrap")) setContacts(false);
+    });
+
+    document.addEventListener("keydown", e => {
+      if (e.key !== "Escape") return;
+      const open = document.querySelector(".modal-backdrop:not(.hidden)");
+      if (open) {
+        closeDialog(open.id);
+        return;
+      }
+      setMenu(false);
+      setContacts(false);
+    });
+
+    $("brandLink").addEventListener("click", e => {
+      e.preventDefault();
+      goTo("tree");
+    });
+
+    document.querySelectorAll("[data-back]").forEach(el =>
+      el.addEventListener("click", () => goTo("tree"))
+    );
+
+    function goTo(page) {
+      const hash = "#" + page;
+      if (location.hash === hash) showPage(page);
+      else location.hash = hash;
+    }
+
+    function showPage(page, initial = false) {
+      if (!PAGES.includes(page)) page = "tree";
+
+      if (currentPage === "settings" && page !== "settings" && draftDirty) {
+        revertDraft();
+        setStatus("settingsStatus", "Несохранённые изменения настроек отменены.");
+      }
+
+      currentPage = page;
+      for (const p of PAGES) $(`${p}Page`).classList.toggle("hidden", p !== page);
+      setMenu(false);
+      if (!initial) window.scrollTo({ top: 0, behavior: scrollBehavior() });
+
+      if (page === "tree") render();
+      if (page === "articles") loadArticles();
+      if (page === "settings") {
+        if (!draftDirty) fillForm(effectiveSettings());
+        updateSettingsUi();
+        if (!initial) loadSiteSettings();
+      }
+    }
+
+    window.addEventListener("hashchange", () => showPage(location.hash.slice(1)));
 
     $("complaintForm").addEventListener("submit", e => {
       e.preventDefault();
+      const text = $("complaintText").value.trim();
+      if (!text) return;
       const subject = encodeURIComponent("Сообщение с сайта emode1k");
-      const body = encodeURIComponent($("complaintText").value.trim());
-      location.href = `mailto:emode1koff@gmail.com?subject=${subject}&body=${body}`;
+      const body = encodeURIComponent(`${text}\n\nСтраница ${location.href}`);
+      location.href = `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
     });
 
-    $("closeComplaintButton").addEventListener("click", () =>
-      $("complaintDialog").classList.add("hidden")
-    );
+    $("closeComplaintButton").addEventListener("click", () => closeDialog("complaintDialog"));
 
-    $("graph").addEventListener("pointerdown", e => {
-      if (e.target.closest(".node") || e.button !== 0) return;
-      drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, x: view.x, y: view.y };
-      $("graph").classList.add("dragging");
-      $("graph").setPointerCapture(e.pointerId);
-    });
+    /* ---------- Поиск ---------- */
 
-    $("graph").addEventListener("pointermove", e => {
-      if (!drag || e.pointerId !== drag.id) return;
-      view.x = drag.x + e.clientX - drag.sx;
-      view.y = drag.y + e.clientY - drag.sy;
-      $("graphContent")?.setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
-    });
-
-    function stopDrag(e) {
-      if (!drag || e.pointerId !== drag.id) return;
-      drag = null;
-      $("graph").classList.remove("dragging");
+    function setQuery(value) {
+      const next = value.trim();
+      if (next === query) return;
+      query = next;
+      queryTerm = next.toLocaleLowerCase("ru");
+      fitted = false;
+      viewTouched = false;
+      if (currentPage !== "tree") goTo("tree");
+      else render();
     }
 
-    $("graph").addEventListener("pointerup", stopDrag);
-    $("graph").addEventListener("pointercancel", stopDrag);
-
-    $("graph").addEventListener("wheel", e => {
-      e.preventDefault();
-      const rect = $("graph").getBoundingClientRect();
-      const x = e.clientX - rect.left, y = e.clientY - rect.top;
-      const old = view.scale;
-      const next = Math.max(.35, Math.min(2.2, old * (e.deltaY < 0 ? 1.1 : .9)));
-      view.x = x - (x - view.x) * next / old;
-      view.y = y - (y - view.y) * next / old;
-      view.scale = next;
-      $("graphContent")?.setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
-    }, { passive: false });
-
-    $("resetViewButton").addEventListener("click", () => {
-      view.x = 0; view.y = 0; view.scale = 1; fitted = false; draw();
+    $("search").addEventListener("input", e => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => setQuery(e.target.value), 150);
     });
 
-    window.addEventListener("resize", () => { fitted = false; draw(); });
+    $("search").addEventListener("keydown", e => {
+      if (e.key !== "Enter") return;
+      e.preventDefault();
+      clearTimeout(searchTimer);
+      setQuery(e.target.value);
+      if (!query) return;
+      const first = [...depth.keys()].find(id => matches(byId.get(id)));
+      if (!first) return;
+      selectedId = first;
+      updateDetails();
+      updateNodeFormUi();
+      render();
+    });
 
-    (async function init() {
-      const { data } = await db.auth.getSession();
-      setAdmin(isSiteAdmin(data?.session));
-      await loadSettings();
-      await loadTree();
-    })();
+    /* ---------- Управление видом ---------- */
+
+    function localPoint(e) {
+      const rect = graphHost.getBoundingClientRect();
+      const ratio = graphHost.clientWidth ? rect.width / graphHost.clientWidth : 1;
+      return { x: (e.clientX - rect.left) / ratio, y: (e.clientY - rect.top) / ratio };
+    }
+
+    function zoomAt(point, factor) {
+      const next = clamp(view.scale * factor, MIN_SCALE, MAX_SCALE);
+      if (next === view.scale) return;
+      view.x = point.x - (point.x - view.x) * next / view.scale;
+      view.y = point.y - (point.y - view.y) * next / view.scale;
+      view.scale = next;
+      viewTouched = true;
+      applyView();
+    }
+
+    function zoomBy(factor) {
+      zoomAt({ x: graphHost.clientWidth / 2, y: graphHost.clientHeight / 2 }, factor);
+    }
+
+    function startGesture() {
+      const pts = [...pointers.values()];
+      if (pts.length === 1) {
+        gesture = { type: "pan", start: pts[0], x: view.x, y: view.y, moved: false };
+      } else if (pts.length >= 2) {
+        const [a, b] = pts;
+        gesture = {
+          type: "pinch",
+          dist: Math.hypot(b.x - a.x, b.y - a.y) || 1,
+          mid: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 },
+          x: view.x, y: view.y, scale: view.scale
+        };
+        suppressClick = true;
+      }
+    }
+
+    graphHost.addEventListener("pointerdown", e => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (!pointers.size) suppressClick = false;
+      pointers.set(e.pointerId, localPoint(e));
+      startGesture();
+    });
+
+    graphHost.addEventListener("pointermove", e => {
+      if (!pointers.has(e.pointerId) || !gesture) return;
+      pointers.set(e.pointerId, localPoint(e));
+      const pts = [...pointers.values()];
+
+      if (gesture.type === "pan") {
+        const dx = pts[0].x - gesture.start.x, dy = pts[0].y - gesture.start.y;
+        if (!gesture.moved) {
+          if (Math.hypot(dx, dy) < 5) return;
+          gesture.moved = true;
+          suppressClick = true;
+          graphHost.classList.add("dragging");
+          try { graphHost.setPointerCapture(e.pointerId); } catch {}
+        }
+        view.x = gesture.x + dx;
+        view.y = gesture.y + dy;
+      } else if (pts.length >= 2) {
+        const [a, b] = pts;
+        const dist = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+        const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+        const next = clamp(gesture.scale * dist / gesture.dist, MIN_SCALE, MAX_SCALE);
+        const cx = (gesture.mid.x - gesture.x) / gesture.scale;
+        const cy = (gesture.mid.y - gesture.y) / gesture.scale;
+        view.scale = next;
+        view.x = mid.x - cx * next;
+        view.y = mid.y - cy * next;
+      }
+      viewTouched = true;
+      applyView();
+    });
+
+    function endPointer(e) {
+      if (!pointers.has(e.pointerId)) return;
+      pointers.delete(e.pointerId);
+      if (pointers.size) {
+        startGesture();
+      } else {
+        gesture = null;
+        graphHost.classList.remove("dragging");
+      }
+    }
+
+    graphHost.addEventListener("pointerup", endPointer);
+    graphHost.addEventListener("pointercancel", endPointer);
+
+    graphHost.addEventListener("click", e => {
+      const el = e.target.closest(".node");
+      if (!el) return;
+      if (suppressClick) {
+        suppressClick = false;
+        return;
+      }
+      clickNode(el.dataset.id, false);
+    });
+
+    graphHost.addEventListener("keydown", e => {
+      const el = e.target.closest?.(".node");
+      if (!el || (e.key !== "Enter" && e.key !== " ")) return;
+      e.preventDefault();
+      clickNode(el.dataset.id, true);
+    });
+
+    graphHost.addEventListener("wheel", e => {
+      e.preventDefault();
+      const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? graphHost.clientHeight : 1;
+      const delta = clamp(e.deltaY * unit, -120, 120);
+      zoomAt(localPoint(e), Math.exp(-delta * 0.0018));
+    }, { passive: false });
+
+    $("zoomInButton").addEventListener("click", () => zoomBy(1.25));
+    $("zoomOutButton").addEventListener("click", () => zoomBy(0.8));
+
+    $("resetViewButton").addEventListener("click", () => {
+      viewTouched = false;
+      fitted = false;
+      render();
+    });
+
+    function onGraphResize() {
+      if (currentPage !== "tree" || !lastLayout) return;
+      if (!viewTouched || !fitted) fitView();
+      applyView();
+    }
+
+    if ("ResizeObserver" in window) new ResizeObserver(onGraphResize).observe(graphHost);
+    else window.addEventListener("resize", onGraphResize);
+
+    /* ---------- Запуск ---------- */
+
+    fillForm(effectiveSettings());
+    updateSettingsUi();
+    showPage(location.hash.slice(1), true);
+
+    if (db) {
+      db.auth.onAuthStateChange((_event, session) => {
+        setTimeout(() => setAdmin(isSiteAdmin(session)), 0);
+      });
+      loadSiteSettings();
+      loadTree();
+    } else {
+      setAdmin(false);
+      updateDetails();
+      render();
+    }
   </script>
 </body>
 </html>
