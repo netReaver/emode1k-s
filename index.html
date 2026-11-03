@@ -172,11 +172,7 @@
       background: #151515;
     }
 
-    .brand-word {
-      color: #f0f0f0;
-      font-size: 16px;
-    }
-
+    .brand-word { color: #f0f0f0; font-size: 16px; }
     .brand-word span { color: var(--accent); }
 
     .top-actions {
@@ -275,7 +271,14 @@
     .node rect { fill: #191919; stroke: #444; stroke-width: 1.5; }
     .node.root rect { fill: #231618; stroke: var(--accent); stroke-width: 2; }
     .node:hover rect, .node.selected rect { stroke: var(--accent); }
-    .node text { fill: var(--text); font-size: 13px; font-weight: 600; pointer-events: none; }
+
+    .node text {
+      fill: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+      pointer-events: none;
+    }
+
     .node .dot { fill: var(--accent); }
     .node .expand-indicator { fill: var(--accent); font-size: 12px; }
 
@@ -310,12 +313,7 @@
 
     .details, .article-content { white-space: pre-wrap; overflow-wrap: anywhere; }
 
-    #details {
-      color: #f1f1f1;
-      font-size: 16px;
-      line-height: 1.7;
-    }
-
+    #details { color: #f1f1f1; font-size: 16px; line-height: 1.7; }
     body:not(.admin-mode) #detailsTitle { color: #fff; }
 
     .muted { color: var(--muted); }
@@ -403,11 +401,7 @@
       transform: translateY(-2px);
     }
 
-    .contact-fab .cigarette {
-      width: 31px;
-      height: 15px;
-      transform: rotate(-35deg);
-    }
+    .contact-fab .cigarette { width: 31px; height: 15px; transform: rotate(-35deg); }
 
     .contact-panel {
       position: absolute;
@@ -422,17 +416,8 @@
       box-shadow: 0 12px 32px #0004;
     }
 
-    .contact-panel h2 {
-      margin: 0 0 8px;
-      color: #222;
-      font-size: 18px;
-    }
-
-    .contact-panel p {
-      margin: 0 0 12px;
-      color: #666;
-      font-size: 14px;
-    }
+    .contact-panel h2 { margin: 0 0 8px; color: #222; font-size: 18px; }
+    .contact-panel p { margin: 0 0 12px; color: #666; font-size: 14px; }
 
     .contact-panel textarea {
       min-height: 110px;
@@ -441,11 +426,7 @@
       border-color: #ccc;
     }
 
-    .contact-panel .button {
-      color: #222;
-      background: #f3f3f3;
-      border-color: #ccc;
-    }
+    .contact-panel .button { color: #222; background: #f3f3f3; border-color: #ccc; }
 
     .contact-panel .button:hover {
       color: #111;
@@ -453,11 +434,7 @@
       border-color: #999;
     }
 
-    .contact-panel a {
-      display: inline-block;
-      margin-top: 12px;
-      color: #444;
-    }
+    .contact-panel a { display: inline-block; margin-top: 12px; color: #444; }
 
     .smoke {
       fill: none;
@@ -793,8 +770,14 @@
     const SUPABASE_PUBLIC_KEY = "sb_publishable_itE-NyvxMgqHsbqn3Dp4sQ_2uZPoiUZ";
     const ADMIN_EMAIL = "emode1koff@gmail.com";
     const ROOT_ID = "emode1k";
-    const NODE_W = 188, NODE_H = 60;
-    const ROOT_STEP = 330, COMPACT_STEP = ROOT_STEP / 2.5, ROW_STEP = 82;
+
+    // Узлы уменьшены примерно вдвое, чтобы не перекрывать друг друга.
+    const NODE_W = 150;
+    const NODE_H = 38;
+    const ROOT_STEP = 165;
+    const COMPACT_STEP = 66;
+    const ROW_STEP = 41;
+
     const $ = id => document.getElementById(id);
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
 
@@ -808,6 +791,7 @@
     let drag = null;
     let fitted = false;
     let currentPage = "tree";
+
     const expanded = new Set();
     const view = { x: 0, y: 0, scale: 1 };
 
@@ -817,14 +801,21 @@
 
     function escapeHtml(value) {
       return String(value).replace(/[&<>"']/g, c => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
       })[c]);
     }
 
-    function childrenOf(id) { return nodes.filter(n => n.parent === id); }
+    function childrenOf(id) {
+      return nodes.filter(n => n.parent === id);
+    }
 
     function descendantsOf(id) {
       const result = new Set([id]);
+
       function walk(parentId) {
         for (const child of childrenOf(parentId)) {
           if (result.has(child.id)) continue;
@@ -832,97 +823,130 @@
           walk(child.id);
         }
       }
+
       walk(id);
       return result;
     }
 
     function depthOf(node, byId) {
-      let depth = 0, current = node;
+      let depth = 0;
+      let current = node;
       const seen = new Set();
+
       while (current.parent && byId.has(current.parent) && !seen.has(current.id)) {
         seen.add(current.id);
         depth++;
         current = byId.get(current.parent);
       }
+
       return depth;
     }
 
     function visibleByExpansion(node, byId) {
       let current = node;
+
       while (current.parent && byId.has(current.parent)) {
         const parent = byId.get(current.parent);
         if (depthOf(parent, byId) >= 1 && !expanded.has(parent.id)) return false;
         current = parent;
       }
+
       return true;
     }
 
     function getVisibleNodes(byId) {
       if (!query) return nodes.filter(n => visibleByExpansion(n, byId));
+
       const found = new Map();
       const term = query.toLocaleLowerCase();
 
       for (const node of nodes) {
         if (!`${node.label} ${node.info || ""}`.toLocaleLowerCase().includes(term)) continue;
+
         found.set(node.id, node);
         let current = node;
+
         while (current.parent && byId.has(current.parent)) {
           current = byId.get(current.parent);
           found.set(current.id, current);
         }
       }
+
       return [...found.values()];
     }
 
     function sortedChildren(parentId, ids) {
-      return nodes.filter(n => n.parent === parentId && ids.has(n.id))
+      return nodes
+        .filter(n => n.parent === parentId && ids.has(n.id))
         .sort((a, b) => a.label.localeCompare(b.label));
     }
 
     function makeLayout(shown, byId) {
       const ids = new Set(shown.map(n => n.id));
       const points = new Map();
+
       if (!ids.has(ROOT_ID) || !byId.has(ROOT_ID)) return points;
       points.set(ROOT_ID, { x: 0, y: 0 });
 
-      const directions = [{ x: -1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 0 }];
+      const directions = [
+        { x: -1, y: 0 },
+        { x: 0, y: 1 },
+        { x: 1, y: 0 }
+      ];
 
       sortedChildren(ROOT_ID, ids).forEach((branch, i) => {
-        const dir = directions[i % 3];
-        const lane = Math.floor(i / 3);
-        const offset = lane ? (lane % 2 ? 1 : -1) * Math.ceil(lane / 2) * ROW_STEP : 0;
-        const first = { x: dir.x * ROOT_STEP, y: dir.y * ROOT_STEP + offset };
+        const dir = directions[i % directions.length];
+        const lane = Math.floor(i / directions.length);
+        const offset = lane
+          ? (lane % 2 ? 1 : -1) * Math.ceil(lane / 2) * ROW_STEP
+          : 0;
+
+        const first = {
+          x: dir.x * ROOT_STEP,
+          y: dir.y * ROOT_STEP + offset
+        };
+
         points.set(branch.id, first);
 
         function place(parent, point, depth) {
           const children = sortedChildren(parent.id, ids);
           const step = depth === 1 ? ROOT_STEP : COMPACT_STEP;
+
           children.forEach((child, j) => {
             const spread = (j - (children.length - 1) / 2) * ROW_STEP;
             const next = {
               x: point.x + dir.x * step + (dir.y ? spread : 0),
               y: point.y + dir.y * step + (dir.x ? spread : 0)
             };
+
             points.set(child.id, next);
             place(child, next, depth + 1);
           });
         }
+
         place(branch, first, 1);
       });
+
       return points;
     }
 
     function edgePath(a, b) {
-      const dx = b.x - a.x, dy = b.y - a.y;
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
       const length = Math.hypot(dx, dy) || 1;
-      const ux = dx / length, uy = dy / length;
-      const x1 = a.x + ux * NODE_W / 2, y1 = a.y + uy * NODE_H / 2;
-      const x2 = b.x - ux * NODE_W / 2, y2 = b.y - uy * NODE_H / 2;
+      const ux = dx / length;
+      const uy = dy / length;
+      const x1 = a.x + ux * NODE_W / 2;
+      const y1 = a.y + uy * NODE_H / 2;
+      const x2 = b.x - ux * NODE_W / 2;
+      const y2 = b.y - uy * NODE_H / 2;
+
       return `<path class="edge" d="M${x1} ${y1} C${x1 + dx * .4} ${y1 + dy * .4},${x2 - dx * .4} ${y2 - dy * .4},${x2} ${y2}"/>`;
     }
 
     function draw() {
       const host = $("graph");
+
       if (loading) {
         host.innerHTML = '<div class="empty-state">Загрузка дерева…</div>';
         return;
@@ -938,53 +962,83 @@
       }
 
       const points = makeLayout(shown, byId);
-      const xs = [...points.values()].map(p => p.x), ys = [...points.values()].map(p => p.y);
-      const minX = Math.min(...xs) - NODE_W, maxX = Math.max(...xs) + NODE_W;
-      const minY = Math.min(...ys) - NODE_H * 2, maxY = Math.max(...ys) + NODE_H * 2;
-      const width = Math.max(900, maxX - minX), height = Math.max(480, maxY - minY);
+      const xs = [...points.values()].map(p => p.x);
+      const ys = [...points.values()].map(p => p.y);
+      const minX = Math.min(...xs) - NODE_W;
+      const maxX = Math.max(...xs) + NODE_W;
+      const minY = Math.min(...ys) - NODE_H * 2;
+      const maxY = Math.max(...ys) + NODE_H * 2;
+      const width = Math.max(900, maxX - minX);
+      const height = Math.max(480, maxY - minY);
       const ox = -minX + (width - (maxX - minX)) / 2;
       const oy = -minY + (height - (maxY - minY)) / 2;
 
       let edges = "";
       shown.forEach(n => {
-        const a = points.get(n.parent), b = points.get(n.id);
+        const a = points.get(n.parent);
+        const b = points.get(n.id);
         if (a && b) edges += edgePath(a, b);
       });
 
       let markup = "";
+
       shown.forEach(n => {
         const p = points.get(n.id);
         if (!p) return;
-        const label = n.label.length > 24 ? n.label.slice(0, 23) + "…" : n.label;
+
+        const label = n.label.length > 20
+          ? n.label.slice(0, 19) + "…"
+          : n.label;
+
         const expandable = depthOf(n, byId) >= 1 && childrenOf(n.id).length > 0;
         const sign = expandable ? (expanded.has(n.id) ? "−" : "+") : "";
+
         markup += `<g class="node ${n.id === ROOT_ID ? "root" : ""} ${n.id === selectedId ? "selected" : ""}"
-          data-id="${escapeHtml(n.id)}" transform="translate(${p.x + ox - NODE_W / 2},${p.y + oy - NODE_H / 2})"
+          data-id="${escapeHtml(n.id)}"
+          transform="translate(${p.x + ox - NODE_W / 2},${p.y + oy - NODE_H / 2})"
           tabindex="0" role="button" aria-label="${escapeHtml(n.label)}">
-          <rect width="${NODE_W}" height="${NODE_H}" rx="8"/>
-          <circle class="dot" cx="16" cy="30" r="3"/>
-          <text x="98" y="35" text-anchor="middle">${escapeHtml(label)}</text>
-          <text class="expand-indicator" x="173" y="20" text-anchor="middle">${sign}</text>
+          <rect width="${NODE_W}" height="${NODE_H}" rx="7"/>
+          <circle class="dot" cx="12" cy="${NODE_H / 2}" r="3"/>
+          <text x="${NODE_W / 2}" y="${NODE_H / 2 + 4}" text-anchor="middle">${escapeHtml(label)}</text>
+          <text class="expand-indicator" x="${NODE_W - 13}" y="14" text-anchor="middle">${sign}</text>
         </g>`;
       });
 
       host.innerHTML = `<svg class="graph-svg" viewBox="0 0 ${host.clientWidth} ${host.clientHeight}">
-        <g id="graphContent"><g transform="translate(${ox} ${oy})">${edges}</g>${markup}</g></svg>`;
+        <g id="graphContent">
+          <g transform="translate(${ox} ${oy})">${edges}</g>
+          ${markup}
+        </g>
+      </svg>`;
 
       if (!fitted) {
-        view.scale = Math.max(.35, Math.min(1,
-          (host.clientWidth - 40) / width, (host.clientHeight - 40) / height));
+        view.scale = Math.max(
+          .35,
+          Math.min(
+            1,
+            (host.clientWidth - 40) / width,
+            (host.clientHeight - 40) / height
+          )
+        );
         view.x = Math.max(20, (host.clientWidth - width * view.scale) / 2);
         view.y = Math.max(20, (host.clientHeight - height * view.scale) / 2);
         fitted = true;
       }
 
-      $("graphContent").setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
+      $("graphContent").setAttribute(
+        "transform",
+        `translate(${view.x} ${view.y}) scale(${view.scale})`
+      );
+
       host.querySelectorAll(".node").forEach(el => {
         const activate = () => clickNode(el.dataset.id);
+
         el.addEventListener("click", activate);
         el.addEventListener("keydown", e => {
-          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activate(); }
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            activate();
+          }
         });
       });
     }
@@ -993,8 +1047,11 @@
       loading = true;
       $("details").textContent = "Загружаю дерево из Supabase…";
       draw();
+
       const { data, error } = await db.from("nodes")
-        .select("id,parent_id,label,info").order("label");
+        .select("id,parent_id,label,info")
+        .order("label");
+
       loading = false;
 
       if (error) {
@@ -1006,7 +1063,10 @@
       }
 
       nodes = (data || []).map(row => ({
-        id: row.id, parent: row.parent_id, label: row.label, info: row.info || ""
+        id: row.id,
+        parent: row.parent_id,
+        label: row.label,
+        info: row.info || ""
       }));
 
       if (!nodes.some(n => n.id === ROOT_ID)) {
@@ -1023,19 +1083,25 @@
     function clickNode(id) {
       const node = nodes.find(n => n.id === id);
       if (!node) return;
+
       const byId = new Map(nodes.map(n => [n.id, n]));
+
       if (depthOf(node, byId) >= 1 && childrenOf(id).length) {
         if (expanded.has(id)) {
           expanded.delete(id);
           descendantsOf(id).forEach(child => expanded.delete(child));
-        } else expanded.add(id);
+        } else {
+          expanded.add(id);
+        }
       }
+
       selectNode(id);
     }
 
     function selectNode(id) {
       const node = nodes.find(n => n.id === id);
       if (!node) return;
+
       selectedId = id;
       $("detailsTitle").textContent = node.label;
       $("details").textContent = node.info || "Описание не добавлено.";
@@ -1053,23 +1119,37 @@
 
     function applySettings(s) {
       const accent = s.accent_color || "#e5484d";
+
       document.documentElement.style.setProperty("--accent", accent);
       document.documentElement.style.setProperty("--line", accent + "99");
-      document.documentElement.style.setProperty("--brightness", Number(s.brightness ?? 100) / 100);
-      document.documentElement.style.setProperty("--page-scale", Number(s.page_scale ?? 100) / 100);
+      document.documentElement.style.setProperty(
+        "--brightness",
+        Number(s.brightness ?? 100) / 100
+      );
+      document.documentElement.style.setProperty(
+        "--page-scale",
+        Number(s.page_scale ?? 100) / 100
+      );
       document.body.classList.toggle("theme-gothic", s.theme === "gothic");
       document.body.classList.toggle("theme-anime", s.theme === "anime");
-      document.body.classList.toggle("animations-off", s.animations_enabled === false);
+      document.body.classList.toggle(
+        "animations-off",
+        s.animations_enabled === false
+      );
     }
 
     function setAdmin(enabled) {
       isAdmin = enabled;
       document.body.classList.toggle("admin-mode", enabled);
       $("adminPanel").classList.toggle("hidden", !enabled);
-      $("adminNodeActions").classList.toggle("hidden", !enabled || selectedId === ROOT_ID);
+      $("adminNodeActions").classList.toggle(
+        "hidden",
+        !enabled || selectedId === ROOT_ID
+      );
       $("articleEditor").classList.toggle("hidden", !enabled);
       $("menuLogoutButton").textContent = enabled ? "Выйти из профиля" : "Войти";
       draw();
+
       if (currentPage === "articles") loadArticles();
     }
 
@@ -1086,6 +1166,7 @@
       $("settingsPage").classList.toggle("hidden", page !== "settings");
       closeMenu();
       window.scrollTo({ top: 0, behavior: "smooth" });
+
       if (page === "articles") loadArticles();
       if (page === "settings") loadSettings();
     }
@@ -1120,14 +1201,17 @@
       const open = panel.classList.contains("hidden");
       panel.classList.toggle("hidden", !open);
       $("contactButton").setAttribute("aria-expanded", String(open));
+
       if (open) $("contactText").focus();
     });
 
     $("contactForm").addEventListener("submit", e => {
       e.preventDefault();
+
       const subject = encodeURIComponent("Сообщение с сайта emode1k");
       const body = encodeURIComponent($("contactText").value.trim());
-      location.href = `mailto:emode1koff@gmail.com?subject=${subject}&body=${body}`;
+      location.href =
+        `mailto:emode1koff@gmail.com?subject=${subject}&body=${body}`;
     });
 
     document.addEventListener("keydown", e => {
@@ -1147,13 +1231,20 @@
 
     async function logout() {
       const { error } = await db.auth.signOut();
-      if (error) $("adminStatus").textContent = error.message;
-      else { setAdmin(false); resetNodeForm(); }
+
+      if (error) {
+        $("adminStatus").textContent = error.message;
+      } else {
+        setAdmin(false);
+        resetNodeForm();
+      }
     }
 
     $("menuLogoutButton").addEventListener("click", async () => {
       closeMenu();
+
       if (isAdmin) return logout();
+
       $("loginDialog").classList.remove("hidden");
       $("emailInput").focus();
     });
@@ -1166,6 +1257,7 @@
 
     $("loginForm").addEventListener("submit", async e => {
       e.preventDefault();
+
       const { data, error } = await db.auth.signInWithPassword({
         email: $("emailInput").value.trim(),
         password: $("passwordInput").value
@@ -1178,7 +1270,8 @@
 
       if (!isSiteAdmin(data.session)) {
         await db.auth.signOut();
-        $("loginStatus").textContent = "У этой учётной записи нет прав администратора.";
+        $("loginStatus").textContent =
+          "У этой учётной записи нет прав администратора.";
         return;
       }
 
@@ -1187,23 +1280,39 @@
       setAdmin(true);
     });
 
-    db.auth.onAuthStateChange((_event, session) => setAdmin(isSiteAdmin(session)));
+    db.auth.onAuthStateChange((_event, session) =>
+      setAdmin(isSiteAdmin(session))
+    );
 
     $("nodeForm").addEventListener("submit", async e => {
       e.preventDefault();
       if (!isAdmin) return;
+
       const label = $("nodeLabel").value.trim();
       const info = $("nodeInfo").value.trim();
-      let result, savedId = editingNodeId;
+      let result;
+      let savedId = editingNodeId;
 
       $("saveNodeButton").disabled = true;
+
       if (editingNodeId) {
-        result = await db.from("nodes").update({ label, info }).eq("id", editingNodeId);
+        result = await db.from("nodes")
+          .update({ label, info })
+          .eq("id", editingNodeId);
       } else {
         savedId = "node-" + crypto.randomUUID();
-        const parentId = nodes.some(n => n.id === selectedId) ? selectedId : ROOT_ID;
-        result = await db.from("nodes").insert({ id: savedId, parent_id: parentId, label, info });
+        const parentId = nodes.some(n => n.id === selectedId)
+          ? selectedId
+          : ROOT_ID;
+
+        result = await db.from("nodes").insert({
+          id: savedId,
+          parent_id: parentId,
+          label,
+          info
+        });
       }
+
       $("saveNodeButton").disabled = false;
 
       if (result.error) {
@@ -1214,6 +1323,7 @@
       resetNodeForm();
       fitted = false;
       await loadTree();
+
       if (savedId) selectNode(savedId);
       $("adminStatus").textContent = "Сохранено.";
     });
@@ -1221,6 +1331,7 @@
     $("editNodeButton").addEventListener("click", () => {
       const node = nodes.find(n => n.id === selectedId);
       if (!isAdmin || !node || node.id === ROOT_ID) return;
+
       editingNodeId = node.id;
       $("nodeLabel").value = node.label;
       $("nodeInfo").value = node.info || "";
@@ -1240,7 +1351,9 @@
         const leaves = [...pending].filter(parent =>
           childrenOf(parent).every(child => !pending.has(child.id))
         );
+
         if (!leaves.length) throw new Error("Цикл в структуре дерева.");
+
         order.push(...leaves);
         leaves.forEach(nodeId => pending.delete(nodeId));
       }
@@ -1249,6 +1362,7 @@
         const { error } = await db.from("nodes").delete().eq("id", nodeId);
         if (error) throw error;
       }
+
       return removed;
     }
 
@@ -1279,8 +1393,10 @@
 
     async function loadArticles() {
       $("articlesList").textContent = "Загружаю статьи…";
+
       const { data, error } = await db.from("articles")
-        .select("id,title,content,updated_at").order("updated_at", { ascending: false });
+        .select("id,title,content,updated_at")
+        .order("updated_at", { ascending: false });
 
       if (error) {
         $("articlesList").textContent = "Ошибка загрузки: " + error.message;
@@ -1288,6 +1404,7 @@
       }
 
       $("articlesList").replaceChildren();
+
       if (!data?.length) {
         $("articlesList").textContent = "Статей пока нет.";
         return;
@@ -1296,8 +1413,10 @@
       data.forEach(article => {
         const card = document.createElement("article");
         card.className = "card article-card";
+
         const title = document.createElement("h2");
         title.textContent = article.title;
+
         const content = document.createElement("div");
         content.className = "article-content";
         content.textContent = article.content;
@@ -1327,7 +1446,11 @@
           remove.textContent = "Удалить";
           remove.addEventListener("click", async () => {
             if (!confirm(`Удалить «${article.title}»?`)) return;
-            const { error: err } = await db.from("articles").delete().eq("id", article.id);
+
+            const { error: err } = await db.from("articles")
+              .delete()
+              .eq("id", article.id);
+
             if (err) $("articleStatus").textContent = err.message;
             else loadArticles();
           });
@@ -1343,15 +1466,22 @@
     $("articleForm").addEventListener("submit", async e => {
       e.preventDefault();
       if (!isAdmin) return;
+
       const title = $("articleTitle").value.trim();
       const content = $("articleContent").value.trim();
 
       const result = editingArticleId
-        ? await db.from("articles").update({
-            title, content, updated_at: new Date().toISOString()
-          }).eq("id", editingArticleId)
+        ? await db.from("articles")
+            .update({
+              title,
+              content,
+              updated_at: new Date().toISOString()
+            })
+            .eq("id", editingArticleId)
         : await db.from("articles").insert({
-            id: "article-" + crypto.randomUUID(), title, content
+            id: "article-" + crypto.randomUUID(),
+            title,
+            content
           });
 
       if (result.error) {
@@ -1369,10 +1499,12 @@
     async function loadSettings() {
       const { data, error } = await db.from("site_settings")
         .select("accent_color,theme,page_scale,brightness,animations_enabled")
-        .eq("id", 1).maybeSingle();
+        .eq("id", 1)
+        .maybeSingle();
 
       if (error) {
-        $("settingsStatus").textContent = "Ошибка загрузки настроек: " + error.message;
+        $("settingsStatus").textContent =
+          "Ошибка загрузки настроек: " + error.message;
         return;
       }
 
@@ -1396,12 +1528,18 @@
 
     $("pageScale").addEventListener("input", e => {
       $("pageScaleOutput").value = e.target.value + "%";
-      document.documentElement.style.setProperty("--page-scale", Number(e.target.value) / 100);
+      document.documentElement.style.setProperty(
+        "--page-scale",
+        Number(e.target.value) / 100
+      );
     });
 
     $("brightness").addEventListener("input", e => {
       $("brightnessOutput").value = e.target.value + "%";
-      document.documentElement.style.setProperty("--brightness", Number(e.target.value) / 100);
+      document.documentElement.style.setProperty(
+        "--brightness",
+        Number(e.target.value) / 100
+      );
     });
 
     $("colorSelect").addEventListener("input", e => {
@@ -1410,8 +1548,14 @@
     });
 
     $("themeSelect").addEventListener("change", e => {
-      document.body.classList.toggle("theme-gothic", e.target.value === "gothic");
-      document.body.classList.toggle("theme-anime", e.target.value === "anime");
+      document.body.classList.toggle(
+        "theme-gothic",
+        e.target.value === "gothic"
+      );
+      document.body.classList.toggle(
+        "theme-anime",
+        e.target.value === "anime"
+      );
     });
 
     $("settingsForm").addEventListener("submit", async e => {
@@ -1427,27 +1571,43 @@
       };
 
       const { error } = await db.from("site_settings").upsert(s);
+
       if (error) {
-        $("settingsStatus").textContent = "Ошибка сохранения: " + error.message;
+        $("settingsStatus").textContent =
+          "Ошибка сохранения: " + error.message;
         return;
       }
 
       applySettings(s);
-      $("settingsStatus").textContent = "Общие настройки сохранены для всех посетителей.";
+      $("settingsStatus").textContent =
+        "Общие настройки сохранены для всех посетителей.";
     });
 
     $("graph").addEventListener("pointerdown", e => {
       if (e.target.closest(".node") || e.button !== 0) return;
-      drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, x: view.x, y: view.y };
+
+      drag = {
+        id: e.pointerId,
+        sx: e.clientX,
+        sy: e.clientY,
+        x: view.x,
+        y: view.y
+      };
+
       $("graph").classList.add("dragging");
       $("graph").setPointerCapture(e.pointerId);
     });
 
     $("graph").addEventListener("pointermove", e => {
       if (!drag || e.pointerId !== drag.id) return;
+
       view.x = drag.x + e.clientX - drag.sx;
       view.y = drag.y + e.clientY - drag.sy;
-      $("graphContent")?.setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
+
+      $("graphContent")?.setAttribute(
+        "transform",
+        `translate(${view.x} ${view.y}) scale(${view.scale})`
+      );
     });
 
     function stopDrag(e) {
@@ -1461,14 +1621,24 @@
 
     $("graph").addEventListener("wheel", e => {
       e.preventDefault();
+
       const rect = $("graph").getBoundingClientRect();
-      const x = e.clientX - rect.left, y = e.clientY - rect.top;
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
       const old = view.scale;
-      const next = Math.max(.35, Math.min(2.2, old * (e.deltaY < 0 ? 1.1 : .9)));
+      const next = Math.max(
+        .35,
+        Math.min(2.2, old * (e.deltaY < 0 ? 1.1 : .9))
+      );
+
       view.x = x - (x - view.x) * next / old;
       view.y = y - (y - view.y) * next / old;
       view.scale = next;
-      $("graphContent")?.setAttribute("transform", `translate(${view.x} ${view.y}) scale(${view.scale})`);
+
+      $("graphContent")?.setAttribute(
+        "transform",
+        `translate(${view.x} ${view.y}) scale(${view.scale})`
+      );
     }, { passive: false });
 
     $("resetViewButton").addEventListener("click", () => {
