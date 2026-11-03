@@ -210,6 +210,100 @@
     .page { min-height: 70vh; }
     .hidden { display: none !important; }
 
+    .hero {
+      position: relative;
+      min-height: 150vh;
+      isolation: isolate;
+      overflow: clip;
+      border-bottom: 1px solid var(--border);
+      background: #080808;
+    }
+
+    .hero-sticky {
+      position: sticky;
+      top: 64px;
+      min-height: calc(100vh - 64px);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 36px 20px;
+    }
+
+    .hero-art {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      opacity: .17;
+      filter: brightness(.42) contrast(1.2);
+      pointer-events: none;
+    }
+
+    .hero-art svg {
+      width: min(78vw, 700px);
+      max-height: 78vh;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      width: min(760px, 92vw);
+      margin-top: 30vh;
+      padding: clamp(20px, 4vw, 42px);
+      border: 1px solid #ffffff24;
+      border-radius: 14px;
+      background: #080808b8;
+      text-align: center;
+      box-shadow: 0 18px 70px #0009;
+      animation: hero-enter 1.1s ease both;
+    }
+
+    .hero-copy h1 {
+      margin: 0 0 14px;
+      color: #fff;
+      font-size: clamp(32px, 7vw, 68px);
+      letter-spacing: .12em;
+      text-transform: lowercase;
+      text-shadow: 0 0 24px #e5484d55;
+    }
+
+    .hero-copy p {
+      max-width: 650px;
+      margin: 0 auto;
+      color: #dedede;
+      font-size: clamp(17px, 2.5vw, 23px);
+    }
+
+    .hero-hint {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      color: #aaa;
+      font-size: 13px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transform: translateX(-50%);
+      animation: hint-pulse 1.8s ease-in-out infinite;
+    }
+
+    .mask-eye-right {
+      transform-box: fill-box;
+      transform-origin: center;
+      transition: transform .12s ease;
+    }
+
+    .hero.blink .mask-eye-right { transform: scaleY(.08); }
+
+    @keyframes hero-enter {
+      from { opacity: 0; transform: translateY(28px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes hint-pulse {
+      0%, 100% { opacity: .45; }
+      50% { opacity: 1; }
+    }
+
     .heading-row {
       display: flex;
       align-items: flex-end;
@@ -397,6 +491,12 @@
       background: #171717;
       box-shadow: 0 5px 18px #0008;
       cursor: pointer;
+      transition: border-color .18s ease, transform .18s ease;
+    }
+
+    .contact-fab:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
     }
 
     .contact-panel {
@@ -414,8 +514,22 @@
 
     .contact-panel h2 { margin: 0 0 8px; color: #222; font-size: 18px; }
     .contact-panel p { margin: 0 0 12px; color: #666; font-size: 14px; }
-    .contact-panel textarea { min-height: 110px; color: #222; background: #fff; border-color: #ccc; }
+
+    .contact-panel textarea {
+      min-height: 110px;
+      color: #222;
+      background: #fff;
+      border-color: #ccc;
+    }
+
     .contact-panel .button { color: #222; background: #f3f3f3; border-color: #ccc; }
+
+    .contact-panel .button:hover {
+      color: #111;
+      background: #e8e8e8;
+      border-color: #999;
+    }
+
     .contact-panel a { display: inline-block; margin-top: 12px; color: #444; }
 
     .smoke {
@@ -424,6 +538,7 @@
       stroke-width: 1.6;
       stroke-linecap: round;
       opacity: 0;
+      transform-origin: center;
       animation: smoke-rise 2.4s ease-out infinite;
     }
 
@@ -512,6 +627,10 @@
       .graph-shell { height: 58vh; min-height: 340px; }
       .side-art { width: 16vw; opacity: .3; }
       .contact-widget { right: 14px; bottom: 14px; }
+      .hero { min-height: 125vh; }
+      .hero-sticky { top: 112px; min-height: calc(100vh - 112px); }
+      .hero-copy { margin-top: 22vh; }
+      .hero-art svg { width: 96vw; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -569,6 +688,68 @@
   </header>
 
   <main>
+    <section class="hero" id="hero">
+      <div class="hero-sticky">
+        <div class="hero-art" aria-hidden="true">
+          <svg viewBox="0 0 600 700">
+            <defs>
+              <linearGradient id="maskShade" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0" stop-color="#eeeeee"/>
+                <stop offset="1" stop-color="#777777"/>
+              </linearGradient>
+            </defs>
+
+            <path d="M300 45
+              C190 45 112 112 98 226
+              C83 352 145 515 237 614
+              C262 641 282 656 300 665
+              C318 656 338 641 363 614
+              C455 515 517 352 502 226
+              C488 112 410 45 300 45Z"
+              fill="url(#maskShade)" stroke="#fff" stroke-width="8"/>
+
+            <path d="M137 250
+              C190 204 247 208 287 252
+              C249 293 190 307 137 278Z"
+              fill="#111" stroke="#222" stroke-width="8"/>
+
+            <path d="M313 252
+              C353 208 410 204 463 250
+              L463 278
+              C410 307 351 293 313 252Z"
+              fill="#111" stroke="#222" stroke-width="8"/>
+
+            <ellipse class="mask-eye-right" cx="388" cy="254" rx="25" ry="12" fill="#eee"/>
+            <ellipse cx="388" cy="254" rx="7" ry="10" fill="#111"/>
+            <ellipse cx="211" cy="254" rx="25" ry="12" fill="#eee"/>
+            <ellipse cx="211" cy="254" rx="7" ry="10" fill="#111"/>
+
+            <path d="M300 270 L273 391 L300 408 L327 391Z"
+              fill="#777" stroke="#222" stroke-width="7"/>
+
+            <path d="M231 463
+              C260 437 340 437 369 463
+              C346 524 254 524 231 463Z"
+              fill="#181818" stroke="#222" stroke-width="8"/>
+
+            <path d="M251 464 L349 464 M260 482 L340 482 M276 500 L324 500"
+              fill="none" stroke="#ddd" stroke-width="7" stroke-linecap="round"/>
+
+            <text x="300" y="586" text-anchor="middle"
+              fill="#111" font-family="sans-serif" font-size="30"
+              font-weight="700" letter-spacing="8">fsociety</text>
+          </svg>
+        </div>
+
+        <div class="hero-copy">
+          <h1>emode1k</h1>
+          <p>Emode1k - программист с различными направлениями и умениями.</p>
+        </div>
+
+        <div class="hero-hint">Прокрути вниз</div>
+      </div>
+    </section>
+
     <section id="treePage" class="page">
       <div class="heading-row">
         <div>
@@ -625,6 +806,7 @@
         </form>
         <p id="articleStatus" class="status" role="status"></p>
       </section>
+
       <div id="articlesList" class="article-list"></div>
     </section>
 
@@ -785,13 +967,13 @@
     }
 
     function escapeHtml(value) {
-      return String(value).replace(/[&<>"']/g, c => ({
+      return String(value).replace(/[&<>"']/g, character => ({
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
         '"': "&quot;",
         "'": "&#39;"
-      })[c]);
+      })[character]);
     }
 
     function childrenOf(id) {
@@ -846,7 +1028,8 @@
       const term = query.toLocaleLowerCase();
 
       for (const node of nodes) {
-        if (!`${node.label} ${node.info || ""}`.toLocaleLowerCase().includes(term)) continue;
+        const content = `${node.label} ${node.info || ""}`.toLocaleLowerCase();
+        if (!content.includes(term)) continue;
 
         found.set(node.id, node);
         let current = node;
@@ -872,18 +1055,17 @@
 
       if (!ids.has(ROOT_ID) || !byId.has(ROOT_ID)) return points;
 
-      const root = byId.get(ROOT_ID);
-      const rootChildren = sortedChildren(root.id, ids);
-      const leafGap = NODE_H + 30;
+      const rootChildren = sortedChildren(ROOT_ID, ids);
+      const leafGap = ROW_STEP;
 
       function leafCount(node) {
         const children = sortedChildren(node.id, ids);
         if (!children.length) return 1;
-        return children.reduce((total, child) => total + leafCount(child), 0);
+        return children.reduce((sum, child) => sum + leafCount(child), 0);
       }
 
       const totalLeaves = rootChildren.reduce(
-        (total, child) => total + leafCount(child),
+        (sum, child) => sum + leafCount(child),
         0
       );
 
@@ -894,7 +1076,7 @@
       function placeSubtree(node, depth, startY) {
         const children = sortedChildren(node.id, ids);
         const count = children.length
-          ? children.reduce((total, child) => total + leafCount(child), 0)
+          ? children.reduce((sum, child) => sum + leafCount(child), 0)
           : 1;
 
         const centerY = startY + ((count - 1) * leafGap) / 2;
@@ -910,8 +1092,6 @@
           placeSubtree(child, depth + 1, childY);
           childY += leafCount(child) * leafGap;
         }
-
-        return count;
       }
 
       for (const child of rootChildren) {
@@ -955,9 +1135,9 @@
       }
 
       const points = makeLayout(shown, byId);
-      const values = [...points.values()];
-      const xs = values.map(point => point.x);
-      const ys = values.map(point => point.y);
+      const coordinates = [...points.values()];
+      const xs = coordinates.map(point => point.x);
+      const ys = coordinates.map(point => point.y);
 
       const minX = Math.min(...xs) - NODE_W;
       const maxX = Math.max(...xs) + NODE_W;
@@ -1190,9 +1370,9 @@
       if (button) goTo(button.dataset.page);
     });
 
-    document.querySelectorAll("[data-back]").forEach(element =>
-      element.addEventListener("click", () => goTo("tree"))
-    );
+    document.querySelectorAll("[data-back]").forEach(element => {
+      element.addEventListener("click", () => goTo("tree"));
+    });
 
     document.addEventListener("click", event => {
       if (!event.target.closest(".brand-area")) closeMenu();
@@ -1206,6 +1386,7 @@
     $("contactButton").addEventListener("click", () => {
       const panel = $("contactPanel");
       const open = panel.classList.contains("hidden");
+
       panel.classList.toggle("hidden", !open);
       $("contactButton").setAttribute("aria-expanded", String(open));
       if (open) $("contactText").focus();
@@ -1662,6 +1843,23 @@
       fitted = false;
       draw();
     });
+
+    let lastBlink = 0;
+
+    window.addEventListener("scroll", () => {
+      const hero = $("hero");
+      if (!hero || window.scrollY < 10) return;
+
+      const now = Date.now();
+      if (now - lastBlink < 450) return;
+
+      lastBlink = now;
+      hero.classList.add("blink");
+
+      window.setTimeout(() => {
+        hero.classList.remove("blink");
+      }, 140);
+    }, { passive: true });
 
     (async function init() {
       const { data } = await db.auth.getSession();
