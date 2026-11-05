@@ -211,13 +211,13 @@
     .page { min-height: 70vh; }
     .hidden { display: none !important; }
 
-    /* Загрузчик закрывает экран, блокирует прокрутку до закрытия. */
     .loader {
       position: fixed;
       inset: 0;
       z-index: 1000;
-      display: grid;
-      place-items: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
       overscroll-behavior: none;
       touch-action: none;
@@ -244,22 +244,27 @@
     .loader-content {
       position: relative;
       z-index: 1;
-      display: grid;
-      justify-items: center;
-      gap: 18px;
-      width: min(90vw, 700px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(12px, 2.5vh, 22px);
+      width: min(92vw, 700px);
       max-height: 100vh;
-      overflow: auto;
-      padding: 30px 20px;
+      padding: 20px;
+      overflow: hidden;
+      text-align: center;
     }
 
     .loader-word {
       display: flex;
+      justify-content: center;
       gap: clamp(3px, 1.2vw, 12px);
       color: #fff;
-      font-size: clamp(42px, 12vw, 100px);
+      font-size: clamp(38px, 11vw, 100px);
       font-weight: 900;
       letter-spacing: .08em;
+      line-height: 1;
       text-shadow: 0 0 18px #fff8, 0 0 40px #000;
     }
 
@@ -310,8 +315,8 @@
     .loader-image {
       display: block;
       width: min(260px, 58vw);
-      max-height: min(28vh, 220px);
-      margin-top: 8px;
+      max-height: min(30vh, 220px);
+      margin: 0;
       object-fit: contain;
       border: 1px solid #ffffff55;
       background: #050505;
@@ -346,7 +351,6 @@
       overflow: hidden;
       border-bottom: 1px solid var(--border);
       background-color: #050505;
-      /* Файл background.jpg должен лежать рядом с index.html. */
       background-image: url("./background.jpg");
       background-position: center 42%;
       background-size: cover;
@@ -486,7 +490,7 @@
       z-index: 1;
       width: 100%;
       height: 100%;
-      overflow: visible;
+      overflow: hidden;
       user-select: none;
     }
 
@@ -575,6 +579,7 @@
       background: #fff7a8;
       box-shadow: 0 0 5px 2px #ffd866, 0 0 12px 4px #ff9d32;
       animation: spark-fall var(--spark-duration, .8s) ease-in forwards;
+      will-change: transform, opacity;
     }
 
     @keyframes spark-fall {
@@ -802,6 +807,15 @@
       .loader-image { max-height: 22vh; }
     }
 
+    @media (max-height: 560px) {
+      .loader-content { gap: 10px; padding: 10px; }
+      .loader-word { font-size: clamp(32px, 9vh, 62px); }
+      .loader-image {
+        width: min(190px, 42vw);
+        max-height: 24vh;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: .01ms !important;
@@ -820,7 +834,6 @@
       </div>
       <div class="loader-progress"><span></span></div>
       <p class="loader-caption">Загрузка сайта...</p>
-      <!-- Файл loading.gif должен лежать рядом с index.html. -->
       <img id="loaderImage" class="loader-image" src="./loading.gif"
         alt="Анимация загрузки"
         onerror="this.classList.add('is-broken')">
@@ -922,6 +935,7 @@
     <section id="articlesPage" class="page hidden">
       <button class="button back-button" data-back type="button">← Назад</button>
       <h1 class="page-heading">Статьи</h1>
+
       <section id="articleEditor" class="card hidden">
         <h2 id="articleFormHeading">Новая статья</h2>
         <form id="articleForm" class="form-grid">
@@ -940,6 +954,7 @@
     <section id="settingsPage" class="page hidden">
       <button class="button back-button" data-back type="button">← Назад</button>
       <h1 class="page-heading">Настройки сайта</h1>
+
       <section class="card">
         <form id="settingsForm" class="form-grid">
           <label class="setting-row">
@@ -1067,6 +1082,7 @@
     const NODE_H = 38;
     const EDGE_GAP = 76;
     const ROW_STEP = NODE_H + 30;
+
     const $ = id => document.getElementById(id);
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
 
@@ -1083,11 +1099,8 @@
 
     const expanded = new Set();
     const view = { x: 0, y: 0, scale: 1 };
-
-    /* Случайный выбор цвета провода. */
     const wireColors = ["#ff3038", "#32e875", "#ffd735"];
-    const randomWireColor = () =>
-      wireColors[Math.floor(Math.random() * wireColors.length)];
+    const wireColorsById = new Map();
 
     function isSiteAdmin(session) {
       return session?.user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
@@ -1095,7 +1108,11 @@
 
     function escapeHtml(value) {
       return String(value).replace(/[&<>"']/g, character => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
       })[character]);
     }
 
@@ -1105,6 +1122,7 @@
 
     function descendantsOf(id) {
       const result = new Set([id]);
+
       function walk(parentId) {
         for (const child of childrenOf(parentId)) {
           if (result.has(child.id)) continue;
@@ -1112,6 +1130,7 @@
           walk(child.id);
         }
       }
+
       walk(id);
       return result;
     }
@@ -1120,39 +1139,47 @@
       let depth = 0;
       let current = node;
       const seen = new Set();
+
       while (current.parent && byId.has(current.parent) && !seen.has(current.id)) {
         seen.add(current.id);
         depth++;
         current = byId.get(current.parent);
       }
+
       return depth;
     }
 
     function visibleByExpansion(node, byId) {
       let current = node;
+
       while (current.parent && byId.has(current.parent)) {
         const parent = byId.get(current.parent);
         if (depthOf(parent, byId) >= 1 && !expanded.has(parent.id)) return false;
         current = parent;
       }
+
       return true;
     }
 
     function getVisibleNodes(byId) {
       if (!query) return nodes.filter(node => visibleByExpansion(node, byId));
+
       const found = new Map();
       const term = query.toLocaleLowerCase();
 
       for (const node of nodes) {
         const content = `${node.label} ${node.info || ""}`.toLocaleLowerCase();
         if (!content.includes(term)) continue;
+
         found.set(node.id, node);
         let current = node;
+
         while (current.parent && byId.has(current.parent)) {
           current = byId.get(current.parent);
           found.set(current.id, current);
         }
       }
+
       return [...found.values()];
     }
 
@@ -1165,6 +1192,7 @@
     function makeLayout(shown, byId) {
       const ids = new Set(shown.map(node => node.id));
       const points = new Map();
+
       if (!ids.has(ROOT_ID) || !byId.has(ROOT_ID)) return points;
 
       const rootChildren = sortedChildren(ROOT_ID, ids);
@@ -1176,10 +1204,11 @@
       }
 
       const totalLeaves = rootChildren.reduce(
-        (total, child) => total + leafCount(child), 0
+        (total, child) => total + leafCount(child),
+        0
       );
-      points.set(ROOT_ID, { x: 0, y: 0 });
 
+      points.set(ROOT_ID, { x: 0, y: 0 });
       let cursorY = -((totalLeaves - 1) * ROW_STEP) / 2;
 
       function placeSubtree(node, depth, startY) {
@@ -1204,7 +1233,18 @@
         placeSubtree(child, 1, cursorY);
         cursorY += leafCount(child) * ROW_STEP;
       }
+
       return points;
+    }
+
+    function getWireColor(nodeId) {
+      if (!wireColorsById.has(nodeId)) {
+        wireColorsById.set(
+          nodeId,
+          wireColors[Math.floor(Math.random() * wireColors.length)]
+        );
+      }
+      return wireColorsById.get(nodeId);
     }
 
     function edgePath(a, b, nodeId) {
@@ -1212,28 +1252,19 @@
       const y1 = a.y;
       const x2 = b.x - NODE_W / 2;
       const y2 = b.y;
+      const bend = Math.max(24, (x2 - x1) * 0.4);
+      const path = `M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}`;
 
-      let seed = 0;
-      for (const character of String(nodeId)) {
-        seed = (seed * 31 + character.charCodeAt(0)) >>> 0;
-      }
-
-      const variation = seed % 19;
-      const bend = Math.max(24, Math.abs(x2 - x1) * (0.38 + (variation % 6) * 0.015));
-      const sag = 3 + (variation % 5);
-      const path = `M ${x1} ${y1} C ${x1 + bend} ${y1 + sag}, ${x2 - bend} ${y2 - sag}, ${x2} ${y2}`;
-      const color = randomWireColor();
-      const width = 3.2 + (variation % 4) * 0.35;
-
-      return `<g style="--wire-color:${color}">
+      return `<g style="--wire-color:${getWireColor(nodeId)}">
         <path class="edge-shadow" d="${path}"/>
-        <path class="edge-wire" style="stroke-width:${width}px" d="${path}"/>
+        <path class="edge-wire" d="${path}"/>
         <path class="edge-highlight" d="${path}"/>
       </g>`;
     }
 
     function draw() {
       const host = $("graph");
+
       if (loading) {
         host.innerHTML = '<div class="empty-state">Загрузка дерева…</div>';
         return;
@@ -1249,37 +1280,53 @@
       }
 
       const points = makeLayout(shown, byId);
-      const values = [...points.values()];
-      if (!values.length) {
+
+      if (!points.size) {
         host.innerHTML = '<div class="empty-state">Корень дерева не найден.</div>';
         return;
       }
 
+      const width = Math.max(1, host.clientWidth);
+      const height = Math.max(1, host.clientHeight);
+      const values = [...points.values()];
       const xs = values.map(point => point.x);
       const ys = values.map(point => point.y);
+
       const minX = Math.min(...xs) - NODE_W;
       const maxX = Math.max(...xs) + NODE_W;
       const minY = Math.min(...ys) - NODE_H * 2;
       const maxY = Math.max(...ys) + NODE_H * 2;
-      const width = Math.max(host.clientWidth, maxX - minX);
-      const height = Math.max(host.clientHeight, maxY - minY);
-      const ox = -minX + (width - (maxX - minX)) / 2;
-      const oy = -minY + (height - (maxY - minY)) / 2;
+      const contentWidth = Math.max(1, maxX - minX);
+      const contentHeight = Math.max(1, maxY - minY);
+      const ox = -minX + (width - contentWidth) / 2;
+      const oy = -minY + (height - contentHeight) / 2;
 
       let edges = "";
-      shown.forEach(node => {
+
+      for (const node of shown) {
         const parentPoint = points.get(node.parent);
         const nodePoint = points.get(node.id);
-        if (parentPoint && nodePoint) edges += edgePath(parentPoint, nodePoint, node.id);
-      });
+
+        if (parentPoint && nodePoint) {
+          edges += edgePath(parentPoint, nodePoint, node.id);
+        }
+      }
 
       let markup = "";
+
       shown.forEach((node, index) => {
         const point = points.get(node.id);
         if (!point) return;
-        const label = node.label.length > 20 ? node.label.slice(0, 19) + "…" : node.label;
-        const expandable = depthOf(node, byId) >= 1 && childrenOf(node.id).length > 0;
-        const sign = expandable ? (expanded.has(node.id) ? "−" : "+") : "";
+
+        const label = node.label.length > 20
+          ? node.label.slice(0, 19) + "…"
+          : node.label;
+
+        const expandable =
+          depthOf(node, byId) >= 1 && childrenOf(node.id).length > 0;
+        const sign = expandable
+          ? (expanded.has(node.id) ? "−" : "+")
+          : "";
 
         markup += `<g class="node ${node.id === ROOT_ID ? "root" : ""} ${node.id === selectedId ? "selected" : ""}"
           data-id="${escapeHtml(node.id)}"
@@ -1293,30 +1340,38 @@
         </g>`;
       });
 
-      host.innerHTML = `<svg class="graph-svg" viewBox="0 0 ${host.clientWidth} ${host.clientHeight}">
-        <g id="graphContent">
-          <g transform="translate(${ox} ${oy})">${edges}</g>
-          ${markup}
+      host.innerHTML = `<svg class="graph-svg" viewBox="0 0 ${width} ${height}">
+        <g id="graphContent" transform="translate(${view.x} ${view.y}) scale(${view.scale})">
+          <g transform="translate(${ox} ${oy})">
+            ${edges}
+            ${markup}
+          </g>
         </g>
       </svg>`;
 
       if (!fitted) {
-        view.scale = Math.max(.35, Math.min(
-          1,
-          (host.clientWidth - 40) / width,
-          (host.clientHeight - 40) / height
-        ));
-        view.x = Math.max(20, (host.clientWidth - width * view.scale) / 2);
-        view.y = Math.max(20, (host.clientHeight - height * view.scale) / 2);
+        view.scale = Math.max(
+          .35,
+          Math.min(
+            1,
+            (width - 40) / contentWidth,
+            (height - 40) / contentHeight
+          )
+        );
+        view.x = Math.max(20, (width - contentWidth * view.scale) / 2);
+        view.y = Math.max(20, (height - contentHeight * view.scale) / 2);
+
+        $("graphContent").setAttribute(
+          "transform",
+          `translate(${view.x} ${view.y}) scale(${view.scale})`
+        );
+
         fitted = true;
       }
 
-      $("graphContent").setAttribute(
-        "transform", `translate(${view.x} ${view.y}) scale(${view.scale})`
-      );
-
       host.querySelectorAll(".node").forEach(element => {
         const activate = () => clickNode(element.dataset.id);
+
         element.addEventListener("click", activate);
         element.addEventListener("keydown", event => {
           if (event.key === "Enter" || event.key === " ") {
@@ -1331,29 +1386,32 @@
       const graph = $("graph");
       const node = [...graph.querySelectorAll(".node")]
         .find(element => element.dataset.id === nodeId);
+
       if (!node) return;
 
       const graphRect = graph.getBoundingClientRect();
       const nodeRect = node.getBoundingClientRect();
-      const centerX = nodeRect.left - graphRect.left + nodeRect.width / 2;
-      const startY = nodeRect.top - graphRect.top + nodeRect.height;
+      const nodeLeft = nodeRect.left - graphRect.left;
+      const nodeWidth = nodeRect.width;
+      const startY = nodeRect.top - graphRect.top + nodeRect.height - 2;
+      const count = 4 + Math.floor(Math.random() * 7);
 
-      /* Разное количество искр; каждая летит со случайным интервалом и траекторией. */
-      const count = 3 + Math.floor(Math.random() * 6);
       for (let index = 0; index < count; index++) {
         const spark = document.createElement("span");
+        const offsetX = Math.random() * nodeWidth;
         const drift = Math.round((Math.random() - 0.5) * 150);
-        const drop = Math.round(35 + Math.random() * 95);
-        const delay = Math.round(Math.random() * 900);
-        const duration = (0.55 + Math.random() * 0.8).toFixed(2);
+        const drop = Math.round(35 + Math.random() * 115);
+        const delay = Math.round(Math.random() * 850);
+        const duration = (0.55 + Math.random() * 0.9).toFixed(2);
 
         spark.className = "spark";
-        spark.style.left = `${centerX + (Math.random() - 0.5) * 34}px`;
-        spark.style.top = `${startY + 2}px`;
+        spark.style.left = `${nodeLeft + offsetX}px`;
+        spark.style.top = `${startY}px`;
         spark.style.setProperty("--spark-drift", `${drift}px`);
         spark.style.setProperty("--spark-drop", `${drop}px`);
         spark.style.setProperty("--spark-duration", `${duration}s`);
         spark.style.animationDelay = `${delay}ms`;
+
         graph.appendChild(spark);
         spark.addEventListener("animationend", () => spark.remove(), { once: true });
       }
@@ -1369,6 +1427,7 @@
         .order("label");
 
       loading = false;
+
       if (error) {
         nodes = [];
         $("detailsTitle").textContent = "Ошибка загрузки";
@@ -1378,7 +1437,10 @@
       }
 
       nodes = (data || []).map(row => ({
-        id: row.id, parent: row.parent_id, label: row.label, info: row.info || ""
+        id: row.id,
+        parent: row.parent_id,
+        label: row.label,
+        info: row.info || ""
       }));
 
       if (!nodes.some(node => node.id === ROOT_ID)) {
@@ -1395,26 +1457,30 @@
     function clickNode(id) {
       const node = nodes.find(item => item.id === id);
       if (!node) return;
-      const byId = new Map(nodes.map(item => [item.id, item]));
-      let opened = false;
 
-      if (depthOf(node, byId) >= 1 && childrenOf(id).length) {
+      const byId = new Map(nodes.map(item => [item.id, item]));
+      const hasChildren = childrenOf(id).length > 0;
+
+      if (hasChildren) {
+        requestAnimationFrame(() => emitSparks(id));
+      }
+
+      if (depthOf(node, byId) >= 1 && hasChildren) {
         if (expanded.has(id)) {
           expanded.delete(id);
           descendantsOf(id).forEach(childId => expanded.delete(childId));
         } else {
           expanded.add(id);
-          opened = true;
         }
       }
 
       selectNode(id);
-      if (opened) requestAnimationFrame(() => emitSparks(id));
     }
 
     function selectNode(id) {
       const node = nodes.find(item => item.id === id);
       if (!node) return;
+
       selectedId = id;
       $("detailsTitle").textContent = node.label;
       $("details").textContent = node.info || "Описание не добавлено.";
@@ -1431,20 +1497,41 @@
     }
 
     function applySettings(settings) {
-      document.documentElement.style.setProperty("--accent", settings.accent_color || "#e5484d");
-      document.documentElement.style.setProperty("--brightness", Number(settings.brightness ?? 100) / 100);
-      document.documentElement.style.setProperty("--page-scale", Number(settings.page_scale ?? 100) / 100);
-      document.body.classList.toggle("theme-gothic", settings.theme === "gothic");
-      document.body.classList.toggle("animations-off", settings.animations_enabled === false);
+      document.documentElement.style.setProperty(
+        "--accent",
+        settings.accent_color || "#e5484d"
+      );
+      document.documentElement.style.setProperty(
+        "--brightness",
+        Number(settings.brightness ?? 100) / 100
+      );
+      document.documentElement.style.setProperty(
+        "--page-scale",
+        Number(settings.page_scale ?? 100) / 100
+      );
+      document.body.classList.toggle(
+        "theme-gothic",
+        settings.theme === "gothic"
+      );
+      document.body.classList.toggle(
+        "animations-off",
+        settings.animations_enabled === false
+      );
     }
 
     function setAdmin(enabled) {
       isAdmin = enabled;
       document.body.classList.toggle("admin-mode", enabled);
       $("adminPanel").classList.toggle("hidden", !enabled);
-      $("adminNodeActions").classList.toggle("hidden", !enabled || selectedId === ROOT_ID);
+      $("adminNodeActions").classList.toggle(
+        "hidden",
+        !enabled || selectedId === ROOT_ID
+      );
       $("articleEditor").classList.toggle("hidden", !enabled);
-      $("menuLogoutButton").textContent = enabled ? "Выйти из профиля" : "Войти";
+      $("menuLogoutButton").textContent = enabled
+        ? "Выйти из профиля"
+        : "Войти";
+
       draw();
       if (currentPage === "articles") loadArticles();
     }
@@ -1462,6 +1549,7 @@
       $("settingsPage").classList.toggle("hidden", page !== "settings");
       closeMenu();
       window.scrollTo({ top: 0, behavior: "smooth" });
+
       if (page === "articles") loadArticles();
       if (page === "settings") loadSettings();
     }
@@ -1484,6 +1572,7 @@
 
     document.addEventListener("click", event => {
       if (!event.target.closest(".brand-area")) closeMenu();
+
       if (!event.target.closest(".contact-widget")) {
         $("contactPanel").classList.add("hidden");
         $("contactButton").setAttribute("aria-expanded", "false");
@@ -1493,6 +1582,7 @@
     $("contactButton").addEventListener("click", () => {
       const panel = $("contactPanel");
       const open = panel.classList.contains("hidden");
+
       panel.classList.toggle("hidden", !open);
       $("contactButton").setAttribute("aria-expanded", String(open));
       if (open) $("contactText").focus();
@@ -1500,13 +1590,17 @@
 
     $("contactForm").addEventListener("submit", event => {
       event.preventDefault();
+
       const subject = encodeURIComponent("Сообщение с сайта emode1k");
       const body = encodeURIComponent($("contactText").value.trim());
-      location.href = `mailto:emode1koff@gmail.com?subject=${subject}&body=${body}`;
+
+      location.href =
+        `mailto:emode1koff@gmail.com?subject=${subject}&body=${body}`;
     });
 
     document.addEventListener("keydown", event => {
       if (event.key !== "Escape") return;
+
       closeMenu();
       $("loginDialog").classList.add("hidden");
       $("contactPanel").classList.add("hidden");
@@ -1521,6 +1615,7 @@
 
     async function logout() {
       const { error } = await db.auth.signOut();
+
       if (error) {
         $("adminStatus").textContent = error.message;
       } else {
@@ -1531,7 +1626,9 @@
 
     $("menuLogoutButton").addEventListener("click", async () => {
       closeMenu();
+
       if (isAdmin) return logout();
+
       $("loginDialog").classList.remove("hidden");
       $("emailInput").focus();
     });
@@ -1544,6 +1641,7 @@
 
     $("loginForm").addEventListener("submit", async event => {
       event.preventDefault();
+
       const { data, error } = await db.auth.signInWithPassword({
         email: $("emailInput").value.trim(),
         password: $("passwordInput").value
@@ -1556,7 +1654,8 @@
 
       if (!isSiteAdmin(data.session)) {
         await db.auth.signOut();
-        $("loginStatus").textContent = "У этой учётной записи нет прав администратора.";
+        $("loginStatus").textContent =
+          "У этой учётной записи нет прав администратора.";
         return;
       }
 
@@ -1577,19 +1676,29 @@
       const info = $("nodeInfo").value.trim();
       let result;
       let savedId = editingNodeId;
+
       $("saveNodeButton").disabled = true;
 
       if (editingNodeId) {
-        result = await db.from("nodes").update({ label, info }).eq("id", editingNodeId);
+        result = await db.from("nodes")
+          .update({ label, info })
+          .eq("id", editingNodeId);
       } else {
         savedId = "node-" + crypto.randomUUID();
-        const parentId = nodes.some(node => node.id === selectedId) ? selectedId : ROOT_ID;
+        const parentId = nodes.some(node => node.id === selectedId)
+          ? selectedId
+          : ROOT_ID;
+
         result = await db.from("nodes").insert({
-          id: savedId, parent_id: parentId, label, info
+          id: savedId,
+          parent_id: parentId,
+          label,
+          info
         });
       }
 
       $("saveNodeButton").disabled = false;
+
       if (result.error) {
         $("adminStatus").textContent = result.error.message;
         return;
@@ -1598,6 +1707,7 @@
       resetNodeForm();
       fitted = false;
       await loadTree();
+
       if (savedId) selectNode(savedId);
       $("adminStatus").textContent = "Сохранено.";
     });
@@ -1605,6 +1715,7 @@
     $("editNodeButton").addEventListener("click", () => {
       const node = nodes.find(item => item.id === selectedId);
       if (!isAdmin || !node || node.id === ROOT_ID) return;
+
       editingNodeId = node.id;
       $("nodeLabel").value = node.label;
       $("nodeInfo").value = node.info || "";
@@ -1624,7 +1735,9 @@
         const leaves = [...pending].filter(parentId =>
           childrenOf(parentId).every(child => !pending.has(child.id))
         );
+
         if (!leaves.length) throw new Error("Цикл в структуре дерева.");
+
         order.push(...leaves);
         leaves.forEach(nodeId => pending.delete(nodeId));
       }
@@ -1633,6 +1746,7 @@
         const { error } = await db.from("nodes").delete().eq("id", nodeId);
         if (error) throw error;
       }
+
       return removed;
     }
 
@@ -1643,7 +1757,12 @@
 
       try {
         const removed = await deleteBranch(node.id);
-        removed.forEach(id => expanded.delete(id));
+
+        removed.forEach(id => {
+          expanded.delete(id);
+          wireColorsById.delete(id);
+        });
+
         selectedId = ROOT_ID;
         fitted = false;
         await loadTree();
@@ -1663,6 +1782,7 @@
 
     async function loadArticles() {
       $("articlesList").textContent = "Загружаю статьи…";
+
       const { data, error } = await db.from("articles")
         .select("id,title,content,updated_at")
         .order("updated_at", { ascending: false });
@@ -1673,6 +1793,7 @@
       }
 
       $("articlesList").replaceChildren();
+
       if (!data?.length) {
         $("articlesList").textContent = "Статей пока нет.";
         return;
@@ -1681,11 +1802,14 @@
       data.forEach(article => {
         const card = document.createElement("article");
         card.className = "card article-card";
+
         const title = document.createElement("h2");
         title.textContent = article.title;
+
         const content = document.createElement("div");
         content.className = "article-content";
         content.textContent = article.content;
+
         card.append(title, content);
 
         if (isAdmin) {
@@ -1712,15 +1836,22 @@
           remove.textContent = "Удалить";
           remove.addEventListener("click", async () => {
             if (!confirm(`Удалить «${article.title}»?`)) return;
+
             const { error: deleteError } = await db.from("articles")
-              .delete().eq("id", article.id);
-            if (deleteError) $("articleStatus").textContent = deleteError.message;
-            else loadArticles();
+              .delete()
+              .eq("id", article.id);
+
+            if (deleteError) {
+              $("articleStatus").textContent = deleteError.message;
+            } else {
+              loadArticles();
+            }
           });
 
           actions.append(edit, remove);
           card.append(actions);
         }
+
         $("articlesList").append(card);
       });
     }
@@ -1731,12 +1862,19 @@
 
       const title = $("articleTitle").value.trim();
       const content = $("articleContent").value.trim();
+
       const result = editingArticleId
-        ? await db.from("articles").update({
-            title, content, updated_at: new Date().toISOString()
-          }).eq("id", editingArticleId)
+        ? await db.from("articles")
+            .update({
+              title,
+              content,
+              updated_at: new Date().toISOString()
+            })
+            .eq("id", editingArticleId)
         : await db.from("articles").insert({
-            id: "article-" + crypto.randomUUID(), title, content
+            id: "article-" + crypto.randomUUID(),
+            title,
+            content
           });
 
       if (result.error) {
@@ -1758,13 +1896,17 @@
         .maybeSingle();
 
       if (error) {
-        $("settingsStatus").textContent = "Ошибка загрузки настроек: " + error.message;
+        $("settingsStatus").textContent =
+          "Ошибка загрузки настроек: " + error.message;
         return;
       }
 
       const settings = data || {
-        accent_color: "#e5484d", theme: "standard", page_scale: 100,
-        brightness: 100, animations_enabled: true
+        accent_color: "#e5484d",
+        theme: "standard",
+        page_scale: 100,
+        brightness: 100,
+        animations_enabled: true
       };
 
       applySettings(settings);
@@ -1779,12 +1921,18 @@
 
     $("pageScale").addEventListener("input", event => {
       $("pageScaleOutput").value = event.target.value + "%";
-      document.documentElement.style.setProperty("--page-scale", Number(event.target.value) / 100);
+      document.documentElement.style.setProperty(
+        "--page-scale",
+        Number(event.target.value) / 100
+      );
     });
 
     $("brightness").addEventListener("input", event => {
       $("brightnessOutput").value = event.target.value + "%";
-      document.documentElement.style.setProperty("--brightness", Number(event.target.value) / 100);
+      document.documentElement.style.setProperty(
+        "--brightness",
+        Number(event.target.value) / 100
+      );
     });
 
     $("colorSelect").addEventListener("input", event => {
@@ -1792,11 +1940,15 @@
     });
 
     $("themeSelect").addEventListener("change", event => {
-      document.body.classList.toggle("theme-gothic", event.target.value === "gothic");
+      document.body.classList.toggle(
+        "theme-gothic",
+        event.target.value === "gothic"
+      );
     });
 
     $("settingsForm").addEventListener("submit", async event => {
       event.preventDefault();
+
       const settings = {
         id: 1,
         accent_color: $("colorSelect").value,
@@ -1807,31 +1959,41 @@
       };
 
       const { error } = await db.from("site_settings").upsert(settings);
+
       if (error) {
         $("settingsStatus").textContent = "Ошибка сохранения: " + error.message;
         return;
       }
 
       applySettings(settings);
-      $("settingsStatus").textContent = "Общие настройки сохранены для всех посетителей.";
+      $("settingsStatus").textContent =
+        "Общие настройки сохранены для всех посетителей.";
     });
 
     $("graph").addEventListener("pointerdown", event => {
       if (event.target.closest(".node") || event.button !== 0) return;
+
       drag = {
-        id: event.pointerId, sx: event.clientX, sy: event.clientY,
-        x: view.x, y: view.y
+        id: event.pointerId,
+        sx: event.clientX,
+        sy: event.clientY,
+        x: view.x,
+        y: view.y
       };
+
       $("graph").classList.add("dragging");
       $("graph").setPointerCapture(event.pointerId);
     });
 
     $("graph").addEventListener("pointermove", event => {
       if (!drag || event.pointerId !== drag.id) return;
+
       view.x = drag.x + event.clientX - drag.sx;
       view.y = drag.y + event.clientY - drag.sy;
+
       $("graphContent")?.setAttribute(
-        "transform", `translate(${view.x} ${view.y}) scale(${view.scale})`
+        "transform",
+        `translate(${view.x} ${view.y}) scale(${view.scale})`
       );
     });
 
@@ -1846,16 +2008,23 @@
 
     $("graph").addEventListener("wheel", event => {
       event.preventDefault();
+
       const rect = $("graph").getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
       const oldScale = view.scale;
-      const nextScale = Math.max(.35, Math.min(2.2, oldScale * (event.deltaY < 0 ? 1.1 : .9)));
+      const nextScale = Math.max(
+        .35,
+        Math.min(2.2, oldScale * (event.deltaY < 0 ? 1.1 : .9))
+      );
+
       view.x = x - (x - view.x) * nextScale / oldScale;
       view.y = y - (y - view.y) * nextScale / oldScale;
       view.scale = nextScale;
+
       $("graphContent")?.setAttribute(
-        "transform", `translate(${view.x} ${view.y}) scale(${view.scale})`
+        "transform",
+        `translate(${view.x} ${view.y}) scale(${view.scale})`
       );
     }, { passive: false });
 
@@ -1882,19 +2051,20 @@
 
     function closeLoader() {
       if (!loader || !loader.isConnected) return;
+
       loader.classList.add("loaded");
       document.documentElement.style.overflow = previousHtmlOverflow;
       document.body.style.overflow = previousBodyOverflow;
+
       window.setTimeout(() => loader.remove(), 700);
     }
 
-    if (loader && loaderWord) {
-      window.setTimeout(() => loaderWord.classList.add("complete"), 1800);
-      window.setTimeout(closeLoader, 2800);
-      window.addEventListener("load", () => {
-        window.setTimeout(closeLoader, 500);
-      }, { once: true });
-    }
+    window.setTimeout(() => loaderWord?.classList.add("complete"), 1800);
+    window.setTimeout(closeLoader, 2800);
+
+    window.addEventListener("load", () => {
+      window.setTimeout(closeLoader, 500);
+    }, { once: true });
 
     (async function init() {
       const { data } = await db.auth.getSession();
