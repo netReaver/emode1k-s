@@ -533,6 +533,9 @@
 
     .node {
       cursor: pointer;
+    }
+
+    .node-body {
       transform-box: fill-box;
       transform-origin: center;
       animation: node-open .4s cubic-bezier(.2, .8, .2, 1) both;
@@ -1375,13 +1378,14 @@
 
         markup += `<g class="node ${node.id === ROOT_ID ? "root" : ""} ${node.id === selectedId ? "selected" : ""}"
           data-id="${escapeHtml(node.id)}"
-          style="animation-delay:${Math.min(index * 24, 320)}ms"
           transform="translate(${position.x},${position.y})"
           tabindex="0" role="button" aria-label="${escapeHtml(node.label)}">
-          <rect width="${NODE_W}" height="${NODE_H}" rx="7"/>
-          <circle class="dot" cx="12" cy="${NODE_H / 2}" r="3"/>
-          <text x="${NODE_W / 2}" y="${NODE_H / 2 + 4}" text-anchor="middle">${escapeHtml(label)}</text>
-          <text class="expand-indicator" x="${NODE_W - 13}" y="14" text-anchor="middle">${sign}</text>
+          <g class="node-body" style="animation-delay:${Math.min(index * 24, 320)}ms">
+            <rect width="${NODE_W}" height="${NODE_H}" rx="7"/>
+            <circle class="dot" cx="12" cy="${NODE_H / 2}" r="3"/>
+            <text x="${NODE_W / 2}" y="${NODE_H / 2 + 4}" text-anchor="middle">${escapeHtml(label)}</text>
+            <text class="expand-indicator" x="${NODE_W - 13}" y="14" text-anchor="middle">${sign}</text>
+          </g>
         </g>`;
       });
 
