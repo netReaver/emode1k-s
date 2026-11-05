@@ -17,12 +17,13 @@
       --text: #ededed;
       --muted: #a2a2a2;
       --accent: #e5484d;
-      --line: #d6d6d6;
       --brightness: 1;
       --page-scale: 1;
     }
 
     * { box-sizing: border-box; }
+
+    html, body { min-height: 100%; }
 
     body {
       min-height: 100vh;
@@ -210,6 +211,7 @@
     .page { min-height: 70vh; }
     .hidden { display: none !important; }
 
+    /* Загрузчик закрывает экран и блокирует прокрутку страницы. */
     .loader {
       position: fixed;
       inset: 0;
@@ -220,8 +222,7 @@
       overscroll-behavior: none;
       touch-action: none;
       background:
-        linear-gradient(135deg, #070707 0%, #151515 48%, #050505 100%)
-        center / cover no-repeat;
+        radial-gradient(ellipse at center, #191919 0%, #050505 75%);
       opacity: 1;
       visibility: visible;
       transition: opacity .65s ease, visibility .65s ease;
@@ -231,11 +232,8 @@
       position: absolute;
       inset: 0;
       content: "";
-      background:
-        linear-gradient(180deg, #0008, #000c),
-        url("https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=2000&q=85")
-        center / cover no-repeat;
-      animation: loader-image-in 1.2s ease-out both;
+      background: #0009;
+      pointer-events: none;
     }
 
     .loader.loaded {
@@ -249,7 +247,7 @@
       z-index: 1;
       display: grid;
       justify-items: center;
-      gap: 22px;
+      gap: 18px;
       width: min(90vw, 700px);
       padding: 30px 20px;
     }
@@ -270,13 +268,13 @@
       animation: letter-wave .55s cubic-bezier(.2, .8, .2, 1) forwards;
     }
 
-    .loader-word span:nth-child(1) { animation-delay: .25s; }
-    .loader-word span:nth-child(2) { animation-delay: .55s; }
-    .loader-word span:nth-child(3) { animation-delay: .85s; }
-    .loader-word span:nth-child(4) { animation-delay: 1.15s; }
-    .loader-word span:nth-child(5) { animation-delay: 1.45s; }
-    .loader-word span:nth-child(6) { animation-delay: 1.75s; }
-    .loader-word span:nth-child(7) { animation-delay: 2.05s; }
+    .loader-word span:nth-child(1) { animation-delay: .18s; }
+    .loader-word span:nth-child(2) { animation-delay: .34s; }
+    .loader-word span:nth-child(3) { animation-delay: .50s; }
+    .loader-word span:nth-child(4) { animation-delay: .66s; }
+    .loader-word span:nth-child(5) { animation-delay: .82s; }
+    .loader-word span:nth-child(6) { animation-delay: .98s; }
+    .loader-word span:nth-child(7) { animation-delay: 1.14s; }
 
     .loader-word.complete span {
       opacity: 1;
@@ -308,10 +306,19 @@
       text-transform: uppercase;
     }
 
-    @keyframes loader-image-in {
-      from { opacity: 0; transform: scale(1.04); }
-      to { opacity: 1; transform: scale(1); }
+    /* GIF находится ниже надписи загрузчика, а не только на фоне. */
+    .loader-image {
+      display: block;
+      width: min(260px, 58vw);
+      max-height: min(28vh, 220px);
+      margin-top: 8px;
+      object-fit: contain;
+      border: 1px solid #ffffff55;
+      background: #050505;
+      box-shadow: 0 8px 30px #0009;
     }
+
+    .loader-image.is-broken { display: none; }
 
     @keyframes letter-wave {
       0% { opacity: 0; transform: translateY(30px) scale(.7); }
@@ -330,14 +337,6 @@
       to { transform: translateX(320%); }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .loader-word span,
-      .loader-progress span {
-        animation-duration: .01ms;
-        animation-delay: 0s;
-      }
-    }
-
     .hero {
       position: relative;
       min-height: 100vh;
@@ -346,11 +345,9 @@
       isolation: isolate;
       overflow: hidden;
       border-bottom: 1px solid var(--border);
-      background-color: #090909;
-      background-image:
-        linear-gradient(180deg, #0008 0%, #0004 45%, #000d 100%),
-        url("https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=2400&q=90");
-      background-position: center, center 42%;
+      background-color: #050505;
+      background-image: url("./fsociety.jpg");
+      background-position: center 42%;
       background-size: cover;
       background-repeat: no-repeat;
     }
@@ -361,17 +358,17 @@
       z-index: -1;
       content: "";
       background:
-        radial-gradient(ellipse at 50% 45%, transparent 0, #0005 70%),
-        linear-gradient(180deg, #0002, #0008);
+        linear-gradient(180deg, #0009 0%, #0005 45%, #000e 100%),
+        #0008;
     }
 
     .hero-content {
       width: min(760px, 90vw);
       margin-top: 0;
       padding: clamp(24px, 5vw, 48px);
-      border: 1px solid #ffffff42;
-      border-radius: 10px;
-      background: #080808c9;
+      border: 1px solid #ffffff55;
+      border-radius: 12px;
+      background: #080808c2;
       text-align: center;
       box-shadow: 0 18px 70px #0009;
       animation: hero-enter .9s ease both;
@@ -497,29 +494,48 @@
       user-select: none;
     }
 
-    .edge {
+    /* Кабель: тёмная оболочка, изоляция, блик. */
+    .edge-shadow {
       fill: none;
-      stroke: #f4f4f4;
-      stroke-width: 2.2;
-      stroke-opacity: .88;
+      stroke: #000;
+      stroke-width: 7;
+      stroke-opacity: .78;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .edge-wire {
+      fill: none;
+      stroke: var(--wire-color, #d7d1c8);
+      stroke-width: 4;
+      stroke-opacity: .96;
       stroke-linecap: round;
       stroke-linejoin: round;
       filter: drop-shadow(0 1px 2px #000);
-      stroke-dasharray: 1000;
-      stroke-dashoffset: 0;
-      animation: cable-draw .65s cubic-bezier(.2, .7, .2, 1) both;
+      stroke-dasharray: 1200;
+      animation: cable-draw .65s ease both;
+    }
+
+    .edge-highlight {
+      fill: none;
+      stroke: #fff;
+      stroke-width: 1;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-opacity: .42;
+      pointer-events: none;
     }
 
     @keyframes cable-draw {
-      from { stroke-dashoffset: 1000; opacity: .15; }
-      to { stroke-dashoffset: 0; opacity: .88; }
+      from { stroke-dashoffset: 1200; opacity: .15; }
+      to { stroke-dashoffset: 0; opacity: .96; }
     }
 
     .node {
       cursor: pointer;
       transform-box: fill-box;
       transform-origin: center;
-      animation: node-open .42s cubic-bezier(.2, .8, .2, 1) both;
+      animation: node-open .4s cubic-bezier(.2, .8, .2, 1) both;
     }
 
     .node rect {
@@ -549,12 +565,30 @@
       pointer-events: none;
     }
 
-    .node .dot { fill: #fff; }
-    .node .expand-indicator { fill: #fff; font-size: 12px; }
+    .node .dot, .node .expand-indicator { fill: #fff; }
+    .node .expand-indicator { font-size: 12px; }
 
     @keyframes node-open {
       from { opacity: 0; transform: scale(.82) translateY(8px); }
       to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .spark {
+      position: absolute;
+      z-index: 4;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      pointer-events: none;
+      background: #fff7a8;
+      box-shadow: 0 0 5px 2px #ffd866, 0 0 12px 4px #ff9d32;
+      animation: spark-fall .68s ease-in forwards;
+    }
+
+    @keyframes spark-fall {
+      0% { opacity: 0; transform: translate(0, 0) scale(.25); }
+      15% { opacity: 1; transform: translate(0, 4px) scale(1); }
+      100% { opacity: 0; transform: translate(var(--spark-drift), 42px) scale(.12); }
     }
 
     .empty-state {
@@ -584,12 +618,6 @@
       border: 1px solid #fff;
       border-radius: 10px;
       background: var(--panel);
-      animation: card-enter .32s ease both;
-    }
-
-    @keyframes card-enter {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     .details, .article-content { white-space: pre-wrap; overflow-wrap: anywhere; }
@@ -745,22 +773,6 @@
     .gothic-cross.two { right: 2%; top: 58%; }
     .gothic-cross.three { left: 3%; bottom: 3%; }
 
-    .side-art {
-      display: none;
-      position: fixed;
-      z-index: 0;
-      top: 50%;
-      width: min(19vw, 250px);
-      max-height: 65vh;
-      object-fit: contain;
-      opacity: .65;
-      pointer-events: none;
-      transform: translateY(-50%);
-    }
-
-    .side-art.left { left: 0; }
-    .side-art.right { right: 0; }
-
     body.theme-gothic {
       --bg: #090909;
       --panel: #151515;
@@ -769,26 +781,11 @@
       --text: #eee;
       --muted: #aaa;
       --accent: #dedede;
-      --line: #fff;
       background: #090909;
       filter: grayscale(1) brightness(var(--brightness));
     }
 
     body.theme-gothic .gothic-cross { display: block; }
-
-    body.theme-anime {
-      --bg: #21170e;
-      --panel: #2b2015;
-      --panel-soft: #392a1b;
-      --border: #79522f;
-      --text: #fff0d9;
-      --muted: #d0b99d;
-      --accent: #e89a4b;
-      --line: #fff;
-      background: #21170e;
-    }
-
-    body.theme-anime .side-art { display: block; }
 
     .animations-off *, .animations-off *::before, .animations-off *::after {
       animation: none !important;
@@ -805,10 +802,9 @@
       .content-grid,
       body.admin-mode .content-grid { grid-template-columns: 1fr; }
       .graph-shell { height: 58vh; min-height: 340px; }
-      .side-art { width: 16vw; opacity: .3; }
       .contact-widget { right: 14px; bottom: 14px; }
-      .hero { min-height: 100svh; background-position: center, center; }
-      .hero-content { margin-top: 0; }
+      .hero { min-height: 100svh; background-position: center; }
+      .loader-image { max-height: 22vh; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -829,17 +825,18 @@
       </div>
       <div class="loader-progress"><span></span></div>
       <p class="loader-caption">Загрузка сайта...</p>
+      <img
+        id="loaderImage"
+        class="loader-image"
+        src="./loading%20%281%29.gif"
+        alt="Анимация загрузки"
+        onerror="this.classList.add('is-broken')">
     </div>
   </div>
 
   <span class="gothic-cross one" aria-hidden="true">✝</span>
   <span class="gothic-cross two" aria-hidden="true">✝</span>
   <span class="gothic-cross three" aria-hidden="true">✝</span>
-
-  <img class="side-art left" alt="Джотаро Куджо"
-    src="https://static.jojowiki.com/images/thumb/3/3a/latest/20210430072039/Jotaro_SC_Infobox_Anime.png/400px-Jotaro_SC_Infobox_Anime.png">
-  <img class="side-art right" alt="Годжо Сатору"
-    src="https://static.wikia.nocookie.net/jujutsu-kaisen/images/e/ef/Satoru_Gojo_%28Anime_2%29.png/revision/latest?cb=20250726003655">
 
   <header class="topbar">
     <div class="brand-area">
@@ -994,7 +991,6 @@
             <select id="themeSelect">
               <option value="standard">Стандартный</option>
               <option value="gothic">Готик</option>
-              <option value="anime">Аниме</option>
             </select>
           </label>
 
@@ -1079,8 +1075,6 @@
     const NODE_W = 150;
     const NODE_H = 38;
     const EDGE_GAP = 76;
-    const ROOT_STEP = NODE_W + EDGE_GAP;
-    const COMPACT_STEP = NODE_W + EDGE_GAP;
     const ROW_STEP = NODE_H + 30;
 
     const $ = id => document.getElementById(id);
@@ -1238,20 +1232,41 @@
       return points;
     }
 
-    function edgePath(a, b) {
-      const dx = b.x - a.x;
-      const dy = b.y - a.y;
-      const length = Math.hypot(dx, dy) || 1;
-      const ux = dx / length;
-      const uy = dy / length;
+    /*
+      Каждому проводу назначается постоянная вариация по id узла.
+      Координаты и раскладка дерева при этом не меняются.
+    */
+    function edgePath(a, b, nodeId) {
+      const x1 = a.x + NODE_W / 2;
+      const y1 = a.y;
+      const x2 = b.x - NODE_W / 2;
+      const y2 = b.y;
 
-      const x1 = a.x + ux * NODE_W / 2;
-      const y1 = a.y + uy * NODE_H / 2;
-      const x2 = b.x - ux * NODE_W / 2;
-      const y2 = b.y - uy * NODE_H / 2;
+      let seed = 0;
+      for (const character of String(nodeId)) {
+        seed = (seed * 31 + character.charCodeAt(0)) >>> 0;
+      }
 
-      const bend = Math.max(24, Math.abs(x2 - x1) * .45);
-      return `<path class="edge" d="M${x1} ${y1} C${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}"/>`;
+      const variation = seed % 19;
+      const bend = Math.max(24, Math.abs(x2 - x1) * (0.38 + (variation % 6) * 0.015));
+      const sag = 3 + (variation % 5);
+      const colors = [
+        "#d9d2c7", "#c4c9ce", "#ded8c8", "#c9c4bd",
+        "#bfc9c6", "#d2c7c1", "#c8cdd4", "#d4c9b8"
+      ];
+      const color = colors[seed % colors.length];
+      const width = 3.2 + (variation % 4) * 0.35;
+
+      const path = `M ${x1} ${y1}
+        C ${x1 + bend} ${y1 + sag},
+          ${x2 - bend} ${y2 - sag},
+          ${x2} ${y2}`;
+
+      return `<g style="--wire-color:${color}">
+        <path class="edge-shadow" d="${path}"/>
+        <path class="edge-wire" style="stroke-width:${width}px" d="${path}"/>
+        <path class="edge-highlight" d="${path}"/>
+      </g>`;
     }
 
     function draw() {
@@ -1273,6 +1288,12 @@
 
       const points = makeLayout(shown, byId);
       const values = [...points.values()];
+
+      if (!values.length) {
+        host.innerHTML = '<div class="empty-state">Корень дерева не найден.</div>';
+        return;
+      }
+
       const xs = values.map(point => point.x);
       const ys = values.map(point => point.y);
 
@@ -1287,10 +1308,12 @@
 
       let edges = "";
 
-      shown.forEach((node, index) => {
+      shown.forEach(node => {
         const parentPoint = points.get(node.parent);
         const nodePoint = points.get(node.id);
-        if (parentPoint && nodePoint) edges += edgePath(parentPoint, nodePoint);
+        if (parentPoint && nodePoint) {
+          edges += edgePath(parentPoint, nodePoint, node.id);
+        }
       });
 
       let markup = "";
@@ -1311,7 +1334,7 @@
 
         markup += `<g class="node ${node.id === ROOT_ID ? "root" : ""} ${node.id === selectedId ? "selected" : ""}"
           data-id="${escapeHtml(node.id)}"
-          style="animation-delay:${Math.min(index * 28, 350)}ms"
+          style="animation-delay:${Math.min(index * 24, 320)}ms"
           transform="translate(${point.x + ox - NODE_W / 2},${point.y + oy - NODE_H / 2})"
           tabindex="0" role="button" aria-label="${escapeHtml(node.label)}">
           <rect width="${NODE_W}" height="${NODE_H}" rx="7"/>
@@ -1360,6 +1383,29 @@
       });
     }
 
+    function emitSparks(nodeId) {
+      const graph = $("graph");
+      const node = [...graph.querySelectorAll(".node")]
+        .find(element => element.dataset.id === nodeId);
+
+      if (!node) return;
+
+      const graphRect = graph.getBoundingClientRect();
+      const nodeRect = node.getBoundingClientRect();
+      const centerX = nodeRect.left - graphRect.left + nodeRect.width / 2;
+      const startY = nodeRect.top - graphRect.top + nodeRect.height;
+
+      for (let index = 0; index < 4; index++) {
+        const spark = document.createElement("span");
+        spark.className = "spark";
+        spark.style.left = `${centerX + (index - 1.5) * 7}px`;
+        spark.style.top = `${startY + 2}px`;
+        spark.style.setProperty("--spark-drift", `${(index - 1.5) * 9}px`);
+        graph.appendChild(spark);
+        spark.addEventListener("animationend", () => spark.remove(), { once: true });
+      }
+    }
+
     async function loadTree() {
       loading = true;
       $("details").textContent = "Загружаю дерево из Supabase…";
@@ -1402,6 +1448,7 @@
       if (!node) return;
 
       const byId = new Map(nodes.map(item => [item.id, item]));
+      let opened = false;
 
       if (depthOf(node, byId) >= 1 && childrenOf(id).length) {
         if (expanded.has(id)) {
@@ -1409,10 +1456,15 @@
           descendantsOf(id).forEach(childId => expanded.delete(childId));
         } else {
           expanded.add(id);
+          opened = true;
         }
       }
 
       selectNode(id);
+
+      if (opened) {
+        requestAnimationFrame(() => emitSparks(id));
+      }
     }
 
     function selectNode(id) {
@@ -1438,7 +1490,6 @@
       const accent = settings.accent_color || "#e5484d";
 
       document.documentElement.style.setProperty("--accent", accent);
-      document.documentElement.style.setProperty("--line", "#ffffff");
       document.documentElement.style.setProperty(
         "--brightness",
         Number(settings.brightness ?? 100) / 100
@@ -1450,10 +1501,6 @@
       document.body.classList.toggle(
         "theme-gothic",
         settings.theme === "gothic"
-      );
-      document.body.classList.toggle(
-        "theme-anime",
-        settings.theme === "anime"
       );
       document.body.classList.toggle(
         "animations-off",
@@ -1846,13 +1893,13 @@
       };
 
       applySettings(settings);
-      $("colorSelect").value = settings.accent_color;
-      $("themeSelect").value = settings.theme;
-      $("pageScale").value = settings.page_scale;
-      $("pageScaleOutput").value = settings.page_scale + "%";
-      $("brightness").value = settings.brightness;
-      $("brightnessOutput").value = settings.brightness + "%";
-      $("animationsEnabled").checked = settings.animations_enabled;
+      $("colorSelect").value = settings.accent_color || "#e5484d";
+      $("themeSelect").value = settings.theme === "gothic" ? "gothic" : "standard";
+      $("pageScale").value = settings.page_scale ?? 100;
+      $("pageScaleOutput").value = (settings.page_scale ?? 100) + "%";
+      $("brightness").value = settings.brightness ?? 100;
+      $("brightnessOutput").value = (settings.brightness ?? 100) + "%";
+      $("animationsEnabled").checked = settings.animations_enabled !== false;
     }
 
     $("pageScale").addEventListener("input", event => {
@@ -1873,17 +1920,12 @@
 
     $("colorSelect").addEventListener("input", event => {
       document.documentElement.style.setProperty("--accent", event.target.value);
-      document.documentElement.style.setProperty("--line", "#ffffff");
     });
 
     $("themeSelect").addEventListener("change", event => {
       document.body.classList.toggle(
         "theme-gothic",
         event.target.value === "gothic"
-      );
-      document.body.classList.toggle(
-        "theme-anime",
-        event.target.value === "anime"
       );
     });
 
@@ -1984,28 +2026,30 @@
 
     const loader = $("loader");
     const loaderWord = $("loaderWord");
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+
+    function closeLoader() {
+      if (!loader || !loader.isConnected) return;
+
+      loader.classList.add("loaded");
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.body.style.overflow = previousBodyOverflow;
+
+      window.setTimeout(() => loader.remove(), 700);
+    }
 
     if (loader && loaderWord) {
-      const unlockLoader = () => {
-        document.documentElement.style.overflow = "";
-        document.body.style.overflow = "";
-      };
+      window.setTimeout(() => loaderWord.classList.add("complete"), 1800);
+      window.setTimeout(closeLoader, 2800);
 
-      document.documentElement.style.overflow = "hidden";
-      document.body.style.overflow = "hidden";
-
-      window.setTimeout(() => {
-        loaderWord.classList.add("complete");
-      }, 2600);
-
-      window.setTimeout(() => {
-        loader.classList.add("loaded");
-        unlockLoader();
-      }, 3400);
-
-      window.setTimeout(() => {
-        loader.remove();
-      }, 4100);
+      /* Не оставляем экран загрузки висеть, если таймеры/загрузка задержались. */
+      window.addEventListener("load", () => {
+        window.setTimeout(closeLoader, 500);
+      }, { once: true });
     }
 
     (async function init() {
