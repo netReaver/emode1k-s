@@ -218,6 +218,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
       overflow: hidden;
       overscroll-behavior: none;
       touch-action: none;
@@ -250,7 +253,7 @@
       justify-content: center;
       gap: clamp(12px, 2.5vh, 22px);
       width: min(92vw, 700px);
-      max-height: 100vh;
+      max-height: 100%;
       padding: 20px;
       overflow: hidden;
       text-align: center;
@@ -488,6 +491,7 @@
       position: absolute;
       inset: 0;
       z-index: 1;
+      display: block;
       width: 100%;
       height: 100%;
       overflow: hidden;
@@ -1195,26 +1199,46 @@
 
       if (!ids.has(ROOT_ID) || !byId.has(ROOT_ID)) return points;
 
-      const rootChildren = sortedChildren(ROOT_ID, ids);
-
-      function leafCount(node) {
-        const children = sortedChildren(node.id, ids);
-        if (!children.length) return 1;
-        return children.reduce((total, child) => total + leafCount(child), 0);
+      function visibleChildren(parentId) {
+        return nodes
+          .filter(node => node.parent === parentId && ids.has(node.id))
+          .sort((a, b) => a.label.localeCompare(b.label));
       }
 
+      function leafCount(node, path = new Set()) {
+        if (path.has(node.id)) return 1;
+
+        const nextPath = new Set(path);
+        nextPath.add(node.id);
+        const children = visibleChildren(node.id);
+
+        if (!children.length) return 1;
+
+        return children.reduce(
+          (sum, child) => sum + leafCount(child, nextPath),
+          0
+        );
+      }
+
+      points.set(ROOT_ID, { x: 0, y: 0 });
+
+      const rootChildren = visibleChildren(ROOT_ID);
       const totalLeaves = rootChildren.reduce(
-        (total, child) => total + leafCount(child),
+        (sum, child) => sum + leafCount(child),
         0
       );
 
-      points.set(ROOT_ID, { x: 0, y: 0 });
       let cursorY = -((totalLeaves - 1) * ROW_STEP) / 2;
 
-      function placeSubtree(node, depth, startY) {
-        const children = sortedChildren(node.id, ids);
+      function place(node, depth, startY, path = new Set()) {
+        if (path.has(node.id)) return;
+
+        const nextPath = new Set(path);
+        nextPath.add(node.id);
+
+        const children = visibleChildren(node.id);
         const count = children.length
-          ? children.reduce((total, child) => total + leafCount(child), 0)
+          ? children.reduce((sum, child) => sum + leafCount(child, nextPath), 0)
           : 1;
 
         points.set(node.id, {
@@ -1223,15 +1247,18 @@
         });
 
         let childY = startY;
+
         for (const child of children) {
-          placeSubtree(child, depth + 1, childY);
-          childY += leafCount(child) * ROW_STEP;
+          const childLeaves = leafCount(child, nextPath);
+          place(child, depth + 1, childY, nextPath);
+          childY += childLeaves * ROW_STEP;
         }
       }
 
       for (const child of rootChildren) {
-        placeSubtree(child, 1, cursorY);
-        cursorY += leafCount(child) * ROW_STEP;
+        const count = leafCount(child);
+        place(child, 1, cursorY);
+        cursorY += count * ROW_STEP;
       }
 
       return points;
@@ -1247,13 +1274,17 @@
       return wireColorsById.get(nodeId);
     }
 
-    function edgePath(a, b, nodeId) {
-      const x1 = a.x + NODE_W / 2;
-      const y1 = a.y;
-      const x2 = b.x - NODE_W / 2;
-      const y2 = b.y;
-      const bend = Math.max(24, (x2 - x1) * 0.4);
-      const path = `M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}`;
+    function edgePath(parent, child, nodeId) {
+      const startX = parent.x + NODE_W;
+      const startY = parent.y + NODE_H / 2;
+      const endX = child.x;
+      const endY = child.y + NODE_H / 2;
+      const bend = Math.max(24, (endX - startX) * 0.4);
+
+      const path = `M ${startX} ${startY}
+        C ${startX + bend} ${startY},
+          ${endX - bend} ${endY},
+          ${endX} ${endY}`;
 
       return `<g style="--wire-color:${getWireColor(nodeId)}">
         <path class="edge-shadow" d="${path}"/>
@@ -1281,7 +1312,7 @@
 
       const points = makeLayout(shown, byId);
 
-      if (!points.size) {
+      if (!points.has(ROOT_ID)) {
         host.innerHTML = '<div class="empty-state">Корень дерева не найден.</div>';
         return;
       }
@@ -1289,41 +1320,55 @@
       const width = Math.max(1, host.clientWidth);
       const height = Math.max(1, host.clientHeight);
       const values = [...points.values()];
-      const xs = values.map(point => point.x);
-      const ys = values.map(point => point.y);
 
-      const minX = Math.min(...xs) - NODE_W;
-      const maxX = Math.max(...xs) + NODE_W;
-      const minY = Math.min(...ys) - NODE_H * 2;
-      const maxY = Math.max(...ys) + NODE_H * 2;
-      const contentWidth = Math.max(1, maxX - minX);
-      const contentHeight = Math.max(1, maxY - minY);
-      const ox = -minX + (width - contentWidth) / 2;
-      const oy = -minY + (height - contentHeight) / 2;
+      const minX = Math.min(...values.map(point => point.x));
+      const maxX = Math.max(...values.map(point => point.x));
+      const minY = Math.min(...values.map(point => point.y));
+      const maxY = Math.max(...values.map(point => point.y));
+
+      const paddingX = NODE_W;
+      const paddingY = NODE_H * 2;
+      const contentWidth = Math.max(NODE_W, maxX - minX + paddingX * 2);
+      const contentHeight = Math.max(NODE_H, maxY - minY + paddingY * 2);
+      const offsetX = paddingX - minX - NODE_W / 2;
+      const offsetY = paddingY - minY - NODE_H / 2;
+
+      const positions = new Map();
+
+      for (const node of shown) {
+        const point = points.get(node.id);
+        if (!point) continue;
+
+        positions.set(node.id, {
+          x: point.x + offsetX,
+          y: point.y + offsetY
+        });
+      }
 
       let edges = "";
 
       for (const node of shown) {
-        const parentPoint = points.get(node.parent);
-        const nodePoint = points.get(node.id);
+        if (!node.parent) continue;
 
-        if (parentPoint && nodePoint) {
-          edges += edgePath(parentPoint, nodePoint, node.id);
+        const parentPosition = positions.get(node.parent);
+        const childPosition = positions.get(node.id);
+
+        if (parentPosition && childPosition) {
+          edges += edgePath(parentPosition, childPosition, node.id);
         }
       }
 
       let markup = "";
 
       shown.forEach((node, index) => {
-        const point = points.get(node.id);
-        if (!point) return;
+        const position = positions.get(node.id);
+        if (!position) return;
 
         const label = node.label.length > 20
           ? node.label.slice(0, 19) + "…"
           : node.label;
 
-        const expandable =
-          depthOf(node, byId) >= 1 && childrenOf(node.id).length > 0;
+        const expandable = node.id !== ROOT_ID && childrenOf(node.id).length > 0;
         const sign = expandable
           ? (expanded.has(node.id) ? "−" : "+")
           : "";
@@ -1331,7 +1376,7 @@
         markup += `<g class="node ${node.id === ROOT_ID ? "root" : ""} ${node.id === selectedId ? "selected" : ""}"
           data-id="${escapeHtml(node.id)}"
           style="animation-delay:${Math.min(index * 24, 320)}ms"
-          transform="translate(${point.x + ox - NODE_W / 2},${point.y + oy - NODE_H / 2})"
+          transform="translate(${position.x},${position.y})"
           tabindex="0" role="button" aria-label="${escapeHtml(node.label)}">
           <rect width="${NODE_W}" height="${NODE_H}" rx="7"/>
           <circle class="dot" cx="12" cy="${NODE_H / 2}" r="3"/>
@@ -1340,34 +1385,29 @@
         </g>`;
       });
 
-      host.innerHTML = `<svg class="graph-svg" viewBox="0 0 ${width} ${height}">
-        <g id="graphContent" transform="translate(${view.x} ${view.y}) scale(${view.scale})">
-          <g transform="translate(${ox} ${oy})">
-            ${edges}
-            ${markup}
-          </g>
-        </g>
-      </svg>`;
-
       if (!fitted) {
         view.scale = Math.max(
-          .35,
+          0.25,
           Math.min(
             1,
             (width - 40) / contentWidth,
             (height - 40) / contentHeight
           )
         );
-        view.x = Math.max(20, (width - contentWidth * view.scale) / 2);
-        view.y = Math.max(20, (height - contentHeight * view.scale) / 2);
-
-        $("graphContent").setAttribute(
-          "transform",
-          `translate(${view.x} ${view.y}) scale(${view.scale})`
-        );
-
+        view.x = (width - contentWidth * view.scale) / 2;
+        view.y = (height - contentHeight * view.scale) / 2;
         fitted = true;
       }
+
+      host.innerHTML = `<svg class="graph-svg"
+        viewBox="0 0 ${width} ${height}"
+        preserveAspectRatio="none">
+        <g id="graphContent"
+          transform="translate(${view.x} ${view.y}) scale(${view.scale})">
+          ${edges}
+          ${markup}
+        </g>
+      </svg>`;
 
       host.querySelectorAll(".node").forEach(element => {
         const activate = () => clickNode(element.dataset.id);
@@ -1400,9 +1440,9 @@
         const spark = document.createElement("span");
         const offsetX = Math.random() * nodeWidth;
         const drift = Math.round((Math.random() - 0.5) * 150);
-        const drop = Math.round(35 + Math.random() * 115);
+        const drop = Math.round(100 + Math.random() * 220);
         const delay = Math.round(Math.random() * 850);
-        const duration = (0.55 + Math.random() * 0.9).toFixed(2);
+        const duration = (0.65 + Math.random() * 1.1).toFixed(2);
 
         spark.className = "spark";
         spark.style.left = `${nodeLeft + offsetX}px`;
@@ -1509,10 +1549,7 @@
         "--page-scale",
         Number(settings.page_scale ?? 100) / 100
       );
-      document.body.classList.toggle(
-        "theme-gothic",
-        settings.theme === "gothic"
-      );
+      document.body.classList.toggle("theme-gothic", settings.theme === "gothic");
       document.body.classList.toggle(
         "animations-off",
         settings.animations_enabled === false
