@@ -211,7 +211,7 @@
     .page { min-height: 70vh; }
     .hidden { display: none !important; }
 
-    /* Загрузчик закрывает экран и блокирует прокрутку страницы. */
+    /* Загрузчик закрывает экран, блокирует прокрутку до закрытия. */
     .loader {
       position: fixed;
       inset: 0;
@@ -221,8 +221,7 @@
       overflow: hidden;
       overscroll-behavior: none;
       touch-action: none;
-      background:
-        radial-gradient(ellipse at center, #191919 0%, #050505 75%);
+      background: radial-gradient(ellipse at center, #191919 0%, #050505 75%);
       opacity: 1;
       visibility: visible;
       transition: opacity .65s ease, visibility .65s ease;
@@ -249,6 +248,8 @@
       justify-items: center;
       gap: 18px;
       width: min(90vw, 700px);
+      max-height: 100vh;
+      overflow: auto;
       padding: 30px 20px;
     }
 
@@ -306,7 +307,6 @@
       text-transform: uppercase;
     }
 
-    /* GIF находится ниже надписи загрузчика, а не только на фоне. */
     .loader-image {
       display: block;
       width: min(260px, 58vw);
@@ -346,7 +346,8 @@
       overflow: hidden;
       border-bottom: 1px solid var(--border);
       background-color: #050505;
-      background-image: url("./fsociety.jpg");
+      /* Файл background.jpg должен лежать рядом с index.html. */
+      background-image: url("./background.jpg");
       background-position: center 42%;
       background-size: cover;
       background-repeat: no-repeat;
@@ -357,14 +358,11 @@
       inset: 0;
       z-index: -1;
       content: "";
-      background:
-        linear-gradient(180deg, #0009 0%, #0005 45%, #000e 100%),
-        #0008;
+      background: linear-gradient(180deg, #0009 0%, #0005 45%, #000e 100%), #0008;
     }
 
     .hero-content {
       width: min(760px, 90vw);
-      margin-top: 0;
       padding: clamp(24px, 5vw, 48px);
       border: 1px solid #ffffff55;
       border-radius: 12px;
@@ -475,9 +473,7 @@
       overflow: hidden;
       border: 1px solid #fff;
       border-radius: 12px;
-      background:
-        radial-gradient(ellipse at 20% 20%, #ffffff08, transparent 55%),
-        #111;
+      background: radial-gradient(ellipse at 20% 20%, #ffffff08, transparent 55%), #111;
       cursor: grab;
       touch-action: none;
     }
@@ -494,34 +490,30 @@
       user-select: none;
     }
 
-    /* Кабель: тёмная оболочка, изоляция, блик. */
-    .edge-shadow {
+    .edge-shadow, .edge-wire, .edge-highlight {
       fill: none;
-      stroke: #000;
-      stroke-width: 7;
-      stroke-opacity: .78;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
 
+    .edge-shadow {
+      stroke: #000;
+      stroke-width: 7;
+      stroke-opacity: .78;
+    }
+
     .edge-wire {
-      fill: none;
       stroke: var(--wire-color, #d7d1c8);
       stroke-width: 4;
       stroke-opacity: .96;
-      stroke-linecap: round;
-      stroke-linejoin: round;
       filter: drop-shadow(0 1px 2px #000);
       stroke-dasharray: 1200;
       animation: cable-draw .65s ease both;
     }
 
     .edge-highlight {
-      fill: none;
       stroke: #fff;
       stroke-width: 1;
-      stroke-linecap: round;
-      stroke-linejoin: round;
       stroke-opacity: .42;
       pointer-events: none;
     }
@@ -582,13 +574,16 @@
       pointer-events: none;
       background: #fff7a8;
       box-shadow: 0 0 5px 2px #ffd866, 0 0 12px 4px #ff9d32;
-      animation: spark-fall .68s ease-in forwards;
+      animation: spark-fall var(--spark-duration, .8s) ease-in forwards;
     }
 
     @keyframes spark-fall {
       0% { opacity: 0; transform: translate(0, 0) scale(.25); }
-      15% { opacity: 1; transform: translate(0, 4px) scale(1); }
-      100% { opacity: 0; transform: translate(var(--spark-drift), 42px) scale(.12); }
+      12% { opacity: 1; }
+      100% {
+        opacity: 0;
+        transform: translate(var(--spark-drift), var(--spark-drop)) scale(.12);
+      }
     }
 
     .empty-state {
@@ -825,10 +820,8 @@
       </div>
       <div class="loader-progress"><span></span></div>
       <p class="loader-caption">Загрузка сайта...</p>
-      <img
-        id="loaderImage"
-        class="loader-image"
-        src="./loading%20%281%29.gif"
+      <!-- Файл loading.gif должен лежать рядом с index.html. -->
+      <img id="loaderImage" class="loader-image" src="./loading.gif"
         alt="Анимация загрузки"
         onerror="this.classList.add('is-broken')">
     </div>
@@ -879,7 +872,7 @@
         <p class="hero-label">Добро пожаловать</p>
         <h1>emode1k</h1>
         <p class="hero-description">
-          Emode1k - программист с различными направлениями и умениями.
+          Emode1k — программист с различными направлениями и умениями.
         </p>
         <a class="hero-button" href="#treePage">Перейти к дереву</a>
       </div>
@@ -929,7 +922,6 @@
     <section id="articlesPage" class="page hidden">
       <button class="button back-button" data-back type="button">← Назад</button>
       <h1 class="page-heading">Статьи</h1>
-
       <section id="articleEditor" class="card hidden">
         <h2 id="articleFormHeading">Новая статья</h2>
         <form id="articleForm" class="form-grid">
@@ -948,7 +940,6 @@
     <section id="settingsPage" class="page hidden">
       <button class="button back-button" data-back type="button">← Назад</button>
       <h1 class="page-heading">Настройки сайта</h1>
-
       <section class="card">
         <form id="settingsForm" class="form-grid">
           <label class="setting-row">
@@ -1076,7 +1067,6 @@
     const NODE_H = 38;
     const EDGE_GAP = 76;
     const ROW_STEP = NODE_H + 30;
-
     const $ = id => document.getElementById(id);
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
 
@@ -1094,17 +1084,18 @@
     const expanded = new Set();
     const view = { x: 0, y: 0, scale: 1 };
 
+    /* Случайный выбор цвета провода. */
+    const wireColors = ["#ff3038", "#32e875", "#ffd735"];
+    const randomWireColor = () =>
+      wireColors[Math.floor(Math.random() * wireColors.length)];
+
     function isSiteAdmin(session) {
       return session?.user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
     }
 
     function escapeHtml(value) {
       return String(value).replace(/[&<>"']/g, character => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
       })[character]);
     }
 
@@ -1114,7 +1105,6 @@
 
     function descendantsOf(id) {
       const result = new Set([id]);
-
       function walk(parentId) {
         for (const child of childrenOf(parentId)) {
           if (result.has(child.id)) continue;
@@ -1122,7 +1112,6 @@
           walk(child.id);
         }
       }
-
       walk(id);
       return result;
     }
@@ -1131,47 +1120,39 @@
       let depth = 0;
       let current = node;
       const seen = new Set();
-
       while (current.parent && byId.has(current.parent) && !seen.has(current.id)) {
         seen.add(current.id);
         depth++;
         current = byId.get(current.parent);
       }
-
       return depth;
     }
 
     function visibleByExpansion(node, byId) {
       let current = node;
-
       while (current.parent && byId.has(current.parent)) {
         const parent = byId.get(current.parent);
         if (depthOf(parent, byId) >= 1 && !expanded.has(parent.id)) return false;
         current = parent;
       }
-
       return true;
     }
 
     function getVisibleNodes(byId) {
       if (!query) return nodes.filter(node => visibleByExpansion(node, byId));
-
       const found = new Map();
       const term = query.toLocaleLowerCase();
 
       for (const node of nodes) {
         const content = `${node.label} ${node.info || ""}`.toLocaleLowerCase();
         if (!content.includes(term)) continue;
-
         found.set(node.id, node);
         let current = node;
-
         while (current.parent && byId.has(current.parent)) {
           current = byId.get(current.parent);
           found.set(current.id, current);
         }
       }
-
       return [...found.values()];
     }
 
@@ -1184,7 +1165,6 @@
     function makeLayout(shown, byId) {
       const ids = new Set(shown.map(node => node.id));
       const points = new Map();
-
       if (!ids.has(ROOT_ID) || !byId.has(ROOT_ID)) return points;
 
       const rootChildren = sortedChildren(ROOT_ID, ids);
@@ -1196,10 +1176,8 @@
       }
 
       const totalLeaves = rootChildren.reduce(
-        (total, child) => total + leafCount(child),
-        0
+        (total, child) => total + leafCount(child), 0
       );
-
       points.set(ROOT_ID, { x: 0, y: 0 });
 
       let cursorY = -((totalLeaves - 1) * ROW_STEP) / 2;
@@ -1210,12 +1188,10 @@
           ? children.reduce((total, child) => total + leafCount(child), 0)
           : 1;
 
-        const point = {
+        points.set(node.id, {
           x: depth * (NODE_W + EDGE_GAP),
           y: startY + ((count - 1) * ROW_STEP) / 2
-        };
-
-        points.set(node.id, point);
+        });
 
         let childY = startY;
         for (const child of children) {
@@ -1228,14 +1204,9 @@
         placeSubtree(child, 1, cursorY);
         cursorY += leafCount(child) * ROW_STEP;
       }
-
       return points;
     }
 
-    /*
-      Каждому проводу назначается постоянная вариация по id узла.
-      Координаты и раскладка дерева при этом не меняются.
-    */
     function edgePath(a, b, nodeId) {
       const x1 = a.x + NODE_W / 2;
       const y1 = a.y;
@@ -1250,17 +1221,9 @@
       const variation = seed % 19;
       const bend = Math.max(24, Math.abs(x2 - x1) * (0.38 + (variation % 6) * 0.015));
       const sag = 3 + (variation % 5);
-      const colors = [
-        "#d9d2c7", "#c4c9ce", "#ded8c8", "#c9c4bd",
-        "#bfc9c6", "#d2c7c1", "#c8cdd4", "#d4c9b8"
-      ];
-      const color = colors[seed % colors.length];
+      const path = `M ${x1} ${y1} C ${x1 + bend} ${y1 + sag}, ${x2 - bend} ${y2 - sag}, ${x2} ${y2}`;
+      const color = randomWireColor();
       const width = 3.2 + (variation % 4) * 0.35;
-
-      const path = `M ${x1} ${y1}
-        C ${x1 + bend} ${y1 + sag},
-          ${x2 - bend} ${y2 - sag},
-          ${x2} ${y2}`;
 
       return `<g style="--wire-color:${color}">
         <path class="edge-shadow" d="${path}"/>
@@ -1271,7 +1234,6 @@
 
     function draw() {
       const host = $("graph");
-
       if (loading) {
         host.innerHTML = '<div class="empty-state">Загрузка дерева…</div>';
         return;
@@ -1288,7 +1250,6 @@
 
       const points = makeLayout(shown, byId);
       const values = [...points.values()];
-
       if (!values.length) {
         host.innerHTML = '<div class="empty-state">Корень дерева не найден.</div>';
         return;
@@ -1296,7 +1257,6 @@
 
       const xs = values.map(point => point.x);
       const ys = values.map(point => point.y);
-
       const minX = Math.min(...xs) - NODE_W;
       const maxX = Math.max(...xs) + NODE_W;
       const minY = Math.min(...ys) - NODE_H * 2;
@@ -1307,30 +1267,19 @@
       const oy = -minY + (height - (maxY - minY)) / 2;
 
       let edges = "";
-
       shown.forEach(node => {
         const parentPoint = points.get(node.parent);
         const nodePoint = points.get(node.id);
-        if (parentPoint && nodePoint) {
-          edges += edgePath(parentPoint, nodePoint, node.id);
-        }
+        if (parentPoint && nodePoint) edges += edgePath(parentPoint, nodePoint, node.id);
       });
 
       let markup = "";
-
       shown.forEach((node, index) => {
         const point = points.get(node.id);
         if (!point) return;
-
-        const label = node.label.length > 20
-          ? node.label.slice(0, 19) + "…"
-          : node.label;
-
-        const expandable =
-          depthOf(node, byId) >= 1 && childrenOf(node.id).length > 0;
-        const sign = expandable
-          ? (expanded.has(node.id) ? "−" : "+")
-          : "";
+        const label = node.label.length > 20 ? node.label.slice(0, 19) + "…" : node.label;
+        const expandable = depthOf(node, byId) >= 1 && childrenOf(node.id).length > 0;
+        const sign = expandable ? (expanded.has(node.id) ? "−" : "+") : "";
 
         markup += `<g class="node ${node.id === ROOT_ID ? "root" : ""} ${node.id === selectedId ? "selected" : ""}"
           data-id="${escapeHtml(node.id)}"
@@ -1352,27 +1301,22 @@
       </svg>`;
 
       if (!fitted) {
-        view.scale = Math.max(
-          .35,
-          Math.min(
-            1,
-            (host.clientWidth - 40) / width,
-            (host.clientHeight - 40) / height
-          )
-        );
+        view.scale = Math.max(.35, Math.min(
+          1,
+          (host.clientWidth - 40) / width,
+          (host.clientHeight - 40) / height
+        ));
         view.x = Math.max(20, (host.clientWidth - width * view.scale) / 2);
         view.y = Math.max(20, (host.clientHeight - height * view.scale) / 2);
         fitted = true;
       }
 
       $("graphContent").setAttribute(
-        "transform",
-        `translate(${view.x} ${view.y}) scale(${view.scale})`
+        "transform", `translate(${view.x} ${view.y}) scale(${view.scale})`
       );
 
       host.querySelectorAll(".node").forEach(element => {
         const activate = () => clickNode(element.dataset.id);
-
         element.addEventListener("click", activate);
         element.addEventListener("keydown", event => {
           if (event.key === "Enter" || event.key === " ") {
@@ -1387,7 +1331,6 @@
       const graph = $("graph");
       const node = [...graph.querySelectorAll(".node")]
         .find(element => element.dataset.id === nodeId);
-
       if (!node) return;
 
       const graphRect = graph.getBoundingClientRect();
@@ -1395,12 +1338,22 @@
       const centerX = nodeRect.left - graphRect.left + nodeRect.width / 2;
       const startY = nodeRect.top - graphRect.top + nodeRect.height;
 
-      for (let index = 0; index < 4; index++) {
+      /* Разное количество искр; каждая летит со случайным интервалом и траекторией. */
+      const count = 3 + Math.floor(Math.random() * 6);
+      for (let index = 0; index < count; index++) {
         const spark = document.createElement("span");
+        const drift = Math.round((Math.random() - 0.5) * 150);
+        const drop = Math.round(35 + Math.random() * 95);
+        const delay = Math.round(Math.random() * 900);
+        const duration = (0.55 + Math.random() * 0.8).toFixed(2);
+
         spark.className = "spark";
-        spark.style.left = `${centerX + (index - 1.5) * 7}px`;
+        spark.style.left = `${centerX + (Math.random() - 0.5) * 34}px`;
         spark.style.top = `${startY + 2}px`;
-        spark.style.setProperty("--spark-drift", `${(index - 1.5) * 9}px`);
+        spark.style.setProperty("--spark-drift", `${drift}px`);
+        spark.style.setProperty("--spark-drop", `${drop}px`);
+        spark.style.setProperty("--spark-duration", `${duration}s`);
+        spark.style.animationDelay = `${delay}ms`;
         graph.appendChild(spark);
         spark.addEventListener("animationend", () => spark.remove(), { once: true });
       }
@@ -1416,7 +1369,6 @@
         .order("label");
 
       loading = false;
-
       if (error) {
         nodes = [];
         $("detailsTitle").textContent = "Ошибка загрузки";
@@ -1426,10 +1378,7 @@
       }
 
       nodes = (data || []).map(row => ({
-        id: row.id,
-        parent: row.parent_id,
-        label: row.label,
-        info: row.info || ""
+        id: row.id, parent: row.parent_id, label: row.label, info: row.info || ""
       }));
 
       if (!nodes.some(node => node.id === ROOT_ID)) {
@@ -1446,7 +1395,6 @@
     function clickNode(id) {
       const node = nodes.find(item => item.id === id);
       if (!node) return;
-
       const byId = new Map(nodes.map(item => [item.id, item]));
       let opened = false;
 
@@ -1461,16 +1409,12 @@
       }
 
       selectNode(id);
-
-      if (opened) {
-        requestAnimationFrame(() => emitSparks(id));
-      }
+      if (opened) requestAnimationFrame(() => emitSparks(id));
     }
 
     function selectNode(id) {
       const node = nodes.find(item => item.id === id);
       if (!node) return;
-
       selectedId = id;
       $("detailsTitle").textContent = node.label;
       $("details").textContent = node.info || "Описание не добавлено.";
@@ -1487,40 +1431,20 @@
     }
 
     function applySettings(settings) {
-      const accent = settings.accent_color || "#e5484d";
-
-      document.documentElement.style.setProperty("--accent", accent);
-      document.documentElement.style.setProperty(
-        "--brightness",
-        Number(settings.brightness ?? 100) / 100
-      );
-      document.documentElement.style.setProperty(
-        "--page-scale",
-        Number(settings.page_scale ?? 100) / 100
-      );
-      document.body.classList.toggle(
-        "theme-gothic",
-        settings.theme === "gothic"
-      );
-      document.body.classList.toggle(
-        "animations-off",
-        settings.animations_enabled === false
-      );
+      document.documentElement.style.setProperty("--accent", settings.accent_color || "#e5484d");
+      document.documentElement.style.setProperty("--brightness", Number(settings.brightness ?? 100) / 100);
+      document.documentElement.style.setProperty("--page-scale", Number(settings.page_scale ?? 100) / 100);
+      document.body.classList.toggle("theme-gothic", settings.theme === "gothic");
+      document.body.classList.toggle("animations-off", settings.animations_enabled === false);
     }
 
     function setAdmin(enabled) {
       isAdmin = enabled;
       document.body.classList.toggle("admin-mode", enabled);
       $("adminPanel").classList.toggle("hidden", !enabled);
-      $("adminNodeActions").classList.toggle(
-        "hidden",
-        !enabled || selectedId === ROOT_ID
-      );
+      $("adminNodeActions").classList.toggle("hidden", !enabled || selectedId === ROOT_ID);
       $("articleEditor").classList.toggle("hidden", !enabled);
-      $("menuLogoutButton").textContent = enabled
-        ? "Выйти из профиля"
-        : "Войти";
-
+      $("menuLogoutButton").textContent = enabled ? "Выйти из профиля" : "Войти";
       draw();
       if (currentPage === "articles") loadArticles();
     }
@@ -1538,7 +1462,6 @@
       $("settingsPage").classList.toggle("hidden", page !== "settings");
       closeMenu();
       window.scrollTo({ top: 0, behavior: "smooth" });
-
       if (page === "articles") loadArticles();
       if (page === "settings") loadSettings();
     }
@@ -1561,7 +1484,6 @@
 
     document.addEventListener("click", event => {
       if (!event.target.closest(".brand-area")) closeMenu();
-
       if (!event.target.closest(".contact-widget")) {
         $("contactPanel").classList.add("hidden");
         $("contactButton").setAttribute("aria-expanded", "false");
@@ -1571,7 +1493,6 @@
     $("contactButton").addEventListener("click", () => {
       const panel = $("contactPanel");
       const open = panel.classList.contains("hidden");
-
       panel.classList.toggle("hidden", !open);
       $("contactButton").setAttribute("aria-expanded", String(open));
       if (open) $("contactText").focus();
@@ -1579,16 +1500,13 @@
 
     $("contactForm").addEventListener("submit", event => {
       event.preventDefault();
-
       const subject = encodeURIComponent("Сообщение с сайта emode1k");
       const body = encodeURIComponent($("contactText").value.trim());
-      location.href =
-        `mailto:emode1koff@gmail.com?subject=${subject}&body=${body}`;
+      location.href = `mailto:emode1koff@gmail.com?subject=${subject}&body=${body}`;
     });
 
     document.addEventListener("keydown", event => {
       if (event.key !== "Escape") return;
-
       closeMenu();
       $("loginDialog").classList.add("hidden");
       $("contactPanel").classList.add("hidden");
@@ -1603,7 +1521,6 @@
 
     async function logout() {
       const { error } = await db.auth.signOut();
-
       if (error) {
         $("adminStatus").textContent = error.message;
       } else {
@@ -1614,9 +1531,7 @@
 
     $("menuLogoutButton").addEventListener("click", async () => {
       closeMenu();
-
       if (isAdmin) return logout();
-
       $("loginDialog").classList.remove("hidden");
       $("emailInput").focus();
     });
@@ -1629,7 +1544,6 @@
 
     $("loginForm").addEventListener("submit", async event => {
       event.preventDefault();
-
       const { data, error } = await db.auth.signInWithPassword({
         email: $("emailInput").value.trim(),
         password: $("passwordInput").value
@@ -1642,8 +1556,7 @@
 
       if (!isSiteAdmin(data.session)) {
         await db.auth.signOut();
-        $("loginStatus").textContent =
-          "У этой учётной записи нет прав администратора.";
+        $("loginStatus").textContent = "У этой учётной записи нет прав администратора.";
         return;
       }
 
@@ -1664,29 +1577,19 @@
       const info = $("nodeInfo").value.trim();
       let result;
       let savedId = editingNodeId;
-
       $("saveNodeButton").disabled = true;
 
       if (editingNodeId) {
-        result = await db.from("nodes")
-          .update({ label, info })
-          .eq("id", editingNodeId);
+        result = await db.from("nodes").update({ label, info }).eq("id", editingNodeId);
       } else {
         savedId = "node-" + crypto.randomUUID();
-        const parentId = nodes.some(node => node.id === selectedId)
-          ? selectedId
-          : ROOT_ID;
-
+        const parentId = nodes.some(node => node.id === selectedId) ? selectedId : ROOT_ID;
         result = await db.from("nodes").insert({
-          id: savedId,
-          parent_id: parentId,
-          label,
-          info
+          id: savedId, parent_id: parentId, label, info
         });
       }
 
       $("saveNodeButton").disabled = false;
-
       if (result.error) {
         $("adminStatus").textContent = result.error.message;
         return;
@@ -1695,7 +1598,6 @@
       resetNodeForm();
       fitted = false;
       await loadTree();
-
       if (savedId) selectNode(savedId);
       $("adminStatus").textContent = "Сохранено.";
     });
@@ -1703,7 +1605,6 @@
     $("editNodeButton").addEventListener("click", () => {
       const node = nodes.find(item => item.id === selectedId);
       if (!isAdmin || !node || node.id === ROOT_ID) return;
-
       editingNodeId = node.id;
       $("nodeLabel").value = node.label;
       $("nodeInfo").value = node.info || "";
@@ -1723,9 +1624,7 @@
         const leaves = [...pending].filter(parentId =>
           childrenOf(parentId).every(child => !pending.has(child.id))
         );
-
         if (!leaves.length) throw new Error("Цикл в структуре дерева.");
-
         order.push(...leaves);
         leaves.forEach(nodeId => pending.delete(nodeId));
       }
@@ -1734,7 +1633,6 @@
         const { error } = await db.from("nodes").delete().eq("id", nodeId);
         if (error) throw error;
       }
-
       return removed;
     }
 
@@ -1765,7 +1663,6 @@
 
     async function loadArticles() {
       $("articlesList").textContent = "Загружаю статьи…";
-
       const { data, error } = await db.from("articles")
         .select("id,title,content,updated_at")
         .order("updated_at", { ascending: false });
@@ -1776,7 +1673,6 @@
       }
 
       $("articlesList").replaceChildren();
-
       if (!data?.length) {
         $("articlesList").textContent = "Статей пока нет.";
         return;
@@ -1785,14 +1681,11 @@
       data.forEach(article => {
         const card = document.createElement("article");
         card.className = "card article-card";
-
         const title = document.createElement("h2");
         title.textContent = article.title;
-
         const content = document.createElement("div");
         content.className = "article-content";
         content.textContent = article.content;
-
         card.append(title, content);
 
         if (isAdmin) {
@@ -1819,22 +1712,15 @@
           remove.textContent = "Удалить";
           remove.addEventListener("click", async () => {
             if (!confirm(`Удалить «${article.title}»?`)) return;
-
             const { error: deleteError } = await db.from("articles")
-              .delete()
-              .eq("id", article.id);
-
-            if (deleteError) {
-              $("articleStatus").textContent = deleteError.message;
-            } else {
-              loadArticles();
-            }
+              .delete().eq("id", article.id);
+            if (deleteError) $("articleStatus").textContent = deleteError.message;
+            else loadArticles();
           });
 
           actions.append(edit, remove);
           card.append(actions);
         }
-
         $("articlesList").append(card);
       });
     }
@@ -1845,19 +1731,12 @@
 
       const title = $("articleTitle").value.trim();
       const content = $("articleContent").value.trim();
-
       const result = editingArticleId
-        ? await db.from("articles")
-            .update({
-              title,
-              content,
-              updated_at: new Date().toISOString()
-            })
-            .eq("id", editingArticleId)
+        ? await db.from("articles").update({
+            title, content, updated_at: new Date().toISOString()
+          }).eq("id", editingArticleId)
         : await db.from("articles").insert({
-            id: "article-" + crypto.randomUUID(),
-            title,
-            content
+            id: "article-" + crypto.randomUUID(), title, content
           });
 
       if (result.error) {
@@ -1879,17 +1758,13 @@
         .maybeSingle();
 
       if (error) {
-        $("settingsStatus").textContent =
-          "Ошибка загрузки настроек: " + error.message;
+        $("settingsStatus").textContent = "Ошибка загрузки настроек: " + error.message;
         return;
       }
 
       const settings = data || {
-        accent_color: "#e5484d",
-        theme: "standard",
-        page_scale: 100,
-        brightness: 100,
-        animations_enabled: true
+        accent_color: "#e5484d", theme: "standard", page_scale: 100,
+        brightness: 100, animations_enabled: true
       };
 
       applySettings(settings);
@@ -1904,18 +1779,12 @@
 
     $("pageScale").addEventListener("input", event => {
       $("pageScaleOutput").value = event.target.value + "%";
-      document.documentElement.style.setProperty(
-        "--page-scale",
-        Number(event.target.value) / 100
-      );
+      document.documentElement.style.setProperty("--page-scale", Number(event.target.value) / 100);
     });
 
     $("brightness").addEventListener("input", event => {
       $("brightnessOutput").value = event.target.value + "%";
-      document.documentElement.style.setProperty(
-        "--brightness",
-        Number(event.target.value) / 100
-      );
+      document.documentElement.style.setProperty("--brightness", Number(event.target.value) / 100);
     });
 
     $("colorSelect").addEventListener("input", event => {
@@ -1923,15 +1792,11 @@
     });
 
     $("themeSelect").addEventListener("change", event => {
-      document.body.classList.toggle(
-        "theme-gothic",
-        event.target.value === "gothic"
-      );
+      document.body.classList.toggle("theme-gothic", event.target.value === "gothic");
     });
 
     $("settingsForm").addEventListener("submit", async event => {
       event.preventDefault();
-
       const settings = {
         id: 1,
         accent_color: $("colorSelect").value,
@@ -1942,41 +1807,31 @@
       };
 
       const { error } = await db.from("site_settings").upsert(settings);
-
       if (error) {
         $("settingsStatus").textContent = "Ошибка сохранения: " + error.message;
         return;
       }
 
       applySettings(settings);
-      $("settingsStatus").textContent =
-        "Общие настройки сохранены для всех посетителей.";
+      $("settingsStatus").textContent = "Общие настройки сохранены для всех посетителей.";
     });
 
     $("graph").addEventListener("pointerdown", event => {
       if (event.target.closest(".node") || event.button !== 0) return;
-
       drag = {
-        id: event.pointerId,
-        sx: event.clientX,
-        sy: event.clientY,
-        x: view.x,
-        y: view.y
+        id: event.pointerId, sx: event.clientX, sy: event.clientY,
+        x: view.x, y: view.y
       };
-
       $("graph").classList.add("dragging");
       $("graph").setPointerCapture(event.pointerId);
     });
 
     $("graph").addEventListener("pointermove", event => {
       if (!drag || event.pointerId !== drag.id) return;
-
       view.x = drag.x + event.clientX - drag.sx;
       view.y = drag.y + event.clientY - drag.sy;
-
       $("graphContent")?.setAttribute(
-        "transform",
-        `translate(${view.x} ${view.y}) scale(${view.scale})`
+        "transform", `translate(${view.x} ${view.y}) scale(${view.scale})`
       );
     });
 
@@ -1991,23 +1846,16 @@
 
     $("graph").addEventListener("wheel", event => {
       event.preventDefault();
-
       const rect = $("graph").getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
       const oldScale = view.scale;
-      const nextScale = Math.max(
-        .35,
-        Math.min(2.2, oldScale * (event.deltaY < 0 ? 1.1 : .9))
-      );
-
+      const nextScale = Math.max(.35, Math.min(2.2, oldScale * (event.deltaY < 0 ? 1.1 : .9)));
       view.x = x - (x - view.x) * nextScale / oldScale;
       view.y = y - (y - view.y) * nextScale / oldScale;
       view.scale = nextScale;
-
       $("graphContent")?.setAttribute(
-        "transform",
-        `translate(${view.x} ${view.y}) scale(${view.scale})`
+        "transform", `translate(${view.x} ${view.y}) scale(${view.scale})`
       );
     }, { passive: false });
 
@@ -2034,19 +1882,15 @@
 
     function closeLoader() {
       if (!loader || !loader.isConnected) return;
-
       loader.classList.add("loaded");
       document.documentElement.style.overflow = previousHtmlOverflow;
       document.body.style.overflow = previousBodyOverflow;
-
       window.setTimeout(() => loader.remove(), 700);
     }
 
     if (loader && loaderWord) {
       window.setTimeout(() => loaderWord.classList.add("complete"), 1800);
       window.setTimeout(closeLoader, 2800);
-
-      /* Не оставляем экран загрузки висеть, если таймеры/загрузка задержались. */
       window.addEventListener("load", () => {
         window.setTimeout(closeLoader, 500);
       }, { once: true });
