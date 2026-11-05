@@ -634,7 +634,9 @@
     .form-grid { display: grid; gap: 10px; }
     textarea { width: 100%; min-height: 120px; resize: vertical; }
     .button-row, .article-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-
+body:has(#articlesPage:not(.hidden)) #hero {
+  display: none;
+}
     .status {
       min-height: 1.4em;
       margin: 9px 0 0;
