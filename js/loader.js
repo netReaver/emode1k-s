@@ -1,6 +1,6 @@
 import { byId, on } from './dom.js';
 
-const MIN_VISIBLE = 1500;
+const MIN_VISIBLE = 2600;
 const HARD_LIMIT = 7000;
 
 export function bootLoader() {

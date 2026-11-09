@@ -12,6 +12,27 @@
 </head>
 
 <body data-page="tree" data-role="guest">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="paperGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f4f1ea"/>
+        <stop offset="0.55" stop-color="#d9d4c8"/>
+        <stop offset="1" stop-color="#b6b0a2"/>
+      </linearGradient>
+      <radialGradient id="emberGrad" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0" stop-color="#ffe0b0"/>
+        <stop offset="0.4" stop-color="#ff8a3c"/>
+        <stop offset="0.75" stop-color="#c23c22"/>
+        <stop offset="1" stop-color="#c23c22" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="bloodFill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#a01218"/>
+        <stop offset="0.55" stop-color="#5c0a10"/>
+        <stop offset="1" stop-color="#38060a"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
   <div class="loader" id="loader" aria-live="polite">
     <div class="loader__inner">
       <div class="loader__word" id="loaderWord" aria-label="EMODE1K">
@@ -46,13 +67,19 @@
 
         <a class="logo" href="#" aria-label="emode1k">
           <span class="logo__mark" aria-hidden="true">
-            <svg viewBox="0 0 44 26" width="31" height="18">
+            <svg viewBox="0 0 44 26" width="32" height="19">
               <path class="smoke-line" d="M25 11C20 7 29 6 25 1"/>
               <path class="smoke-line smoke-line--2" d="M31 11C27 7 35 5 31 1"/>
               <path class="smoke-line smoke-line--3" d="M36 11C32 7 40 5 36 1"/>
-              <rect x="4" y="14" width="29" height="6" rx="1" fill="#e6e3de"/>
-              <rect x="33" y="14" width="7" height="6" fill="#b86642"/>
-              <path d="M4 14v6" stroke="#9a9a9a"/>
+              <path class="smoke-line smoke-line--4" d="M28.5 11C25 8 32 6.5 28.5 2.5"/>
+              <circle class="ember-bit" cx="25" cy="11" r="0.9"/>
+              <rect x="4" y="14" width="29" height="6" rx="1" fill="url(#paperGrad)"/>
+              <path d="M4 15.6h29M4 18.4h29" stroke="#a39c8c" stroke-width="0.4"/>
+              <path d="M30 14v6" stroke="#9a6a44" stroke-width="0.55"/>
+              <rect x="33" y="14" width="7" height="6" fill="#a85b38"/>
+              <path d="M33 15.5h7" stroke="#8a4428" stroke-width="0.5"/>
+              <circle cx="31.2" cy="17" r="3.6" fill="url(#emberGrad)"/>
+              <circle class="ember-core" cx="31.2" cy="17" r="1.15" fill="#ffd9a0"/>
             </svg>
           </span>
           <span class="logo__text"><b>E</b>mode1k</span>
@@ -79,10 +106,26 @@
       <section class="hero" id="hero">
         <div class="hero__art" aria-hidden="true"></div>
         <div class="hero__plate">
-          <p class="hero__label">Личная карта</p>
+          <p class="hero__label">Добро пожаловать, пользователь</p>
           <h1 class="hero__title">emode1k</h1>
-          <p class="hero__lead">Проекты, инструменты и заметки по мере того, как они появляются.</p>
+
+          <div class="blood" aria-hidden="true">
+            <svg class="blood__pool" viewBox="0 0 220 40" preserveAspectRatio="none">
+              <path class="blood__body" d="M8 30C20 21 34 21 46 27C64 19 92 18 112 25C134 17 168 19 184 26C196 29 208 28 214 31V40H8Z" fill="url(#bloodFill)"/>
+              <path d="M8 30C20 21 34 21 46 27C64 19 92 18 112 25C134 17 168 19 184 26C196 29 208 28 214 31" fill="none" stroke="#7e1218" stroke-width="1.1"/>
+              <ellipse class="blood__gloss" cx="116" cy="29" rx="50" ry="2.4" fill="#c82430" opacity="0.5"/>
+            </svg>
+            <span class="blood__ripple blood__ripple--a"></span>
+            <span class="blood__ripple blood__ripple--b"></span>
+            <svg class="blood__drop" viewBox="0 0 12 16">
+              <path d="M6 1C9.5 5.5 11 8.8 11 11.5A5 5 0 1 1 1 11.5C1 8.8 2.5 5.5 6 1Z" fill="#a01218"/>
+              <path d="M6 1C9.5 5.5 11 8.8 11 11.5" fill="none" stroke="#c82430" stroke-width="0.8" opacity="0.8"/>
+            </svg>
+          </div>
+
+          <p class="hero__lead">emode1k — важная информация для людей, которым она нужна (от осинта до работы).</p>
           <a class="hero__link" href="#treePage">Открыть дерево</a>
+          <p class="hero__fine">Создатель сайта не несёт ответственности за действия, совершённые пользователями после ознакомления.</p>
         </div>
         <span class="hero__hint" aria-hidden="true">прокрути вниз</span>
       </section>
@@ -252,8 +295,12 @@
         <path class="smoke-line" d="M25 11C20 7 29 6 25 1"/>
         <path class="smoke-line smoke-line--2" d="M31 11C27 7 35 5 31 1"/>
         <path class="smoke-line smoke-line--3" d="M36 11C32 7 40 5 36 1"/>
-        <rect x="4" y="14" width="29" height="6" rx="1" fill="#e6e3de"/>
-        <rect x="33" y="14" width="7" height="6" fill="#b86642"/>
+        <rect x="4" y="14" width="29" height="6" rx="1" fill="url(#paperGrad)"/>
+        <path d="M4 15.6h29M4 18.4h29" stroke="#a39c8c" stroke-width="0.4"/>
+        <path d="M30 14v6" stroke="#9a6a44" stroke-width="0.55"/>
+        <rect x="33" y="14" width="7" height="6" fill="#a85b38"/>
+        <circle cx="31.2" cy="17" r="3.6" fill="url(#emberGrad)"/>
+        <circle class="ember-core" cx="31.2" cy="17" r="1.15" fill="#ffd9a0"/>
       </svg>
     </button>
   </div>

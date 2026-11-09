@@ -11,7 +11,8 @@ export class GraphView {
   constructor({ host, stage, canvas, onSelect }) {
     this.host = host;
     this.stage = stage;
-    this.sparks = new SparkField(canvas);
+    this.sparkCanvas = canvas;
+    this.sparks = new SparkField(host, canvas);
     this.onSelect = onSelect;
 
     this.nodes = [];
@@ -135,9 +136,15 @@ export class GraphView {
     </svg>`;
 
     this.known = new Set(this.nodes.map((node) => node.id));
+    this.syncSparkTransform();
 
     const meta = document.getElementById('graphMeta');
     if (meta) meta.textContent = `${visible.length} / ${this.nodes.length} узлов`;
+  }
+
+  syncSparkTransform() {
+    this.sparkCanvas.style.transform =
+      `translate(${this.view.x}px, ${this.view.y}px) scale(${this.view.scale})`;
   }
 
   fitView(width, height, contentWidth, contentHeight) {
@@ -278,6 +285,7 @@ export class GraphView {
       'transform',
       `translate(${this.view.x} ${this.view.y}) scale(${this.view.scale})`
     );
+    this.syncSparkTransform();
   }
 
   activate(id) {
@@ -307,13 +315,14 @@ export class GraphView {
     const position = this.positions.get(id);
     if (!position) return;
 
-    const x = this.view.x + (position.x + NODE.width / 2) * this.view.scale;
-    const y = this.view.y + (position.y + NODE.height) * this.view.scale;
+    // координаты в системе графа: частицы едут вместе с полотном при панорамировании
+    const x = position.x + NODE.width / 2;
+    const y = position.y + NODE.height;
 
     requestAnimationFrame(() => {
       this.sparks.burst(x, y, {
         count: Math.round(11 + Math.random() * 8),
-        spread: (NODE.width / 2) * this.view.scale * 0.8,
+        spread: (NODE.width / 2) * 0.8,
         power,
       });
     });

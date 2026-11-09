@@ -5,7 +5,8 @@ const PALETTE = ['#ffd9a0', '#ffb26b', '#ff8a4a', '#e5484d', '#d9d9df'];
 const randomBetween = (min, max) => min + Math.random() * (max - min);
 
 export class SparkField {
-  constructor(canvas) {
+  constructor(host, canvas) {
+    this.host = host;
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.particles = [];
@@ -17,7 +18,7 @@ export class SparkField {
     this.glow = this.createGlow();
 
     this.resize();
-    new ResizeObserver(() => this.resize()).observe(canvas);
+    new ResizeObserver(() => this.resize()).observe(host);
   }
 
   createGlow() {
@@ -38,20 +39,21 @@ export class SparkField {
   }
 
   resize() {
-    const rect = this.canvas.getBoundingClientRect();
-    if (!rect.width || !rect.height) return;
+    const width = this.host.clientWidth;
+    const height = this.host.clientHeight;
+    if (!width || !height) return;
 
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
-    const width = Math.round(rect.width);
-    const height = Math.round(rect.height);
+    const w = Math.round(width);
+    const h = Math.round(height);
 
-    if (width === this.width && height === this.height && ratio === this.ratio) return;
+    if (w === this.width && h === this.height && ratio === this.ratio) return;
 
-    this.width = width;
-    this.height = height;
+    this.width = w;
+    this.height = h;
     this.ratio = ratio;
-    this.canvas.width = Math.round(width * ratio);
-    this.canvas.height = Math.round(height * ratio);
+    this.canvas.width = Math.round(w * ratio);
+    this.canvas.height = Math.round(h * ratio);
     this.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
   }
 
@@ -65,7 +67,7 @@ export class SparkField {
         x: x + randomBetween(-spread, spread),
         y: y + randomBetween(-3, 3),
         vx: (Math.random() < 0.5 ? -1 : 1) * sideways * 145 * power,
-        vy: randomBetween(-70, -250) * power,
+        vy: (cube ? randomBetween(45, 165) : randomBetween(25, 120)) * power,
         size: cube ? randomBetween(3.2, 6.4) : randomBetween(1.4, 2.6),
         rotation: randomBetween(0, Math.PI),
         spin: randomBetween(-7, 7),
@@ -125,8 +127,6 @@ export class SparkField {
       particle.x += particle.vx * delta;
       particle.y += particle.vy * delta;
       particle.rotation += particle.spin * delta;
-
-      if (particle.y > this.height + 80) continue;
 
       keep.push(particle);
     }
