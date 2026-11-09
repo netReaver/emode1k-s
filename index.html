@@ -3,2118 +3,278 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0c0c0c">
-  <meta name="description" content="Интерактивный сайт проекта emode1k">
+  <meta name="theme-color" content="#08080a">
+  <meta name="description" content="Интерактивная карта проектов emode1k">
   <title>emode1k</title>
-
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #0c0c0c;
-      --panel: #141414;
-      --panel-soft: #1b1b1b;
-      --border: #363636;
-      --text: #ededed;
-      --muted: #a2a2a2;
-      --accent: #e5484d;
-      --brightness: 1;
-      --page-scale: 1;
-    }
-
-    * { box-sizing: border-box; }
-
-    html, body { min-height: 100%; }
-
-    body {
-      min-height: 100vh;
-      margin: 0;
-      color: var(--text);
-      background: var(--bg);
-      font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system,
-        BlinkMacSystemFont, "Segoe UI", sans-serif;
-      filter: brightness(var(--brightness));
-    }
-
-    button, input, textarea, select { font: inherit; }
-    button { color: inherit; }
-
-    input, textarea, select, .button {
-      color: var(--text);
-      background: var(--panel-soft);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-    }
-
-    input, textarea, select { padding: 10px 12px; }
-
-    input:focus, textarea:focus, select:focus,
-    button:focus-visible, a:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      min-height: 64px;
-      padding: 10px clamp(14px, 3vw, 34px);
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      border-bottom: 1px solid var(--border);
-      background: #0c0c0cf2;
-      backdrop-filter: blur(12px);
-    }
-
-    .brand-area {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .menu-button {
-      display: grid;
-      width: 40px;
-      height: 40px;
-      align-content: center;
-      justify-items: center;
-      gap: 5px;
-      padding: 8px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--accent);
-      background: var(--panel);
-      cursor: pointer;
-    }
-
-    .menu-button span {
-      width: 19px;
-      height: 2px;
-      border-radius: 2px;
-      background: currentColor;
-      transition: transform .2s ease, opacity .2s ease;
-    }
-
-    .menu-button[aria-expanded="true"] span:first-child {
-      transform: translateY(7px) rotate(45deg);
-    }
-
-    .menu-button[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
-
-    .menu-button[aria-expanded="true"] span:last-child {
-      transform: translateY(-7px) rotate(-45deg);
-    }
-
-    .site-menu {
-      position: absolute;
-      top: calc(100% + 10px);
-      left: 0;
-      z-index: 35;
-      display: grid;
-      gap: 3px;
-      width: 210px;
-      padding: 7px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--panel);
-      box-shadow: 0 12px 30px #0008;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transform: translateY(-6px);
-      transition: opacity .18s ease, transform .18s ease, visibility .18s;
-    }
-
-    .site-menu.open {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transform: translateY(0);
-    }
-
-    .site-menu button {
-      width: 100%;
-      padding: 10px 12px;
-      border: 0;
-      border-radius: 6px;
-      color: var(--text);
-      background: transparent;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .site-menu button:hover {
-      color: var(--accent);
-      background: #ffffff0a;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--text);
-      font-weight: 800;
-      letter-spacing: .08em;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .brand-mark {
-      display: grid;
-      width: 40px;
-      height: 40px;
-      place-items: center;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: #151515;
-    }
-
-    .brand-word { color: #f0f0f0; font-size: 16px; }
-    .brand-word span { color: var(--accent); }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-left: auto;
-    }
-
-    .search { width: min(28vw, 300px); min-width: 150px; }
-
-    .button {
-      min-height: 40px;
-      padding: 9px 13px;
-      cursor: pointer;
-      transition: border-color .18s ease, background .18s ease;
-    }
-
-    .button:hover {
-      border-color: var(--accent);
-      background: #252525;
-    }
-
-    .button:disabled { opacity: .55; cursor: wait; }
-    .button-primary { border-color: var(--accent); }
-    .button-danger { border-color: #78474a; color: #ffc1c5; }
-
-    main {
-      width: min(1500px, 100%);
-      margin: 0 auto;
-      padding: 26px clamp(14px, 3vw, 34px) 54px;
-      zoom: var(--page-scale);
-    }
-
-    .page { min-height: 70vh; }
-    .hidden { display: none !important; }
-
-    .loader {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-      height: 100dvh;
-      overflow: hidden;
-      overscroll-behavior: none;
-      touch-action: none;
-      background: radial-gradient(ellipse at center, #191919 0%, #050505 75%);
-      opacity: 1;
-      visibility: visible;
-      transition: opacity .65s ease, visibility .65s ease;
-    }
-
-    .loader::before {
-      position: absolute;
-      inset: 0;
-      content: "";
-      background: #0009;
-      pointer-events: none;
-    }
-
-    .loader.loaded {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .loader-content {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: clamp(12px, 2.5vh, 22px);
-      width: min(92vw, 700px);
-      max-height: 100%;
-      padding: 20px;
-      overflow: hidden;
-      text-align: center;
-    }
-
-    .loader-word {
-      display: flex;
-      justify-content: center;
-      gap: clamp(3px, 1.2vw, 12px);
-      color: #fff;
-      font-size: clamp(38px, 11vw, 100px);
-      font-weight: 900;
-      letter-spacing: .08em;
-      line-height: 1;
-      text-shadow: 0 0 18px #fff8, 0 0 40px #000;
-    }
-
-    .loader-word span {
-      opacity: 0;
-      transform: translateY(30px) scale(.7);
-      animation: letter-wave .55s cubic-bezier(.2, .8, .2, 1) forwards;
-    }
-
-    .loader-word span:nth-child(1) { animation-delay: .18s; }
-    .loader-word span:nth-child(2) { animation-delay: .34s; }
-    .loader-word span:nth-child(3) { animation-delay: .50s; }
-    .loader-word span:nth-child(4) { animation-delay: .66s; }
-    .loader-word span:nth-child(5) { animation-delay: .82s; }
-    .loader-word span:nth-child(6) { animation-delay: .98s; }
-    .loader-word span:nth-child(7) { animation-delay: 1.14s; }
-
-    .loader-word.complete span {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      animation: word-flash .35s ease-out;
-    }
-
-    .loader-progress {
-      width: min(260px, 65vw);
-      height: 3px;
-      overflow: hidden;
-      background: #ffffff35;
-    }
-
-    .loader-progress span {
-      display: block;
-      width: 35%;
-      height: 100%;
-      background: #fff;
-      box-shadow: 0 0 12px #fff;
-      animation: loader-bar 1s ease-in-out infinite;
-    }
-
-    .loader-caption {
-      margin: 0;
-      color: #e5e5e5;
-      font-size: 13px;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-    }
-
-    .loader-image {
-      display: block;
-      width: min(260px, 58vw);
-      max-height: min(30vh, 220px);
-      margin: 0;
-      object-fit: contain;
-      border: 1px solid #ffffff55;
-      background: #050505;
-      box-shadow: 0 8px 30px #0009;
-    }
-
-    .loader-image.is-broken { display: none; }
-
-    @keyframes letter-wave {
-      0% { opacity: 0; transform: translateY(30px) scale(.7); }
-      65% { opacity: 1; transform: translateY(-8px) scale(1.12); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    @keyframes word-flash {
-      0% { filter: brightness(1); }
-      45% { filter: brightness(2.5); }
-      100% { filter: brightness(1); }
-    }
-
-    @keyframes loader-bar {
-      from { transform: translateX(-120%); }
-      to { transform: translateX(320%); }
-    }
-
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      isolation: isolate;
-      overflow: hidden;
-      border-bottom: 1px solid var(--border);
-      background-color: #050505;
-      background-image: url("./background.jpg");
-      background-position: center 42%;
-      background-size: cover;
-      background-repeat: no-repeat;
-    }
-
-    .hero::before {
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      content: "";
-      background: linear-gradient(180deg, #0009 0%, #0005 45%, #000e 100%), #0008;
-    }
-
-    .hero-content {
-      width: min(760px, 90vw);
-      padding: clamp(24px, 5vw, 48px);
-      border: 1px solid #ffffff55;
-      border-radius: 12px;
-      background: #080808c2;
-      text-align: center;
-      box-shadow: 0 18px 70px #0009;
-      animation: hero-enter .9s ease both;
-    }
-
-    .hero-label {
-      margin: 0 0 10px;
-      color: var(--accent);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-    }
-
-    .hero-content h1 {
-      margin: 0 0 16px;
-      color: #fff;
-      font-size: clamp(38px, 8vw, 76px);
-      letter-spacing: .12em;
-      text-shadow: 0 0 24px #000;
-    }
-
-    .hero-description {
-      margin: 0;
-      color: #ededed;
-      font-size: clamp(17px, 2.5vw, 23px);
-      text-shadow: 0 2px 12px #000;
-    }
-
-    .hero-button {
-      display: inline-block;
-      margin-top: 26px;
-      padding: 11px 18px;
-      border: 1px solid var(--accent);
-      border-radius: 8px;
-      color: #fff;
-      background: #111c;
-      text-decoration: none;
-      transition: background .2s ease, transform .2s ease;
-    }
-
-    .hero-button:hover {
-      background: var(--accent);
-      transform: translateY(-2px);
-    }
-
-    .hero-scroll-hint {
-      position: absolute;
-      bottom: 28px;
-      left: 50%;
-      color: #ccc;
-      font-size: 12px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      transform: translateX(-50%);
-      animation: hint-pulse 1.8s ease-in-out infinite;
-    }
-
-    @keyframes hero-enter {
-      from { opacity: 0; transform: translateY(22px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes hint-pulse {
-      0%, 100% { opacity: .45; }
-      50% { opacity: 1; }
-    }
-
-    .heading-row {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .eyebrow {
-      margin: 0 0 6px;
-      color: var(--accent);
-      font-size: 11px;
-      font-weight: 750;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-    }
-
-    h1 { margin: 0; font-size: clamp(25px, 4vw, 36px); line-height: 1.15; }
-    h2 { margin-top: 0; }
-    .subheading { max-width: 720px; margin: 9px 0 0; color: var(--muted); }
-
-    .graph-tools {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .graph-meta { color: var(--muted); font-size: 13px; white-space: nowrap; }
-
-    .graph-shell {
-      position: relative;
-      min-height: 440px;
-      height: min(66vh, 760px);
-      overflow: hidden;
-      border: 1px solid #fff;
-      border-radius: 12px;
-      background: radial-gradient(ellipse at 20% 20%, #ffffff08, transparent 55%), #111;
-      cursor: grab;
-      touch-action: none;
-    }
-
-    .graph-shell.dragging { cursor: grabbing; }
-
-    svg.graph-svg {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      display: block;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      user-select: none;
-    }
-
-    .edge-shadow, .edge-wire, .edge-highlight {
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .edge-shadow {
-      stroke: #000;
-      stroke-width: 7;
-      stroke-opacity: .78;
-    }
-
-    .edge-wire {
-      stroke: var(--wire-color, #d7d1c8);
-      stroke-width: 4;
-      stroke-opacity: .96;
-      filter: drop-shadow(0 1px 2px #000);
-      stroke-dasharray: 1200;
-      animation: cable-draw .65s ease both;
-    }
-
-    .edge-highlight {
-      stroke: #fff;
-      stroke-width: 1;
-      stroke-opacity: .42;
-      pointer-events: none;
-    }
-
-    @keyframes cable-draw {
-      from { stroke-dashoffset: 1200; opacity: .15; }
-      to { stroke-dashoffset: 0; opacity: .96; }
-    }
-
-    .node {
-      cursor: pointer;
-    }
-
-    .node-body {
-      transform-box: fill-box;
-      transform-origin: center;
-      animation: node-open .4s cubic-bezier(.2, .8, .2, 1) both;
-    }
-
-    .node rect {
-      fill: #191919;
-      stroke: #fff;
-      stroke-width: 1.5;
-      transition: fill .22s ease, stroke-width .22s ease, filter .22s ease;
-    }
-
-    .node.root rect {
-      fill: #231618;
-      stroke: #fff;
-      stroke-width: 2;
-    }
-
-    .node:hover rect, .node.selected rect {
-      fill: #252525;
-      stroke: #fff;
-      stroke-width: 2.4;
-      filter: drop-shadow(0 0 7px #ffffff55);
-    }
-
-    .node text {
-      fill: var(--text);
-      font-size: 12px;
-      font-weight: 600;
-      pointer-events: none;
-    }
-
-    .node .dot, .node .expand-indicator { fill: #fff; }
-    .node .expand-indicator { font-size: 12px; }
-
-    @keyframes node-open {
-      from { opacity: 0; transform: scale(.82) translateY(8px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
-    .spark {
-      position: absolute;
-      z-index: 4;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      pointer-events: none;
-      background: #fff7a8;
-      box-shadow: 0 0 5px 2px #ffd866, 0 0 12px 4px #ff9d32;
-      animation: spark-fall var(--spark-duration, .8s) ease-in forwards;
-      will-change: transform, opacity;
-    }
-
-    @keyframes spark-fall {
-      0% { opacity: 0; transform: translate(0, 0) scale(.25); }
-      12% { opacity: 1; }
-      100% {
-        opacity: 0;
-        transform: translate(var(--spark-drift), var(--spark-drop)) scale(.12);
-      }
-    }
-
-    .empty-state {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    .content-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 14px;
-      margin-top: 14px;
-    }
-
-    body.admin-mode .content-grid {
-      grid-template-columns: minmax(250px, .8fr) minmax(300px, 1.2fr);
-    }
-
-    .card {
-      min-width: 0;
-      padding: 18px;
-      border: 1px solid #fff;
-      border-radius: 10px;
-      background: var(--panel);
-    }
-
-    .details, .article-content { white-space: pre-wrap; overflow-wrap: anywhere; }
-    #details { color: #f1f1f1; font-size: 16px; line-height: 1.7; }
-    body:not(.admin-mode) #detailsTitle { color: #fff; }
-
-    .form-grid { display: grid; gap: 10px; }
-    textarea { width: 100%; min-height: 120px; resize: vertical; }
-    .button-row, .article-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-body:has(#articlesPage:not(.hidden)) #hero {
-  display: none;
-}
-    .status {
-      min-height: 1.4em;
-      margin: 9px 0 0;
-      color: #b8d5aa;
-      font-size: 13px;
-      overflow-wrap: anywhere;
-    }
-
-    .error { color: #ffabb3; }
-
-    .notice {
-      margin: 10px 0;
-      padding: 11px 12px;
-      border: 1px solid #705d2c;
-      border-radius: 8px;
-      color: #f3dda2;
-      background: #382f191c;
-      font-size: 13px;
-    }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 40;
-      display: grid;
-      place-items: center;
-      padding: 16px;
-      background: #000b;
-      backdrop-filter: blur(4px);
-    }
-
-    .modal {
-      width: min(100%, 460px);
-      max-height: 90vh;
-      overflow: auto;
-      padding: 20px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--panel);
-      box-shadow: 0 20px 60px #0009;
-    }
-
-    .page-heading { margin: 0 0 18px; }
-    .back-button { margin-bottom: 16px; }
-    .article-list { display: grid; gap: 12px; margin-top: 16px; }
-    .article-card h2 { margin-bottom: 8px; }
-    .setting-row { display: grid; gap: 6px; }
-    .setting-check { display: flex; align-items: center; gap: 10px; }
-    .range-line { display: flex; align-items: center; gap: 12px; }
-    .range-line input { flex: 1; }
-    input[type="range"] { accent-color: var(--accent); }
-    select { width: 100%; }
-
-    .contact-widget {
-      position: fixed;
-      right: 22px;
-      bottom: 22px;
-      z-index: 50;
-    }
-
-    .contact-fab {
-      display: grid;
-      width: 58px;
-      height: 58px;
-      place-items: center;
-      border: 1px solid #444;
-      border-radius: 50%;
-      color: #eee;
-      background: #171717;
-      box-shadow: 0 5px 18px #0008;
-      cursor: pointer;
-      transition: border-color .18s ease, transform .18s ease;
-    }
-
-    .contact-fab:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
-
-    .contact-panel {
-      position: absolute;
-      right: 0;
-      bottom: 72px;
-      width: min(350px, calc(100vw - 32px));
-      padding: 18px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      color: #252525;
-      background: #fff;
-      box-shadow: 0 12px 32px #0004;
-    }
-
-    .contact-panel h2 { margin: 0 0 8px; color: #222; font-size: 18px; }
-    .contact-panel p { margin: 0 0 12px; color: #666; font-size: 14px; }
-
-    .contact-panel textarea {
-      min-height: 110px;
-      color: #222;
-      background: #fff;
-      border-color: #ccc;
-    }
-
-    .contact-panel .button { color: #222; background: #f3f3f3; border-color: #ccc; }
-
-    .contact-panel .button:hover {
-      color: #111;
-      background: #e8e8e8;
-      border-color: #999;
-    }
-
-    .contact-panel a { display: inline-block; margin-top: 12px; color: #444; }
-
-    .smoke {
-      fill: none;
-      stroke: #c8c8c8;
-      stroke-width: 1.6;
-      stroke-linecap: round;
-      opacity: 0;
-      transform-origin: center;
-      animation: smoke-rise 2.4s ease-out infinite;
-    }
-
-    .smoke.s2 { animation-delay: .8s; }
-    .smoke.s3 { animation-delay: 1.6s; }
-
-    @keyframes smoke-rise {
-      0% { opacity: 0; transform: translate(0, 5px) scale(.75); }
-      20% { opacity: .7; }
-      100% { opacity: 0; transform: translate(5px, -12px) scale(1.2); }
-    }
-
-    .gothic-cross {
-      display: none;
-      position: fixed;
-      z-index: 0;
-      color: #aaa;
-      font-size: clamp(40px, 8vw, 110px);
-      opacity: .16;
-      pointer-events: none;
-    }
-
-    .gothic-cross.one { left: 2%; top: 24%; }
-    .gothic-cross.two { right: 2%; top: 58%; }
-    .gothic-cross.three { left: 3%; bottom: 3%; }
-
-    body.theme-gothic {
-      --bg: #090909;
-      --panel: #151515;
-      --panel-soft: #202020;
-      --border: #555;
-      --text: #eee;
-      --muted: #aaa;
-      --accent: #dedede;
-      background: #090909;
-      filter: grayscale(1) brightness(var(--brightness));
-    }
-
-    body.theme-gothic .gothic-cross { display: block; }
-
-    .animations-off *, .animations-off *::before, .animations-off *::after {
-      animation: none !important;
-      transition: none !important;
-    }
-
-    @media (max-width: 760px) {
-      .topbar { flex-wrap: wrap; gap: 10px; }
-      .brand-area { flex: 1; }
-      .top-actions { width: 100%; flex-wrap: wrap; }
-      .search { width: 100%; }
-      .heading-row { align-items: flex-start; flex-direction: column; }
-      .graph-tools { justify-content: flex-start; }
-      .content-grid,
-      body.admin-mode .content-grid { grid-template-columns: 1fr; }
-      .graph-shell { height: 58vh; min-height: 340px; }
-      .contact-widget { right: 14px; bottom: 14px; }
-      .hero { min-height: 100svh; background-position: center; }
-      .loader-image { max-height: 22vh; }
-    }
-
-    @media (max-height: 560px) {
-      .loader-content { gap: 10px; padding: 10px; }
-      .loader-word { font-size: clamp(32px, 9vh, 62px); }
-      .loader-image {
-        width: min(190px, 42vw);
-        max-height: 24vh;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: .01ms !important;
-        transition-duration: .01ms !important;
-      }
-    }
-  </style>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2308080a'/%3E%3Crect x='5' y='14' width='19' height='5' fill='%23e6e3de'/%3E%3Crect x='24' y='14' width='4' height='5' fill='%23b86642'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./css/site.css">
+  <link rel="stylesheet" href="./css/graph.css">
 </head>
 
-<body>
-  <div id="loader" class="loader" aria-label="Загрузка сайта">
-    <div class="loader-content">
-      <div id="loaderWord" class="loader-word" aria-label="EMODE1K">
-        <span>E</span><span>M</span><span>O</span><span>D</span>
-        <span>E</span><span>1</span><span>K</span>
+<body data-page="tree" data-role="guest">
+  <div class="loader" id="loader" aria-live="polite">
+    <div class="loader__inner">
+      <div class="loader__word" id="loaderWord" aria-label="EMODE1K">
+        <span>E</span><span>M</span><span>O</span><span>D</span><span>E</span><span>1</span><span>K</span>
       </div>
-      <div class="loader-progress"><span></span></div>
-      <p class="loader-caption">Загрузка сайта...</p>
-      <img id="loaderImage" class="loader-image" src="./loading.gif"
-        alt="Анимация загрузки"
-        onerror="this.classList.add('is-broken')">
+      <div class="loader__track"><span></span></div>
+      <p class="loader__caption" id="loaderCaption">Загрузка</p>
+      <img class="loader__image" id="loaderImage" src="./loading.gif" alt="">
     </div>
   </div>
 
-  <span class="gothic-cross one" aria-hidden="true">✝</span>
-  <span class="gothic-cross two" aria-hidden="true">✝</span>
-  <span class="gothic-cross three" aria-hidden="true">✝</span>
+  <div class="atmosphere" aria-hidden="true">
+    <div class="atmosphere__haze"></div>
+    <div class="atmosphere__smoke atmosphere__smoke--a"></div>
+    <div class="atmosphere__smoke atmosphere__smoke--b"></div>
+    <svg class="atmosphere__spires" viewBox="0 0 1600 320" preserveAspectRatio="none">
+      <path class="spire spire--far" d="M0 320V236l64-10 22-52 20 54 58-6 30-88 26 92 46-8 18-64 24 62 40-4 22-96 20 90 52-6 26-70 18 74 60-8 24-58 22 56 44-6 20-84 24 88 54-10 18-60 26 62 46-6 22-92 20 86 50-4 26-72 20 78 58-8 24-64 22 62 42-6 20-88 22 84 52-6 26-70 18 72 60-8 24-58 22 56 44-6 20-80 24 84 56-10 18-62 26 64 46-6 22-90 22 88 50-4 24-74 22 78 58-8 24-66 20 62 44-8 22-86 20 82 54-6 26-72 18 76 62-10 22-56 24 54V320Z"/>
+      <path class="spire spire--near" d="M0 320V286l34 0 6-72 12 72 44 0 8-136 8 136 38 0 8-50 10 50 46 0 8-96 14 96 50 0 8-24 8 24 46 0 8-166 10 166 44 0 8-54 12 54 44 0 8-110 8 110 44 0 8-36 10 36 44 0 8-146 10 146 44 0 8-66 12 66 44 0 8-100 12 100 44 0 8-28 10 28 44 0 8-152 10 152 44 0 8-58 12 58 44 0 8-98 8 98 44 0 8-30 12 30 44 0 8-160 10 160 44 0 8-62 12 62 44 0 8-104 10 104 44 0 8-24 10 24 44 0 8-148 10 148Z"/>
+    </svg>
+    <div class="atmosphere__glitch"></div>
+    <div class="atmosphere__grain"></div>
+    <div class="atmosphere__vignette"></div>
+  </div>
 
-  <header class="topbar">
-    <div class="brand-area">
-      <button id="menuButton" class="menu-button" type="button"
-        aria-label="Открыть меню" aria-expanded="false" aria-controls="siteMenu">
-        <span></span><span></span><span></span>
-      </button>
+  <div class="site">
+    <header class="topbar">
+      <div class="topbar__brand">
+        <button class="hamburger" id="menuButton" type="button"
+                aria-label="Меню" aria-expanded="false" aria-controls="siteMenu">
+          <span></span><span></span><span></span>
+        </button>
 
-      <a class="brand" href="#" aria-label="emode1k">
-        <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 44 26" width="31" height="18" aria-hidden="true">
-            <path class="smoke" d="M25 11 C20 7 29 6 25 1"></path>
-            <path class="smoke s2" d="M31 11 C27 7 35 5 31 1"></path>
-            <path class="smoke s3" d="M36 11 C32 7 40 5 36 1"></path>
-            <rect x="4" y="14" width="29" height="6" rx="1" fill="#e6e3de"></rect>
-            <rect x="33" y="14" width="7" height="6" fill="#b86642"></rect>
-            <path d="M4 14v6" stroke="#aaa" stroke-width="1"></path>
-          </svg>
-        </span>
-        <span class="brand-word"><span>E</span>mode1k</span>
-      </a>
+        <a class="logo" href="#" aria-label="emode1k">
+          <span class="logo__mark" aria-hidden="true">
+            <svg viewBox="0 0 44 26" width="31" height="18">
+              <path class="smoke-line" d="M25 11C20 7 29 6 25 1"/>
+              <path class="smoke-line smoke-line--2" d="M31 11C27 7 35 5 31 1"/>
+              <path class="smoke-line smoke-line--3" d="M36 11C32 7 40 5 36 1"/>
+              <rect x="4" y="14" width="29" height="6" rx="1" fill="#e6e3de"/>
+              <rect x="33" y="14" width="7" height="6" fill="#b86642"/>
+              <path d="M4 14v6" stroke="#9a9a9a"/>
+            </svg>
+          </span>
+          <span class="logo__text"><b>E</b>mode1k</span>
+        </a>
 
-      <nav id="siteMenu" class="site-menu" aria-label="Главное меню" inert>
-        <button type="button" data-page="tree">Главная</button>
-        <button type="button" data-page="articles">Статьи</button>
-        <button type="button" data-page="settings">Настройки</button>
-        <button id="menuLogoutButton" type="button">Войти</button>
-      </nav>
-    </div>
-
-    <div class="top-actions">
-      <input id="search" class="search" type="search"
-        placeholder="Поиск по дереву…" aria-label="Поиск по дереву">
-    </div>
-  </header>
-
-  <main>
-    <section class="hero" id="hero">
-      <div class="hero-content">
-        <p class="hero-label">Добро пожаловать</p>
-        <h1>emode1k</h1>
-        <p class="hero-description">
-          Emode1k — программист с различными направлениями и умениями.
-        </p>
-        <a class="hero-button" href="#treePage">Перейти к дереву</a>
-      </div>
-      <div class="hero-scroll-hint">Прокрути вниз</div>
-    </section>
-
-    <section id="treePage" class="page">
-      <div class="heading-row">
-        <div>
-          <p class="eyebrow">Интерактивная карта проекта</p>
-          <h1>Дерево emode1k</h1>
-          <p class="subheading">Перетаскивай граф для перемещения. Колесо мыши меняет масштаб. Нажимай узлы, чтобы раскрывать ветки.</p>
-        </div>
-        <div class="graph-tools">
-          <span id="graphMeta" class="graph-meta"></span>
-          <button id="resetViewButton" class="button" type="button">Сбросить вид</button>
-        </div>
+        <nav class="menu" id="siteMenu" aria-label="Разделы" inert>
+          <button type="button" data-page="tree">Главная</button>
+          <button type="button" data-page="articles">Статьи</button>
+          <button type="button" data-page="settings">Настройки</button>
+          <span class="menu__rule"></span>
+          <button type="button" id="menuLogoutButton">Войти</button>
+        </nav>
       </div>
 
-      <div id="graph" class="graph-shell" aria-label="Дерево проекта"></div>
+      <div class="topbar__tools">
+        <label class="search">
+          <span class="search__icon" aria-hidden="true"></span>
+          <input id="search" type="search" placeholder="Поиск по дереву" aria-label="Поиск по дереву">
+        </label>
+      </div>
+    </header>
 
-      <div class="content-grid">
-        <section class="card">
-          <h2 id="detailsTitle">Информация об узле</h2>
-          <div id="details" class="details">Загрузка дерева…</div>
-          <div id="adminNodeActions" class="button-row hidden">
-            <button id="editNodeButton" class="button" type="button">Изменить</button>
-            <button id="deleteNodeButton" class="button button-danger" type="button">Удалить ветку</button>
+    <main>
+      <section class="hero" id="hero">
+        <div class="hero__art" aria-hidden="true"></div>
+        <div class="hero__plate">
+          <p class="hero__label">Личная карта</p>
+          <h1 class="hero__title">emode1k</h1>
+          <p class="hero__lead">Проекты, инструменты и заметки по мере того, как они появляются.</p>
+          <a class="hero__link" href="#treePage">Открыть дерево</a>
+        </div>
+        <span class="hero__hint" aria-hidden="true">прокрути вниз</span>
+      </section>
+
+      <section class="page" id="treePage">
+        <div class="page__head">
+          <div>
+            <p class="eyebrow">Интерактивная карта</p>
+            <h1>Дерево проектов</h1>
+            <p class="page__lead">Тяни полотно, колесо мыши — масштаб. Узел раскрывает ветку.</p>
           </div>
-        </section>
+          <div class="page__tools">
+            <span class="graph-meta" id="graphMeta"></span>
+            <button class="btn" id="resetViewButton" type="button">Сбросить вид</button>
+          </div>
+        </div>
 
-        <section id="adminPanel" class="card hidden">
-          <h2 id="nodeFormTitle">Добавить узел</h2>
-          <form id="nodeForm" class="form-grid">
-            <input id="nodeLabel" maxlength="80" required placeholder="Название">
-            <textarea id="nodeInfo" maxlength="2000" placeholder="Описание"></textarea>
-            <div class="button-row">
-              <button id="saveNodeButton" class="button button-primary" type="submit">Добавить</button>
-              <button id="cancelNodeButton" class="button hidden" type="button">Отмена</button>
+        <div class="graph" id="graph">
+          <div class="graph__stage" id="graphStage"></div>
+          <canvas class="graph__sparks" id="sparkCanvas"></canvas>
+        </div>
+
+        <div class="grid">
+          <section class="card">
+            <h2 class="card__title" id="detailsTitle">Узел</h2>
+            <div class="prose" id="details">Загрузка дерева…</div>
+            <div class="actions hidden" id="adminNodeActions">
+              <button class="btn" id="editNodeButton" type="button">Изменить</button>
+              <button class="btn btn--danger" id="deleteNodeButton" type="button">Удалить ветку</button>
+            </div>
+          </section>
+
+          <section class="card hidden" id="adminPanel">
+            <h2 class="card__title" id="nodeFormTitle">Новый узел</h2>
+            <form class="form" id="nodeForm">
+              <input id="nodeLabel" maxlength="80" required placeholder="Название">
+              <textarea id="nodeInfo" maxlength="2000" placeholder="Описание"></textarea>
+              <div class="actions">
+                <button class="btn btn--primary" id="saveNodeButton" type="submit">Добавить</button>
+                <button class="btn hidden" id="cancelNodeButton" type="button">Отмена</button>
+              </div>
+            </form>
+            <p class="status" id="adminStatus" role="status"></p>
+          </section>
+        </div>
+      </section>
+
+      <section class="page hidden" id="articlesPage">
+        <button class="btn btn--ghost back" data-back type="button">← Назад</button>
+        <h1 class="page__title">Статьи</h1>
+
+        <section class="card hidden" id="articleEditor">
+          <h2 class="card__title" id="articleFormHeading">Новая статья</h2>
+          <form class="form" id="articleForm">
+            <input id="articleTitle" maxlength="150" placeholder="Заголовок" required>
+            <textarea id="articleContent" maxlength="20000" placeholder="Текст" required></textarea>
+            <div class="actions">
+              <button class="btn btn--primary" id="saveArticleButton" type="submit">Опубликовать</button>
+              <button class="btn hidden" id="cancelArticleButton" type="button">Отмена</button>
             </div>
           </form>
-          <p id="adminStatus" class="status" role="status"></p>
+          <p class="status" id="articleStatus" role="status"></p>
         </section>
-      </div>
-    </section>
 
-    <section id="articlesPage" class="page hidden">
-      <button class="button back-button" data-back type="button">← Назад</button>
-      <h1 class="page-heading">Статьи</h1>
-
-      <section id="articleEditor" class="card hidden">
-        <h2 id="articleFormHeading">Новая статья</h2>
-        <form id="articleForm" class="form-grid">
-          <input id="articleTitle" maxlength="150" placeholder="Заголовок" required>
-          <textarea id="articleContent" maxlength="20000" placeholder="Текст статьи" required></textarea>
-          <div class="button-row">
-            <button id="saveArticleButton" class="button button-primary" type="submit">Опубликовать</button>
-            <button id="cancelArticleButton" class="button hidden" type="button">Отмена</button>
-          </div>
-        </form>
-        <p id="articleStatus" class="status" role="status"></p>
+        <div class="articles" id="articlesList"></div>
       </section>
-      <div id="articlesList" class="article-list"></div>
-    </section>
 
-    <section id="settingsPage" class="page hidden">
-      <button class="button back-button" data-back type="button">← Назад</button>
-      <h1 class="page-heading">Настройки сайта</h1>
+      <section class="page hidden" id="settingsPage">
+        <button class="btn btn--ghost back" data-back type="button">← Назад</button>
+        <h1 class="page__title">Настройки</h1>
 
-      <section class="card">
-        <form id="settingsForm" class="form-grid">
-          <label class="setting-row">
-            Цвет интерфейса
-            <select id="colorSelect">
-              <option value="#e5484d">Красный</option>
-              <option value="#e53935">Красный тёмный</option>
-              <option value="#f44336">Алый</option>
-              <option value="#ff5722">Оранжево-красный</option>
-              <option value="#ff9800">Оранжевый</option>
-              <option value="#ffc107">Янтарный</option>
-              <option value="#ffeb3b">Жёлтый</option>
-              <option value="#cddc39">Лаймовый</option>
-              <option value="#8bc34a">Салатовый</option>
-              <option value="#4caf50">Зелёный</option>
-              <option value="#009688">Бирюзовый</option>
-              <option value="#00bcd4">Циан</option>
-              <option value="#03a9f4">Голубой</option>
-              <option value="#2196f3">Синий</option>
-              <option value="#3f51b5">Индиго</option>
-              <option value="#673ab7">Фиолетовый</option>
-              <option value="#9c27b0">Пурпурный</option>
-              <option value="#e91e63">Розовый</option>
-              <option value="#795548">Коричневый</option>
-              <option value="#9e9e9e">Серый</option>
-              <option value="#ffffff">Белый</option>
-              <option value="#d4af37">Золотой</option>
-              <option value="#00a86b">Изумрудный</option>
-              <option value="#7cfc00">Лайм</option>
-              <option value="#ff00ff">Фуксия</option>
-              <option value="#40e0d0">Светлая бирюза</option>
-              <option value="#6495ed">Васильковый</option>
-              <option value="#dc143c">Малиновый</option>
-              <option value="#ff7f50">Коралловый</option>
-            </select>
-          </label>
+        <section class="card">
+          <p class="notice hidden" id="settingsGate">Оформление меняет администратор. Здесь можно только посмотреть.</p>
+          <form class="form" id="settingsForm">
+            <label class="field">
+              <span>Акцент</span>
+              <select id="colorSelect">
+                <option value="#e5484d">Красный</option>
+                <option value="#e53935">Тёмно-красный</option>
+                <option value="#f44336">Алый</option>
+                <option value="#ff5722">Оранжево-красный</option>
+                <option value="#ff9800">Оранжевый</option>
+                <option value="#ffc107">Янтарный</option>
+                <option value="#ffeb3b">Жёлтый</option>
+                <option value="#cddc39">Лаймовый</option>
+                <option value="#8bc34a">Салатовый</option>
+                <option value="#4caf50">Зелёный</option>
+                <option value="#009688">Бирюзовый</option>
+                <option value="#00bcd4">Циан</option>
+                <option value="#03a9f4">Голубой</option>
+                <option value="#2196f3">Синий</option>
+                <option value="#3f51b5">Индиго</option>
+                <option value="#673ab7">Фиолетовый</option>
+                <option value="#9c27b0">Пурпурный</option>
+                <option value="#e91e63">Розовый</option>
+                <option value="#795548">Коричневый</option>
+                <option value="#9e9e9e">Серый</option>
+                <option value="#ffffff">Белый</option>
+                <option value="#d4af37">Золотой</option>
+                <option value="#00a86b">Изумрудный</option>
+                <option value="#7cfc00">Лайм</option>
+                <option value="#ff00ff">Фуксия</option>
+                <option value="#40e0d0">Бирюза</option>
+                <option value="#6495ed">Васильковый</option>
+                <option value="#dc143c">Малиновый</option>
+                <option value="#ff7f50">Коралловый</option>
+              </select>
+            </label>
 
-          <label class="setting-row">
-            Общий стиль сайта
-            <select id="themeSelect">
-              <option value="standard">Стандартный</option>
-              <option value="gothic">Готик</option>
-            </select>
-          </label>
+            <label class="field">
+              <span>Тема</span>
+              <select id="themeSelect">
+                <option value="standard">Стандартная</option>
+                <option value="gothic">Готик</option>
+              </select>
+            </label>
 
-          <label class="setting-row">
-            Размер страницы
-            <div class="range-line">
-              <input id="pageScale" type="range" min="80" max="120" step="5" value="100">
-              <output id="pageScaleOutput">100%</output>
-            </div>
-          </label>
+            <label class="field">
+              <span>Масштаб</span>
+              <span class="range">
+                <input id="pageScale" type="range" min="80" max="120" step="5" value="100">
+                <output id="pageScaleOutput">100%</output>
+              </span>
+            </label>
 
-          <label class="setting-row">
-            Яркость
-            <div class="range-line">
-              <input id="brightness" type="range" min="50" max="120" step="5" value="100">
-              <output id="brightnessOutput">100%</output>
-            </div>
-          </label>
+            <label class="field">
+              <span>Яркость</span>
+              <span class="range">
+                <input id="brightness" type="range" min="50" max="120" step="5" value="100">
+                <output id="brightnessOutput">100%</output>
+              </span>
+            </label>
 
-          <label class="setting-check">
-            <input id="animationsEnabled" type="checkbox" checked>
-            Включить анимации
-          </label>
+            <label class="check">
+              <input id="animationsEnabled" type="checkbox" checked>
+              <span>Анимации</span>
+            </label>
 
-          <button class="button button-primary" type="submit">Сохранить настройки для всех</button>
-        </form>
-        <p id="settingsStatus" class="status" role="status"></p>
+            <button class="btn btn--primary" type="submit">Сохранить</button>
+          </form>
+          <p class="status" id="settingsStatus" role="status"></p>
+        </section>
       </section>
-    </section>
-  </main>
+    </main>
 
-  <div class="contact-widget">
-    <section id="contactPanel" class="contact-panel hidden" aria-label="Связаться с автором">
-      <h2>Связаться с автором</h2>
-      <p>Напишите сообщение. Оно откроется в вашей почтовой программе.</p>
-      <form id="contactForm" class="form-grid">
-        <textarea id="contactText" maxlength="5000" required placeholder="Ваше сообщение"></textarea>
-        <button class="button button-primary" type="submit">Написать автору</button>
+    <footer class="footer">
+      <span>emode1k</span>
+      <span class="footer__dot"></span>
+      <span id="footerYear">2026</span>
+    </footer>
+  </div>
+
+  <div class="contact">
+    <section class="contact__panel hidden" id="contactPanel" aria-label="Связаться">
+      <h2>Письмо</h2>
+      <p>Откроется почтовый клиент — сообщение уйдёт автору.</p>
+      <form class="form" id="contactForm">
+        <textarea id="contactText" maxlength="5000" required placeholder="Текст"></textarea>
+        <button class="btn btn--primary" type="submit">Отправить</button>
       </form>
-      <a href="mailto:emode1koff@gmail.com">emode1koff@gmail.com</a>
+      <a class="contact__mail" href="mailto:emode1koff@gmail.com">emode1koff@gmail.com</a>
     </section>
 
-    <button id="contactButton" class="contact-fab" type="button"
-      aria-label="Связаться с автором" aria-expanded="false" aria-controls="contactPanel">
-      <svg viewBox="0 0 44 26" width="31" height="18" aria-hidden="true">
-        <path class="smoke" d="M25 11 C20 7 29 6 25 1"></path>
-        <path class="smoke s2" d="M31 11 C27 7 35 5 31 1"></path>
-        <path class="smoke s3" d="M36 11 C32 7 40 5 36 1"></path>
-        <rect x="4" y="14" width="29" height="6" rx="1" fill="#e6e3de"></rect>
-        <rect x="33" y="14" width="7" height="6" fill="#b86642"></rect>
-        <path d="M4 14v6" stroke="#aaa" stroke-width="1"></path>
+    <button class="contact__fab" id="contactButton" type="button"
+            aria-label="Связаться" aria-expanded="false" aria-controls="contactPanel">
+      <svg viewBox="0 0 44 26" width="30" height="17" aria-hidden="true">
+        <path class="smoke-line" d="M25 11C20 7 29 6 25 1"/>
+        <path class="smoke-line smoke-line--2" d="M31 11C27 7 35 5 31 1"/>
+        <path class="smoke-line smoke-line--3" d="M36 11C32 7 40 5 36 1"/>
+        <rect x="4" y="14" width="29" height="6" rx="1" fill="#e6e3de"/>
+        <rect x="33" y="14" width="7" height="6" fill="#b86642"/>
       </svg>
     </button>
   </div>
 
-  <div id="loginDialog" class="modal-backdrop hidden" role="dialog"
-    aria-modal="true" aria-labelledby="loginTitle">
-    <section class="modal">
-      <h2 id="loginTitle">Вход администратора</h2>
-      <p class="notice">Вход выполняется через Supabase Auth.</p>
-      <form id="loginForm" class="form-grid">
-        <input id="emailInput" type="email" autocomplete="username"
-          placeholder="Почта администратора" required>
-        <input id="passwordInput" type="password" autocomplete="current-password"
-          placeholder="Пароль Supabase" required>
-        <div class="button-row">
-          <button class="button button-primary" type="submit">Войти</button>
-          <button id="closeLoginButton" class="button" type="button">Отмена</button>
+  <div class="modal hidden" id="loginDialog" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="modal__box">
+      <h2 id="loginTitle">Вход</h2>
+      <p class="modal__hint">Учётная запись Supabase</p>
+      <form class="form" id="loginForm">
+        <input id="emailInput" type="email" autocomplete="username" placeholder="Почта" required>
+        <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Пароль" required>
+        <div class="actions">
+          <button class="btn btn--primary" type="submit">Войти</button>
+          <button class="btn" id="closeLoginButton" type="button">Отмена</button>
         </div>
-        <p id="loginStatus" class="status error" role="status"></p>
+        <p class="status status--error" id="loginStatus" role="status"></p>
       </form>
-    </section>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = "https://ajydliryxxhqetfwefya.supabase.co";
-    const SUPABASE_PUBLIC_KEY = "sb_publishable_itE-NyvxMgqHsbqn3Dp4sQ_2uZPoiUZ";
-    const ADMIN_EMAIL = "emode1koff@gmail.com";
-    const ROOT_ID = "emode1k";
-
-    const NODE_W = 150;
-    const NODE_H = 38;
-    const EDGE_GAP = 76;
-    const ROW_STEP = NODE_H + 30;
-
-    const $ = id => document.getElementById(id);
-    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
-
-    let nodes = [];
-    let selectedId = ROOT_ID;
-    let isAdmin = false;
-    let editingNodeId = null;
-    let editingArticleId = null;
-    let query = "";
-    let loading = false;
-    let drag = null;
-    let fitted = false;
-    let currentPage = "tree";
-
-    const expanded = new Set();
-    const view = { x: 0, y: 0, scale: 1 };
-    const wireColors = ["#ff3038", "#32e875", "#ffd735"];
-    const wireColorsById = new Map();
-
-    function isSiteAdmin(session) {
-      return session?.user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-    }
-
-    function escapeHtml(value) {
-      return String(value).replace(/[&<>"']/g, character => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      })[character]);
-    }
-
-    function childrenOf(id) {
-      return nodes.filter(node => node.parent === id);
-    }
-
-    function descendantsOf(id) {
-      const result = new Set([id]);
-
-      function walk(parentId) {
-        for (const child of childrenOf(parentId)) {
-          if (result.has(child.id)) continue;
-          result.add(child.id);
-          walk(child.id);
-        }
-      }
-
-      walk(id);
-      return result;
-    }
-
-    function depthOf(node, byId) {
-      let depth = 0;
-      let current = node;
-      const seen = new Set();
-
-      while (current.parent && byId.has(current.parent) && !seen.has(current.id)) {
-        seen.add(current.id);
-        depth++;
-        current = byId.get(current.parent);
-      }
-
-      return depth;
-    }
-
-    function visibleByExpansion(node, byId) {
-      let current = node;
-
-      while (current.parent && byId.has(current.parent)) {
-        const parent = byId.get(current.parent);
-        if (depthOf(parent, byId) >= 1 && !expanded.has(parent.id)) return false;
-        current = parent;
-      }
-
-      return true;
-    }
-
-    function getVisibleNodes(byId) {
-      if (!query) return nodes.filter(node => visibleByExpansion(node, byId));
-
-      const found = new Map();
-      const term = query.toLocaleLowerCase();
-
-      for (const node of nodes) {
-        const content = `${node.label} ${node.info || ""}`.toLocaleLowerCase();
-        if (!content.includes(term)) continue;
-
-        found.set(node.id, node);
-        let current = node;
-
-        while (current.parent && byId.has(current.parent)) {
-          current = byId.get(current.parent);
-          found.set(current.id, current);
-        }
-      }
-
-      return [...found.values()];
-    }
-
-    function sortedChildren(parentId, ids) {
-      return nodes
-        .filter(node => node.parent === parentId && ids.has(node.id))
-        .sort((a, b) => a.label.localeCompare(b.label));
-    }
-
-    function makeLayout(shown, byId) {
-      const ids = new Set(shown.map(node => node.id));
-      const points = new Map();
-
-      if (!ids.has(ROOT_ID) || !byId.has(ROOT_ID)) return points;
-
-      function visibleChildren(parentId) {
-        return nodes
-          .filter(node => node.parent === parentId && ids.has(node.id))
-          .sort((a, b) => a.label.localeCompare(b.label));
-      }
-
-      function leafCount(node, path = new Set()) {
-        if (path.has(node.id)) return 1;
-
-        const nextPath = new Set(path);
-        nextPath.add(node.id);
-        const children = visibleChildren(node.id);
-
-        if (!children.length) return 1;
-
-        return children.reduce(
-          (sum, child) => sum + leafCount(child, nextPath),
-          0
-        );
-      }
-
-      points.set(ROOT_ID, { x: 0, y: 0 });
-
-      const rootChildren = visibleChildren(ROOT_ID);
-      const totalLeaves = rootChildren.reduce(
-        (sum, child) => sum + leafCount(child),
-        0
-      );
-
-      let cursorY = -((totalLeaves - 1) * ROW_STEP) / 2;
-
-      function place(node, depth, startY, path = new Set()) {
-        if (path.has(node.id)) return;
-
-        const nextPath = new Set(path);
-        nextPath.add(node.id);
-
-        const children = visibleChildren(node.id);
-        const count = children.length
-          ? children.reduce((sum, child) => sum + leafCount(child, nextPath), 0)
-          : 1;
-
-        points.set(node.id, {
-          x: depth * (NODE_W + EDGE_GAP),
-          y: startY + ((count - 1) * ROW_STEP) / 2
-        });
-
-        let childY = startY;
-
-        for (const child of children) {
-          const childLeaves = leafCount(child, nextPath);
-          place(child, depth + 1, childY, nextPath);
-          childY += childLeaves * ROW_STEP;
-        }
-      }
-
-      for (const child of rootChildren) {
-        const count = leafCount(child);
-        place(child, 1, cursorY);
-        cursorY += count * ROW_STEP;
-      }
-
-      return points;
-    }
-
-    function getWireColor(nodeId) {
-      if (!wireColorsById.has(nodeId)) {
-        wireColorsById.set(
-          nodeId,
-          wireColors[Math.floor(Math.random() * wireColors.length)]
-        );
-      }
-      return wireColorsById.get(nodeId);
-    }
-
-    function edgePath(parent, child, nodeId) {
-      const startX = parent.x + NODE_W;
-      const startY = parent.y + NODE_H / 2;
-      const endX = child.x;
-      const endY = child.y + NODE_H / 2;
-      const bend = Math.max(24, (endX - startX) * 0.4);
-
-      const path = `M ${startX} ${startY}
-        C ${startX + bend} ${startY},
-          ${endX - bend} ${endY},
-          ${endX} ${endY}`;
-
-      return `<g style="--wire-color:${getWireColor(nodeId)}">
-        <path class="edge-shadow" d="${path}"/>
-        <path class="edge-wire" d="${path}"/>
-        <path class="edge-highlight" d="${path}"/>
-      </g>`;
-    }
-
-    function draw() {
-      const host = $("graph");
-
-      if (loading) {
-        host.innerHTML = '<div class="empty-state">Загрузка дерева…</div>';
-        return;
-      }
-
-      const byId = new Map(nodes.map(node => [node.id, node]));
-      const shown = getVisibleNodes(byId);
-      $("graphMeta").textContent = `${shown.length} / ${nodes.length} узлов`;
-
-      if (!shown.length) {
-        host.innerHTML = '<div class="empty-state">Дерево пусто или ничего не найдено.</div>';
-        return;
-      }
-
-      const points = makeLayout(shown, byId);
-
-      if (!points.has(ROOT_ID)) {
-        host.innerHTML = '<div class="empty-state">Корень дерева не найден.</div>';
-        return;
-      }
-
-      const width = Math.max(1, host.clientWidth);
-      const height = Math.max(1, host.clientHeight);
-      const values = [...points.values()];
-
-      const minX = Math.min(...values.map(point => point.x));
-      const maxX = Math.max(...values.map(point => point.x));
-      const minY = Math.min(...values.map(point => point.y));
-      const maxY = Math.max(...values.map(point => point.y));
-
-      const paddingX = NODE_W;
-      const paddingY = NODE_H * 2;
-      const contentWidth = Math.max(NODE_W, maxX - minX + paddingX * 2);
-      const contentHeight = Math.max(NODE_H, maxY - minY + paddingY * 2);
-      const offsetX = paddingX - minX - NODE_W / 2;
-      const offsetY = paddingY - minY - NODE_H / 2;
-
-      const positions = new Map();
-
-      for (const node of shown) {
-        const point = points.get(node.id);
-        if (!point) continue;
-
-        positions.set(node.id, {
-          x: point.x + offsetX,
-          y: point.y + offsetY
-        });
-      }
-
-      let edges = "";
-
-      for (const node of shown) {
-        if (!node.parent) continue;
-
-        const parentPosition = positions.get(node.parent);
-        const childPosition = positions.get(node.id);
-
-        if (parentPosition && childPosition) {
-          edges += edgePath(parentPosition, childPosition, node.id);
-        }
-      }
-
-      let markup = "";
-
-      shown.forEach((node, index) => {
-        const position = positions.get(node.id);
-        if (!position) return;
-
-        const label = node.label.length > 20
-          ? node.label.slice(0, 19) + "…"
-          : node.label;
-
-        const expandable = node.id !== ROOT_ID && childrenOf(node.id).length > 0;
-        const sign = expandable
-          ? (expanded.has(node.id) ? "−" : "+")
-          : "";
-
-        markup += `<g class="node ${node.id === ROOT_ID ? "root" : ""} ${node.id === selectedId ? "selected" : ""}"
-          data-id="${escapeHtml(node.id)}"
-          transform="translate(${position.x},${position.y})"
-          tabindex="0" role="button" aria-label="${escapeHtml(node.label)}">
-          <g class="node-body" style="animation-delay:${Math.min(index * 24, 320)}ms">
-            <rect width="${NODE_W}" height="${NODE_H}" rx="7"/>
-            <circle class="dot" cx="12" cy="${NODE_H / 2}" r="3"/>
-            <text x="${NODE_W / 2}" y="${NODE_H / 2 + 4}" text-anchor="middle">${escapeHtml(label)}</text>
-            <text class="expand-indicator" x="${NODE_W - 13}" y="14" text-anchor="middle">${sign}</text>
-          </g>
-        </g>`;
-      });
-
-      if (!fitted) {
-        view.scale = Math.max(
-          0.25,
-          Math.min(
-            1,
-            (width - 40) / contentWidth,
-            (height - 40) / contentHeight
-          )
-        );
-        view.x = (width - contentWidth * view.scale) / 2;
-        view.y = (height - contentHeight * view.scale) / 2;
-        fitted = true;
-      }
-
-      host.innerHTML = `<svg class="graph-svg"
-        viewBox="0 0 ${width} ${height}"
-        preserveAspectRatio="none">
-        <g id="graphContent"
-          transform="translate(${view.x} ${view.y}) scale(${view.scale})">
-          ${edges}
-          ${markup}
-        </g>
-      </svg>`;
-
-      host.querySelectorAll(".node").forEach(element => {
-        const activate = () => clickNode(element.dataset.id);
-
-        element.addEventListener("click", activate);
-        element.addEventListener("keydown", event => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            activate();
-          }
-        });
-      });
-    }
-
-    function emitSparks(nodeId) {
-      const graph = $("graph");
-      const node = [...graph.querySelectorAll(".node")]
-        .find(element => element.dataset.id === nodeId);
-
-      if (!node) return;
-
-      const graphRect = graph.getBoundingClientRect();
-      const nodeRect = node.getBoundingClientRect();
-      const nodeLeft = nodeRect.left - graphRect.left;
-      const nodeWidth = nodeRect.width;
-      const startY = nodeRect.top - graphRect.top + nodeRect.height - 2;
-      const count = 4 + Math.floor(Math.random() * 7);
-
-      for (let index = 0; index < count; index++) {
-        const spark = document.createElement("span");
-        const offsetX = Math.random() * nodeWidth;
-        const drift = Math.round((Math.random() - 0.5) * 150);
-        const drop = Math.round(100 + Math.random() * 220);
-        const delay = Math.round(Math.random() * 850);
-        const duration = (0.65 + Math.random() * 1.1).toFixed(2);
-
-        spark.className = "spark";
-        spark.style.left = `${nodeLeft + offsetX}px`;
-        spark.style.top = `${startY}px`;
-        spark.style.setProperty("--spark-drift", `${drift}px`);
-        spark.style.setProperty("--spark-drop", `${drop}px`);
-        spark.style.setProperty("--spark-duration", `${duration}s`);
-        spark.style.animationDelay = `${delay}ms`;
-
-        graph.appendChild(spark);
-        spark.addEventListener("animationend", () => spark.remove(), { once: true });
-      }
-    }
-
-    async function loadTree() {
-      loading = true;
-      $("details").textContent = "Загружаю дерево из Supabase…";
-      draw();
-
-      const { data, error } = await db.from("nodes")
-        .select("id,parent_id,label,info")
-        .order("label");
-
-      loading = false;
-
-      if (error) {
-        nodes = [];
-        $("detailsTitle").textContent = "Ошибка загрузки";
-        $("details").textContent = error.message;
-        draw();
-        return;
-      }
-
-      nodes = (data || []).map(row => ({
-        id: row.id,
-        parent: row.parent_id,
-        label: row.label,
-        info: row.info || ""
-      }));
-
-      if (!nodes.some(node => node.id === ROOT_ID)) {
-        $("detailsTitle").textContent = "Корень не найден";
-        $("details").textContent = "Добавь узел emode1k с parent_id равным null.";
-        draw();
-        return;
-      }
-
-      if (!nodes.some(node => node.id === selectedId)) selectedId = ROOT_ID;
-      selectNode(selectedId);
-    }
-
-    function clickNode(id) {
-      const node = nodes.find(item => item.id === id);
-      if (!node) return;
-
-      const byId = new Map(nodes.map(item => [item.id, item]));
-      const hasChildren = childrenOf(id).length > 0;
-
-      if (hasChildren) {
-        requestAnimationFrame(() => emitSparks(id));
-      }
-
-      if (depthOf(node, byId) >= 1 && hasChildren) {
-        if (expanded.has(id)) {
-          expanded.delete(id);
-          descendantsOf(id).forEach(childId => expanded.delete(childId));
-        } else {
-          expanded.add(id);
-        }
-      }
-
-      selectNode(id);
-    }
-
-    function selectNode(id) {
-      const node = nodes.find(item => item.id === id);
-      if (!node) return;
-
-      selectedId = id;
-      $("detailsTitle").textContent = node.label;
-      $("details").textContent = node.info || "Описание не добавлено.";
-      $("adminNodeActions").classList.toggle("hidden", !isAdmin || id === ROOT_ID);
-      draw();
-    }
-
-    function resetNodeForm() {
-      editingNodeId = null;
-      $("nodeForm").reset();
-      $("nodeFormTitle").textContent = "Добавить узел";
-      $("saveNodeButton").textContent = "Добавить";
-      $("cancelNodeButton").classList.add("hidden");
-    }
-
-    function applySettings(settings) {
-      document.documentElement.style.setProperty(
-        "--accent",
-        settings.accent_color || "#e5484d"
-      );
-      document.documentElement.style.setProperty(
-        "--brightness",
-        Number(settings.brightness ?? 100) / 100
-      );
-      document.documentElement.style.setProperty(
-        "--page-scale",
-        Number(settings.page_scale ?? 100) / 100
-      );
-      document.body.classList.toggle("theme-gothic", settings.theme === "gothic");
-      document.body.classList.toggle(
-        "animations-off",
-        settings.animations_enabled === false
-      );
-    }
-
-    function setAdmin(enabled) {
-      isAdmin = enabled;
-      document.body.classList.toggle("admin-mode", enabled);
-      $("adminPanel").classList.toggle("hidden", !enabled);
-      $("adminNodeActions").classList.toggle(
-        "hidden",
-        !enabled || selectedId === ROOT_ID
-      );
-      $("articleEditor").classList.toggle("hidden", !enabled);
-      $("menuLogoutButton").textContent = enabled
-        ? "Выйти из профиля"
-        : "Войти";
-
-      draw();
-      if (currentPage === "articles") loadArticles();
-    }
-
-    function closeMenu() {
-      $("menuButton").setAttribute("aria-expanded", "false");
-      $("siteMenu").classList.remove("open");
-      $("siteMenu").inert = true;
-    }
-
-    function goTo(page) {
-      currentPage = page;
-      $("treePage").classList.toggle("hidden", page !== "tree");
-      $("articlesPage").classList.toggle("hidden", page !== "articles");
-      $("settingsPage").classList.toggle("hidden", page !== "settings");
-      closeMenu();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-
-      if (page === "articles") loadArticles();
-      if (page === "settings") loadSettings();
-    }
-
-    $("menuButton").addEventListener("click", () => {
-      const open = $("menuButton").getAttribute("aria-expanded") !== "true";
-      $("menuButton").setAttribute("aria-expanded", String(open));
-      $("siteMenu").classList.toggle("open", open);
-      $("siteMenu").inert = !open;
-    });
-
-    $("siteMenu").addEventListener("click", event => {
-      const button = event.target.closest("[data-page]");
-      if (button) goTo(button.dataset.page);
-    });
-
-    document.querySelectorAll("[data-back]").forEach(element => {
-      element.addEventListener("click", () => goTo("tree"));
-    });
-
-    document.addEventListener("click", event => {
-      if (!event.target.closest(".brand-area")) closeMenu();
-
-      if (!event.target.closest(".contact-widget")) {
-        $("contactPanel").classList.add("hidden");
-        $("contactButton").setAttribute("aria-expanded", "false");
-      }
-    });
-
-    $("contactButton").addEventListener("click", () => {
-      const panel = $("contactPanel");
-      const open = panel.classList.contains("hidden");
-
-      panel.classList.toggle("hidden", !open);
-      $("contactButton").setAttribute("aria-expanded", String(open));
-      if (open) $("contactText").focus();
-    });
-
-    $("contactForm").addEventListener("submit", event => {
-      event.preventDefault();
-
-      const subject = encodeURIComponent("Сообщение с сайта emode1k");
-      const body = encodeURIComponent($("contactText").value.trim());
-
-      location.href =
-        `mailto:emode1koff@gmail.com?subject=${subject}&body=${body}`;
-    });
-
-    document.addEventListener("keydown", event => {
-      if (event.key !== "Escape") return;
-
-      closeMenu();
-      $("loginDialog").classList.add("hidden");
-      $("contactPanel").classList.add("hidden");
-      $("contactButton").setAttribute("aria-expanded", "false");
-    });
-
-    $("search").addEventListener("input", event => {
-      query = event.target.value.trim();
-      fitted = false;
-      draw();
-    });
-
-    async function logout() {
-      const { error } = await db.auth.signOut();
-
-      if (error) {
-        $("adminStatus").textContent = error.message;
-      } else {
-        setAdmin(false);
-        resetNodeForm();
-      }
-    }
-
-    $("menuLogoutButton").addEventListener("click", async () => {
-      closeMenu();
-
-      if (isAdmin) return logout();
-
-      $("loginDialog").classList.remove("hidden");
-      $("emailInput").focus();
-    });
-
-    $("closeLoginButton").addEventListener("click", () => {
-      $("loginDialog").classList.add("hidden");
-      $("loginForm").reset();
-      $("loginStatus").textContent = "";
-    });
-
-    $("loginForm").addEventListener("submit", async event => {
-      event.preventDefault();
-
-      const { data, error } = await db.auth.signInWithPassword({
-        email: $("emailInput").value.trim(),
-        password: $("passwordInput").value
-      });
-
-      if (error) {
-        $("loginStatus").textContent = error.message;
-        return;
-      }
-
-      if (!isSiteAdmin(data.session)) {
-        await db.auth.signOut();
-        $("loginStatus").textContent =
-          "У этой учётной записи нет прав администратора.";
-        return;
-      }
-
-      $("loginDialog").classList.add("hidden");
-      $("loginForm").reset();
-      setAdmin(true);
-    });
-
-    db.auth.onAuthStateChange((_event, session) => {
-      setAdmin(isSiteAdmin(session));
-    });
-
-    $("nodeForm").addEventListener("submit", async event => {
-      event.preventDefault();
-      if (!isAdmin) return;
-
-      const label = $("nodeLabel").value.trim();
-      const info = $("nodeInfo").value.trim();
-      let result;
-      let savedId = editingNodeId;
-
-      $("saveNodeButton").disabled = true;
-
-      if (editingNodeId) {
-        result = await db.from("nodes")
-          .update({ label, info })
-          .eq("id", editingNodeId);
-      } else {
-        savedId = "node-" + crypto.randomUUID();
-        const parentId = nodes.some(node => node.id === selectedId)
-          ? selectedId
-          : ROOT_ID;
-
-        result = await db.from("nodes").insert({
-          id: savedId,
-          parent_id: parentId,
-          label,
-          info
-        });
-      }
-
-      $("saveNodeButton").disabled = false;
-
-      if (result.error) {
-        $("adminStatus").textContent = result.error.message;
-        return;
-      }
-
-      resetNodeForm();
-      fitted = false;
-      await loadTree();
-
-      if (savedId) selectNode(savedId);
-      $("adminStatus").textContent = "Сохранено.";
-    });
-
-    $("editNodeButton").addEventListener("click", () => {
-      const node = nodes.find(item => item.id === selectedId);
-      if (!isAdmin || !node || node.id === ROOT_ID) return;
-
-      editingNodeId = node.id;
-      $("nodeLabel").value = node.label;
-      $("nodeInfo").value = node.info || "";
-      $("nodeFormTitle").textContent = "Редактировать узел";
-      $("saveNodeButton").textContent = "Сохранить";
-      $("cancelNodeButton").classList.remove("hidden");
-    });
-
-    $("cancelNodeButton").addEventListener("click", resetNodeForm);
-
-    async function deleteBranch(id) {
-      const pending = descendantsOf(id);
-      const removed = new Set(pending);
-      const order = [];
-
-      while (pending.size) {
-        const leaves = [...pending].filter(parentId =>
-          childrenOf(parentId).every(child => !pending.has(child.id))
-        );
-
-        if (!leaves.length) throw new Error("Цикл в структуре дерева.");
-
-        order.push(...leaves);
-        leaves.forEach(nodeId => pending.delete(nodeId));
-      }
-
-      for (const nodeId of order) {
-        const { error } = await db.from("nodes").delete().eq("id", nodeId);
-        if (error) throw error;
-      }
-
-      return removed;
-    }
-
-    $("deleteNodeButton").addEventListener("click", async () => {
-      const node = nodes.find(item => item.id === selectedId);
-      if (!isAdmin || !node || node.id === ROOT_ID) return;
-      if (!confirm(`Удалить «${node.label}» и все вложенные узлы?`)) return;
-
-      try {
-        const removed = await deleteBranch(node.id);
-
-        removed.forEach(id => {
-          expanded.delete(id);
-          wireColorsById.delete(id);
-        });
-
-        selectedId = ROOT_ID;
-        fitted = false;
-        await loadTree();
-        selectNode(ROOT_ID);
-      } catch (error) {
-        $("adminStatus").textContent = error.message;
-      }
-    });
-
-    function resetArticleForm() {
-      editingArticleId = null;
-      $("articleForm").reset();
-      $("articleFormHeading").textContent = "Новая статья";
-      $("saveArticleButton").textContent = "Опубликовать";
-      $("cancelArticleButton").classList.add("hidden");
-    }
-
-    async function loadArticles() {
-      $("articlesList").textContent = "Загружаю статьи…";
-
-      const { data, error } = await db.from("articles")
-        .select("id,title,content,updated_at")
-        .order("updated_at", { ascending: false });
-
-      if (error) {
-        $("articlesList").textContent = "Ошибка загрузки: " + error.message;
-        return;
-      }
-
-      $("articlesList").replaceChildren();
-
-      if (!data?.length) {
-        $("articlesList").textContent = "Статей пока нет.";
-        return;
-      }
-
-      data.forEach(article => {
-        const card = document.createElement("article");
-        card.className = "card article-card";
-
-        const title = document.createElement("h2");
-        title.textContent = article.title;
-
-        const content = document.createElement("div");
-        content.className = "article-content";
-        content.textContent = article.content;
-
-        card.append(title, content);
-
-        if (isAdmin) {
-          const actions = document.createElement("div");
-          actions.className = "article-actions";
-
-          const edit = document.createElement("button");
-          edit.className = "button";
-          edit.type = "button";
-          edit.textContent = "Изменить";
-          edit.addEventListener("click", () => {
-            editingArticleId = article.id;
-            $("articleTitle").value = article.title;
-            $("articleContent").value = article.content;
-            $("articleFormHeading").textContent = "Редактировать статью";
-            $("saveArticleButton").textContent = "Сохранить";
-            $("cancelArticleButton").classList.remove("hidden");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          });
-
-          const remove = document.createElement("button");
-          remove.className = "button button-danger";
-          remove.type = "button";
-          remove.textContent = "Удалить";
-          remove.addEventListener("click", async () => {
-            if (!confirm(`Удалить «${article.title}»?`)) return;
-
-            const { error: deleteError } = await db.from("articles")
-              .delete()
-              .eq("id", article.id);
-
-            if (deleteError) {
-              $("articleStatus").textContent = deleteError.message;
-            } else {
-              loadArticles();
-            }
-          });
-
-          actions.append(edit, remove);
-          card.append(actions);
-        }
-
-        $("articlesList").append(card);
-      });
-    }
-
-    $("articleForm").addEventListener("submit", async event => {
-      event.preventDefault();
-      if (!isAdmin) return;
-
-      const title = $("articleTitle").value.trim();
-      const content = $("articleContent").value.trim();
-
-      const result = editingArticleId
-        ? await db.from("articles")
-            .update({
-              title,
-              content,
-              updated_at: new Date().toISOString()
-            })
-            .eq("id", editingArticleId)
-        : await db.from("articles").insert({
-            id: "article-" + crypto.randomUUID(),
-            title,
-            content
-          });
-
-      if (result.error) {
-        $("articleStatus").textContent = result.error.message;
-        return;
-      }
-
-      resetArticleForm();
-      $("articleStatus").textContent = "Статья сохранена.";
-      await loadArticles();
-    });
-
-    $("cancelArticleButton").addEventListener("click", resetArticleForm);
-
-    async function loadSettings() {
-      const { data, error } = await db.from("site_settings")
-        .select("accent_color,theme,page_scale,brightness,animations_enabled")
-        .eq("id", 1)
-        .maybeSingle();
-
-      if (error) {
-        $("settingsStatus").textContent =
-          "Ошибка загрузки настроек: " + error.message;
-        return;
-      }
-
-      const settings = data || {
-        accent_color: "#e5484d",
-        theme: "standard",
-        page_scale: 100,
-        brightness: 100,
-        animations_enabled: true
-      };
-
-      applySettings(settings);
-      $("colorSelect").value = settings.accent_color || "#e5484d";
-      $("themeSelect").value = settings.theme === "gothic" ? "gothic" : "standard";
-      $("pageScale").value = settings.page_scale ?? 100;
-      $("pageScaleOutput").value = (settings.page_scale ?? 100) + "%";
-      $("brightness").value = settings.brightness ?? 100;
-      $("brightnessOutput").value = (settings.brightness ?? 100) + "%";
-      $("animationsEnabled").checked = settings.animations_enabled !== false;
-    }
-
-    $("pageScale").addEventListener("input", event => {
-      $("pageScaleOutput").value = event.target.value + "%";
-      document.documentElement.style.setProperty(
-        "--page-scale",
-        Number(event.target.value) / 100
-      );
-    });
-
-    $("brightness").addEventListener("input", event => {
-      $("brightnessOutput").value = event.target.value + "%";
-      document.documentElement.style.setProperty(
-        "--brightness",
-        Number(event.target.value) / 100
-      );
-    });
-
-    $("colorSelect").addEventListener("input", event => {
-      document.documentElement.style.setProperty("--accent", event.target.value);
-    });
-
-    $("themeSelect").addEventListener("change", event => {
-      document.body.classList.toggle(
-        "theme-gothic",
-        event.target.value === "gothic"
-      );
-    });
-
-    $("settingsForm").addEventListener("submit", async event => {
-      event.preventDefault();
-
-      const settings = {
-        id: 1,
-        accent_color: $("colorSelect").value,
-        theme: $("themeSelect").value,
-        page_scale: Number($("pageScale").value),
-        brightness: Number($("brightness").value),
-        animations_enabled: $("animationsEnabled").checked
-      };
-
-      const { error } = await db.from("site_settings").upsert(settings);
-
-      if (error) {
-        $("settingsStatus").textContent = "Ошибка сохранения: " + error.message;
-        return;
-      }
-
-      applySettings(settings);
-      $("settingsStatus").textContent =
-        "Общие настройки сохранены для всех посетителей.";
-    });
-
-    $("graph").addEventListener("pointerdown", event => {
-      if (event.target.closest(".node") || event.button !== 0) return;
-
-      drag = {
-        id: event.pointerId,
-        sx: event.clientX,
-        sy: event.clientY,
-        x: view.x,
-        y: view.y
-      };
-
-      $("graph").classList.add("dragging");
-      $("graph").setPointerCapture(event.pointerId);
-    });
-
-    $("graph").addEventListener("pointermove", event => {
-      if (!drag || event.pointerId !== drag.id) return;
-
-      view.x = drag.x + event.clientX - drag.sx;
-      view.y = drag.y + event.clientY - drag.sy;
-
-      $("graphContent")?.setAttribute(
-        "transform",
-        `translate(${view.x} ${view.y}) scale(${view.scale})`
-      );
-    });
-
-    function stopDrag(event) {
-      if (!drag || event.pointerId !== drag.id) return;
-      drag = null;
-      $("graph").classList.remove("dragging");
-    }
-
-    $("graph").addEventListener("pointerup", stopDrag);
-    $("graph").addEventListener("pointercancel", stopDrag);
-
-    $("graph").addEventListener("wheel", event => {
-      event.preventDefault();
-
-      const rect = $("graph").getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      const oldScale = view.scale;
-      const nextScale = Math.max(
-        .35,
-        Math.min(2.2, oldScale * (event.deltaY < 0 ? 1.1 : .9))
-      );
-
-      view.x = x - (x - view.x) * nextScale / oldScale;
-      view.y = y - (y - view.y) * nextScale / oldScale;
-      view.scale = nextScale;
-
-      $("graphContent")?.setAttribute(
-        "transform",
-        `translate(${view.x} ${view.y}) scale(${view.scale})`
-      );
-    }, { passive: false });
-
-    $("resetViewButton").addEventListener("click", () => {
-      view.x = 0;
-      view.y = 0;
-      view.scale = 1;
-      fitted = false;
-      draw();
-    });
-
-    window.addEventListener("resize", () => {
-      fitted = false;
-      draw();
-    });
-
-    const loader = $("loader");
-    const loaderWord = $("loaderWord");
-    const previousHtmlOverflow = document.documentElement.style.overflow;
-    const previousBodyOverflow = document.body.style.overflow;
-
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
-
-    function closeLoader() {
-      if (!loader || !loader.isConnected) return;
-
-      loader.classList.add("loaded");
-      document.documentElement.style.overflow = previousHtmlOverflow;
-      document.body.style.overflow = previousBodyOverflow;
-
-      window.setTimeout(() => loader.remove(), 700);
-    }
-
-    window.setTimeout(() => loaderWord?.classList.add("complete"), 1800);
-    window.setTimeout(closeLoader, 2800);
-
-    window.addEventListener("load", () => {
-      window.setTimeout(closeLoader, 500);
-    }, { once: true });
-
-    (async function init() {
-      const { data } = await db.auth.getSession();
-      setAdmin(isSiteAdmin(data?.session));
-      await loadSettings();
-      await loadTree();
-    })();
-  </script>
+  <script type="module" src="./js/main.js"></script>
 </body>
 </html>
