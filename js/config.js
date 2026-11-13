@@ -2,6 +2,7 @@ export const SUPABASE_URL = 'https://ajydliryxxhqetfwefya.supabase.co';
 export const SUPABASE_KEY = 'sb_publishable_itE-NyvxMgqHsbqn3Dp4sQ_2uZPoiUZ';
 
 export const ADMIN_EMAIL = 'emode1koff@gmail.com';
+export const SUPPORT_EMAIL = 'emode1koff@gmail.com';
 export const ROOT_ID = 'emode1k';
 
 export const NODE = {

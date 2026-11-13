@@ -1,10 +1,11 @@
-import { ROOT_ID } from './config.js';
+import { ROOT_ID, SUPPORT_EMAIL } from './config.js';
 import * as api from './api.js';
 import { byId, debounce, element, on, show, text } from './dom.js';
 import { GraphView } from './graph.js';
 import { createAdmin } from './admin.js';
 import { createRouter } from './pages.js';
 import { bootLoader } from './loader.js';
+import { createSupport } from './support.js';
 
 const loader = bootLoader();
 
@@ -153,27 +154,38 @@ on(byId('search'), 'input', debounce((event) => {
   graph.setQuery(event.target.value.trim());
 }, 140));
 
-/* ---------- связь ---------- */
+/* ---------- поддержка (бот) ---------- */
 
 const contactPanel = byId('contactPanel');
 const contactButton = byId('contactButton');
 
+function openDeveloperModal() {
+  byId('developerEmail').textContent = SUPPORT_EMAIL;
+  byId('developerMailto').href =
+    `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('Поддержка emode1k')}`;
+  show(byId('developerModal'), true);
+}
+
+const support = createSupport({ openDeveloper: openDeveloperModal });
+
 function setContact(open) {
   show(contactPanel, open);
   contactButton.setAttribute('aria-expanded', String(open));
+  if (open) support.reset();
 }
 
 on(contactButton, 'click', () => {
   const open = contactPanel.classList.contains('hidden');
   setContact(open);
-  if (open) byId('contactText').focus();
+  if (open) byId('chatInput').focus();
 });
 
-on(byId('contactForm'), 'submit', (event) => {
-  event.preventDefault();
+on(byId('contactCloseButton'), 'click', () => setContact(false));
 
-  const body = encodeURIComponent(byId('contactText').value.trim());
-  location.href = `mailto:emode1koff@gmail.com?subject=${encodeURIComponent('Письмо с сайта emode1k')}&body=${body}`;
+on(byId('developerCloseButton'), 'click', () => show(byId('developerModal'), false));
+
+on(byId('developerModal'), 'click', (event) => {
+  if (event.target === byId('developerModal')) show(byId('developerModal'), false);
 });
 
 if (byId('footerYear')) byId('footerYear').textContent = String(new Date().getFullYear());
@@ -191,6 +203,7 @@ on(document, 'keydown', (event) => {
   setMenu(false);
   setContact(false);
   show(byId('loginDialog'), false);
+  show(byId('developerModal'), false);
 });
 
 /* ---------- старт ---------- */

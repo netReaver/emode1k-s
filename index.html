@@ -268,14 +268,16 @@
   </div>
 
   <div class="contact">
-    <section class="contact__panel hidden" id="contactPanel" aria-label="Связаться">
-      <h2>Письмо</h2>
-      <p>Откроется почтовый клиент — сообщение уйдёт автору.</p>
-      <form class="form" id="contactForm">
-        <textarea id="contactText" maxlength="5000" required placeholder="Текст"></textarea>
+    <section class="contact__panel hidden" id="contactPanel" aria-label="Поддержка">
+      <header class="chat__head">
+        <h2>Поддержка</h2>
+        <button class="chat__close" id="contactCloseButton" type="button" aria-label="Закрыть">×</button>
+      </header>
+      <div class="chat__log" id="chatLog" role="log" aria-live="polite"></div>
+      <form class="chat__form" id="chatForm">
+        <input id="chatInput" maxlength="300" placeholder="Опишите проблему…" autocomplete="off">
         <button class="btn btn--primary" type="submit">Отправить</button>
       </form>
-      <a class="contact__mail" href="mailto:emode1koff@gmail.com">emode1koff@gmail.com</a>
     </section>
 
     <button class="contact__fab" id="contactButton" type="button"
@@ -307,6 +309,18 @@
         </div>
         <p class="status status--error" id="loginStatus" role="status"></p>
       </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="developerModal" role="dialog" aria-modal="true" aria-labelledby="developerTitle">
+    <div class="modal__box">
+      <h2 id="developerTitle">Связаться с разработчиком</h2>
+      <p class="modal__hint">Напишите разработчику напрямую:</p>
+      <p class="developer__email" id="developerEmail"></p>
+      <div class="actions">
+        <a class="btn btn--primary" id="developerMailto" href="#">Написать письмо</a>
+        <button class="btn" id="developerCloseButton" type="button">Закрыть</button>
+      </div>
     </div>
   </div>
 
