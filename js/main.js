@@ -1,17 +1,69 @@
-import { ROOT_ID } from './config.js';
+import { ROOT_ID, SUPPORT_EMAIL } from './config.js';
 import * as api from './api.js';
-import { byId, debounce, on, show, text } from './dom.js';
+import { byId, debounce, element, on, show, text } from './dom.js';
 import { GraphView } from './graph.js';
 import { createAdmin } from './admin.js';
 import { createRouter } from './pages.js';
 import { bootLoader } from './loader.js';
+import { createSupport } from './support.js';
+import { createReports } from './reports.js';
 
 const loader = bootLoader();
+
+const formatDate = (value) => {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleDateString('ru-RU', { day: '2-digit', month: 'long', year: 'numeric' });
+};
+
+const excerptOf = (content, length = 160) => {
+  const text = String(content || '').replace(/\s+/g, ' ').trim();
+  return text.length > length ? `${text.slice(0, length).trimEnd()}…` : text;
+};
 
 function showNode(node) {
   text(byId('detailsTitle'), node.label);
   text(byId('details'), node.info || 'Описание не добавлено.');
   show(byId('adminNodeActions'), admin.isAdmin() && node.id !== ROOT_ID);
+  loadRelated(node.id);
+}
+
+async function loadRelated(nodeId) {
+  const list = byId('relatedList');
+  list.replaceChildren(element('p', 'related__empty', 'Загружаю статьи…'));
+
+  try {
+    const articles = await api.fetchRelatedArticles(nodeId);
+    list.replaceChildren();
+
+    if (!articles.length) {
+      list.append(element('p', 'related__empty', 'Пока нет связанных статей.'));
+      return;
+    }
+
+    for (const article of articles) {
+      const item = element('article', 'related__item');
+      item.tabIndex = 0;
+      const open = () => router.go('articles');
+      item.addEventListener('click', open);
+      item.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          open();
+        }
+      });
+
+      const title = element('h4', 'related__item-title', article.title);
+      const date = element('time', 'related__item-date', formatDate(article.updatedAt));
+      const excerpt = element('p', 'related__item-text', excerptOf(article.content));
+
+      item.append(title, date, excerpt);
+      list.append(item);
+    }
+  } catch (error) {
+    list.replaceChildren(element('p', 'related__empty', `Ошибка загрузки: ${error.message}`));
+  }
 }
 
 const graph = new GraphView({
@@ -25,6 +77,7 @@ const router = createRouter({
   onEnter: (route) => {
     if (route === 'articles') admin.loadArticles();
     if (route === 'settings') admin.loadSettings();
+    if (route === 'reports') reports.load();
   },
 });
 
@@ -33,6 +86,8 @@ const admin = createAdmin({
   reloadTree: loadTree,
   navigate: (route) => router.go(route),
 });
+
+const reports = createReports({ isAdmin: () => admin.isAdmin() });
 
 /* ---------- загрузка дерева ---------- */
 
@@ -103,27 +158,38 @@ on(byId('search'), 'input', debounce((event) => {
   graph.setQuery(event.target.value.trim());
 }, 140));
 
-/* ---------- связь ---------- */
+/* ---------- поддержка (бот) ---------- */
 
 const contactPanel = byId('contactPanel');
 const contactButton = byId('contactButton');
 
+function openDeveloperModal() {
+  byId('developerEmail').textContent = SUPPORT_EMAIL;
+  byId('developerMailto').href =
+    `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('Поддержка emode1k')}`;
+  show(byId('developerModal'), true);
+}
+
+const support = createSupport({ openDeveloper: openDeveloperModal });
+
 function setContact(open) {
   show(contactPanel, open);
   contactButton.setAttribute('aria-expanded', String(open));
+  if (open) support.reset();
 }
 
 on(contactButton, 'click', () => {
   const open = contactPanel.classList.contains('hidden');
   setContact(open);
-  if (open) byId('contactText').focus();
+  if (open) byId('chatInput').focus();
 });
 
-on(byId('contactForm'), 'submit', (event) => {
-  event.preventDefault();
+on(byId('contactCloseButton'), 'click', () => setContact(false));
 
-  const body = encodeURIComponent(byId('contactText').value.trim());
-  location.href = `mailto:emode1koff@gmail.com?subject=${encodeURIComponent('Письмо с сайта emode1k')}&body=${body}`;
+on(byId('developerCloseButton'), 'click', () => show(byId('developerModal'), false));
+
+on(byId('developerModal'), 'click', (event) => {
+  if (event.target === byId('developerModal')) show(byId('developerModal'), false);
 });
 
 if (byId('footerYear')) byId('footerYear').textContent = String(new Date().getFullYear());
@@ -141,6 +207,7 @@ on(document, 'keydown', (event) => {
   setMenu(false);
   setContact(false);
   show(byId('loginDialog'), false);
+  show(byId('developerModal'), false);
 });
 
 /* ---------- старт ---------- */

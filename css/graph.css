@@ -8,9 +8,9 @@
   border-radius: var(--r-md);
   background:
     radial-gradient(42% 36% at 16% 10%, rgba(255, 255, 255, 0.05), transparent 62%),
-    radial-gradient(52% 44% at 86% 92%, rgba(160, 40, 44, 0.11), transparent 64%),
-    radial-gradient(72% 62% at 50% 50%, rgba(18, 18, 24, 0.92), rgba(6, 6, 8, 1) 78%),
-    #09090b;
+    radial-gradient(52% 44% at 86% 92%, rgba(255, 255, 255, 0.05), transparent 64%),
+    radial-gradient(72% 62% at 50% 50%, rgba(22, 27, 34, 0.92), rgba(1, 4, 9, 1) 78%),
+    #010409;
   cursor: grab;
   touch-action: none;
   box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.75);
@@ -82,7 +82,7 @@
   letter-spacing: 0.04em;
 }
 
-.graph__empty--error { color: #ff9ea6; }
+.graph__empty--error { color: #e6edf3; }
 
 /* ---------- wires ---------- */
 .wire { pointer-events: none; }
@@ -98,22 +98,22 @@
 
 .wire__strand {
   fill: none;
-  stroke: #7d7d82;
+  stroke: #7d8590;
   stroke-width: 2.1;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.wire__strand--alt { stroke: #b4b4b9; stroke-width: 1.7; }
+.wire__strand--alt { stroke: #c9d1d9; stroke-width: 1.7; }
 
 .wire__barb {
   fill: none;
-  stroke: #ccccd0;
+  stroke: #e6edf3;
   stroke-width: 1.5;
   stroke-linecap: round;
 }
 
-.wire__knot { fill: #d0d0d4; opacity: 0.8; }
+.wire__knot { fill: #e6edf3; opacity: 0.8; }
 
 .wire__glint {
   fill: none;
@@ -161,8 +161,8 @@
 }
 
 .node__plate {
-  fill: #1a1a20;
-  stroke: #8a8a92;
+  fill: #161b22;
+  stroke: #8b949e;
   stroke-width: 1.2;
   transition: fill 0.28s ease, stroke 0.28s ease, filter 0.28s ease;
 }
@@ -174,26 +174,26 @@
 }
 
 .node__label {
-  fill: #e2e2e5;
+  fill: #e6edf3;
   font-size: 12px;
   font-weight: 600;
   pointer-events: none;
   letter-spacing: 0.02em;
 }
 
-.node__pin { fill: #a5a5aa; }
-.node__sign { fill: #b9b9be; font-size: 12px; font-weight: 700; }
+.node__pin { fill: #8b949e; }
+.node__sign { fill: #8b949e; font-size: 12px; font-weight: 700; }
 
 .node:hover .node__plate,
 .node.selected .node__plate {
-  fill: #202026;
-  stroke: #d6d6da;
+  fill: #1c2129;
+  stroke: #e6edf3;
   filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.22));
 }
 
 .node.selected .node__plate { stroke: var(--accent); }
 
-.node--root .node__plate { fill: #22181a; stroke: #d8d8dc; stroke-width: 1.6; }
+.node--root .node__plate { fill: #161b22; stroke: #e6edf3; stroke-width: 1.6; }
 .node--root .node__label { font-weight: 800; letter-spacing: 0.06em; }
 
 .node:focus-visible .node__plate { stroke: var(--accent); stroke-width: 2; }

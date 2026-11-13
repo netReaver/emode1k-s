@@ -54,7 +54,7 @@ export async function fetchSettings() {
   if (error) throw error;
 
   return data || {
-    accent_color: '#e5484d',
+    accent_color: '#ffffff',
     theme: 'standard',
     page_scale: 100,
     brightness: 100,
@@ -110,6 +110,78 @@ export async function updateArticle(id, { title, content }) {
 export async function deleteArticle(id) {
   const { error } = await client.from('articles').delete().eq('id', id);
   if (error) throw error;
+}
+
+export async function fetchRelatedArticles(nodeId) {
+  const { data: links, error: linksError } = await client
+    .from('article_links')
+    .select('article_id')
+    .eq('node_id', nodeId);
+
+  if (linksError) throw linksError;
+
+  const ids = (links || []).map((link) => link.article_id);
+  if (!ids.length) return [];
+
+  const { data, error } = await client
+    .from('articles')
+    .select('id,title,content,updated_at')
+    .in('id', ids)
+    .order('updated_at', { ascending: false });
+
+  if (error) throw error;
+  return (data || []).map(toArticle);
+}
+
+export async function fetchArticleLinks(articleId) {
+  const { data, error } = await client
+    .from('article_links')
+    .select('node_id')
+    .eq('article_id', articleId);
+
+  if (error) throw error;
+  return (data || []).map((link) => link.node_id);
+}
+
+export async function setArticleLinks(articleId, nodeIds) {
+  const { error: deleteError } = await client
+    .from('article_links')
+    .delete()
+    .eq('article_id', articleId);
+
+  if (deleteError) throw deleteError;
+
+  if (!nodeIds.length) return;
+
+  const { error } = await client
+    .from('article_links')
+    .insert(nodeIds.map((nodeId) => ({ article_id: articleId, node_id: nodeId })));
+
+  if (error) throw error;
+}
+
+export async function fetchAuditLog({ entityType = '', dateFrom = '', dateTo = '', page = 1, pageSize = 20 } = {}) {
+  const { data, error } = await client.rpc('get_audit_log', {
+    p_entity_type: entityType || null,
+    p_date_from: dateFrom ? new Date(`${dateFrom}T00:00:00`).toISOString() : null,
+    p_date_to: dateTo ? new Date(`${dateTo}T23:59:59.999`).toISOString() : null,
+    p_page: page,
+    p_page_size: pageSize,
+  });
+
+  if (error) throw error;
+  return data || [];
+}
+
+export async function fetchAuditLogCount({ entityType = '', dateFrom = '', dateTo = '' } = {}) {
+  const { data, error } = await client.rpc('get_audit_log_count', {
+    p_entity_type: entityType || null,
+    p_date_from: dateFrom ? new Date(`${dateFrom}T00:00:00`).toISOString() : null,
+    p_date_to: dateTo ? new Date(`${dateTo}T23:59:59.999`).toISOString() : null,
+  });
+
+  if (error) throw error;
+  return data ?? 0;
 }
 
 export function isAdminSession(session) {

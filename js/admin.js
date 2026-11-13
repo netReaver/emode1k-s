@@ -28,6 +28,7 @@ export function createAdmin({ graph, reloadTree, navigate }) {
     show(byId('adminNodeActions'), enabled && graph.selectedId !== ROOT_ID);
     show(byId('articleEditor'), enabled);
     show(byId('settingsGate'), !enabled);
+    show(byId('menuReportsButton'), enabled);
 
     text(byId('menuLogoutButton'), enabled ? 'Выйти из профиля' : 'Войти');
 
@@ -190,6 +191,20 @@ export function createAdmin({ graph, reloadTree, navigate }) {
     show(byId('cancelArticleButton'), false);
   }
 
+  function populateNodeSelect() {
+    const select = byId('articleNodes');
+    if (!select) return;
+
+    const nodes = [...graph.nodes].sort((a, b) => a.label.localeCompare(b.label, 'ru'));
+    select.replaceChildren();
+
+    for (const node of nodes) {
+      const option = element('option', '', node.label);
+      option.value = node.id;
+      select.append(option);
+    }
+  }
+
   function renderArticles() {
     const list = byId('articlesList');
     list.replaceChildren();
@@ -215,13 +230,24 @@ export function createAdmin({ graph, reloadTree, navigate }) {
 
         const edit = element('button', 'btn', 'Изменить');
         edit.type = 'button';
-        edit.addEventListener('click', () => {
+        edit.addEventListener('click', async () => {
           editingArticle = article.id;
           byId('articleTitle').value = article.title;
           byId('articleContent').value = article.content;
           text(byId('articleFormHeading'), 'Правка статьи');
           text(byId('saveArticleButton'), 'Сохранить');
           show(byId('cancelArticleButton'), true);
+
+          const select = byId('articleNodes');
+          try {
+            const links = await api.fetchArticleLinks(article.id);
+            [...select.options].forEach((option) => {
+              option.selected = links.includes(option.value);
+            });
+          } catch {
+            [...select.options].forEach((option) => { option.selected = false; });
+          }
+
           window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
@@ -247,6 +273,7 @@ export function createAdmin({ graph, reloadTree, navigate }) {
   }
 
   async function loadArticles() {
+    populateNodeSelect();
     const list = byId('articlesList');
     list.replaceChildren(element('p', 'article__empty', 'Загружаю статьи…'));
 
@@ -264,18 +291,24 @@ export function createAdmin({ graph, reloadTree, navigate }) {
 
     const title = byId('articleTitle').value.trim();
     const content = byId('articleContent').value.trim();
+    const nodeIds = [...byId('articleNodes').selectedOptions].map((option) => option.value);
 
     if (!title || !content) {
       text(byId('articleStatus'), 'Нужны заголовок и текст.');
       return;
     }
 
+    let savedId = editingArticle;
+
     try {
       if (editingArticle) {
         await api.updateArticle(editingArticle, { title, content });
       } else {
-        await api.insertArticle({ id: `article-${crypto.randomUUID()}`, title, content });
+        savedId = `article-${crypto.randomUUID()}`;
+        await api.insertArticle({ id: savedId, title, content });
       }
+
+      await api.setArticleLinks(savedId, nodeIds);
 
       resetArticleForm();
       text(byId('articleStatus'), 'Статья сохранена.');
@@ -323,10 +356,6 @@ export function createAdmin({ graph, reloadTree, navigate }) {
     on(byId('brightness'), 'input', (event) => {
       byId('brightnessOutput').value = `${event.target.value}%`;
       document.documentElement.style.setProperty('--brightness', Number(event.target.value) / 100);
-    });
-
-    on(byId('colorSelect'), 'input', (event) => {
-      document.documentElement.style.setProperty('--accent', event.target.value);
     });
 
     on(byId('themeSelect'), 'change', (event) => {
