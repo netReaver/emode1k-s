@@ -18,10 +18,10 @@ export const WIRE = {
 };
 
 export const SPARKS = {
-  gravity: 0.36,
-  drag: 0.9955,
-  lifeMin: 1700,
-  lifeMax: 3200,
-  speedMin: 0.35,
+  gravity: 0.6,
+  drag: 0.9,
+  lifeMin: 320,
+  lifeMax: 680,
+  speedMin: 0.7,
   speedMax: 1.5,
 };

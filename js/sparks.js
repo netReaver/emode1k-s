@@ -58,16 +58,18 @@ export class SparkField {
   }
 
   burst(x, y, { count = 15, spread = 24, power = 1 } = {}) {
+    const speed = randomBetween(SPARKS.speedMin, SPARKS.speedMax);
+
     for (let index = 0; index < count; index += 1) {
       const cube = Math.random() < 0.28;
-      const life = randomBetween(SPARKS.lifeMin, SPARKS.lifeMax) * randomBetween(0.8, 1.2);
-      const sideways = Math.random() ** 2;
+      const life = randomBetween(SPARKS.lifeMin, SPARKS.lifeMax) * randomBetween(0.85, 1.15);
+      const sideways = Math.random();
 
       this.particles.push({
         x: x + randomBetween(-spread, spread),
         y: y + randomBetween(-3, 3),
-        vx: (Math.random() < 0.5 ? -1 : 1) * sideways * 145 * power,
-        vy: (cube ? randomBetween(45, 165) : randomBetween(25, 120)) * power,
+        vx: (Math.random() < 0.5 ? -1 : 1) * (sideways * 260 + 40) * speed * power,
+        vy: (cube ? randomBetween(120, 300) : randomBetween(70, 220)) * speed * power,
         size: cube ? randomBetween(3.2, 6.4) : randomBetween(1.4, 2.6),
         rotation: randomBetween(0, Math.PI),
         spin: randomBetween(-7, 7),
@@ -109,7 +111,7 @@ export class SparkField {
     // оставляем короткий шлейф, а не стираем всё в ноль
     const ctx = this.ctx;
     ctx.globalCompositeOperation = 'destination-out';
-    ctx.fillStyle = `rgba(0, 0, 0, ${Math.min(0.42, delta * 3.2)})`;
+    ctx.fillStyle = `rgba(0, 0, 0, ${Math.min(0.5, delta * 3.2)})`;
     ctx.fillRect(0, 0, this.width, this.height);
     ctx.globalCompositeOperation = 'source-over';
   }
@@ -140,7 +142,8 @@ export class SparkField {
 
     for (const particle of this.particles) {
       const progress = particle.age / particle.life;
-      const alpha = (1 - progress) * (0.9 - progress * 0.35);
+      // почти до конца держим яркость, затем резкий спад — эффект «вспышки»
+      const alpha = progress < 0.6 ? 1 : Math.pow(1 - (progress - 0.6) / 0.4, 2);
       if (alpha <= 0.01) continue;
 
       ctx.save();
