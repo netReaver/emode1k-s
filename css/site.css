@@ -361,12 +361,15 @@ a { color: inherit; }
 
 .menu {
   position: absolute;
-  top: calc(100% + 12px);
+  top: calc(100% + 10px);
   left: 0;
-  z-index: 45;
+  z-index: 50;
   display: grid;
   gap: 2px;
-  width: 216px;
+  width: 224px;
+  max-height: calc(100dvh - 88px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 7px;
   border: 1px solid var(--line);
   border-radius: var(--r-md);
@@ -377,9 +380,9 @@ a { color: inherit; }
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transform: translateY(-8px) scale(0.985);
+  transform: translateY(-10px) scale(0.98);
   transform-origin: top left;
-  transition: opacity 0.22s var(--ease), transform 0.28s var(--ease), visibility 0.28s;
+  transition: opacity 0.18s var(--ease), transform 0.24s var(--ease), visibility 0s linear 0.24s;
 }
 
 .menu.open {
@@ -387,6 +390,7 @@ a { color: inherit; }
   visibility: visible;
   pointer-events: auto;
   transform: none;
+  transition: opacity 0.18s var(--ease), transform 0.24s var(--ease), visibility 0s;
 }
 
 .menu button {
@@ -1195,6 +1199,7 @@ body.admin-mode .grid {
   .topbar__brand { flex: 1; }
   .topbar__tools { width: 100%; }
   .search { width: 100%; }
+  .menu { width: min(224px, calc(100vw - 28px)); }
   .page__head { flex-direction: column; align-items: flex-start; }
   .page__tools { justify-content: flex-start; }
   .grid,
