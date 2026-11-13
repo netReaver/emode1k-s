@@ -28,6 +28,7 @@ export function createAdmin({ graph, reloadTree, navigate }) {
     show(byId('adminNodeActions'), enabled && graph.selectedId !== ROOT_ID);
     show(byId('articleEditor'), enabled);
     show(byId('settingsGate'), !enabled);
+    show(byId('menuReportsButton'), enabled);
 
     text(byId('menuLogoutButton'), enabled ? 'Выйти из профиля' : 'Войти');
 

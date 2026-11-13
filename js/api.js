@@ -160,6 +160,30 @@ export async function setArticleLinks(articleId, nodeIds) {
   if (error) throw error;
 }
 
+export async function fetchAuditLog({ entityType = '', dateFrom = '', dateTo = '', page = 1, pageSize = 20 } = {}) {
+  const { data, error } = await client.rpc('get_audit_log', {
+    p_entity_type: entityType || null,
+    p_date_from: dateFrom ? new Date(`${dateFrom}T00:00:00`).toISOString() : null,
+    p_date_to: dateTo ? new Date(`${dateTo}T23:59:59.999`).toISOString() : null,
+    p_page: page,
+    p_page_size: pageSize,
+  });
+
+  if (error) throw error;
+  return data || [];
+}
+
+export async function fetchAuditLogCount({ entityType = '', dateFrom = '', dateTo = '' } = {}) {
+  const { data, error } = await client.rpc('get_audit_log_count', {
+    p_entity_type: entityType || null,
+    p_date_from: dateFrom ? new Date(`${dateFrom}T00:00:00`).toISOString() : null,
+    p_date_to: dateTo ? new Date(`${dateTo}T23:59:59.999`).toISOString() : null,
+  });
+
+  if (error) throw error;
+  return data ?? 0;
+}
+
 export function isAdminSession(session) {
   const email = session?.user?.email;
   return Boolean(email) && email.toLowerCase() === ADMIN_EMAIL.toLowerCase();

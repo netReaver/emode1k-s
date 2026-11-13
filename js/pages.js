@@ -4,6 +4,7 @@ const ROUTES = {
   tree: 'treePage',
   articles: 'articlesPage',
   settings: 'settingsPage',
+  reports: 'reportsPage',
 };
 
 export function createRouter({ onEnter } = {}) {

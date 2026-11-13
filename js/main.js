@@ -6,6 +6,7 @@ import { createAdmin } from './admin.js';
 import { createRouter } from './pages.js';
 import { bootLoader } from './loader.js';
 import { createSupport } from './support.js';
+import { createReports } from './reports.js';
 
 const loader = bootLoader();
 
@@ -76,6 +77,7 @@ const router = createRouter({
   onEnter: (route) => {
     if (route === 'articles') admin.loadArticles();
     if (route === 'settings') admin.loadSettings();
+    if (route === 'reports') reports.load();
   },
 });
 
@@ -84,6 +86,8 @@ const admin = createAdmin({
   reloadTree: loadTree,
   navigate: (route) => router.go(route),
 });
+
+const reports = createReports({ isAdmin: () => admin.isAdmin() });
 
 /* ---------- загрузка дерева ---------- */
 

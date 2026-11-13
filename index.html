@@ -84,6 +84,7 @@
           <button type="button" data-page="tree">Главная</button>
           <button type="button" data-page="articles">Статьи</button>
           <button type="button" data-page="settings">Настройки</button>
+          <button type="button" data-page="reports" id="menuReportsButton" class="hidden">Репорты</button>
           <span class="menu__rule"></span>
           <button type="button" id="menuLogoutButton">Войти</button>
         </nav>
@@ -256,6 +257,45 @@
             <button class="btn btn--primary" type="submit">Сохранить</button>
           </form>
           <p class="status" id="settingsStatus" role="status"></p>
+        </section>
+      </section>
+
+      <section class="page hidden" id="reportsPage">
+        <button class="btn btn--ghost back" data-back type="button">← Назад</button>
+        <h1 class="page__title">Репорты</h1>
+        <p class="page__lead">История изменений деревьев и статей.</p>
+
+        <section class="card">
+          <form class="form reports__filters" id="reportsFilters">
+            <div class="reports__filters-row">
+              <label class="field">
+                <span>Тип сущности</span>
+                <select id="reportsEntity">
+                  <option value="">Все</option>
+                  <option value="node">Узлы дерева</option>
+                  <option value="article">Статьи</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Дата с</span>
+                <input id="reportsFrom" type="date">
+              </label>
+              <label class="field">
+                <span>Дата по</span>
+                <input id="reportsTo" type="date">
+              </label>
+              <div class="actions">
+                <button class="btn btn--primary" type="submit">Применить</button>
+                <button class="btn" id="reportsReset" type="button">Сбросить</button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <section class="card reports__table-card">
+          <div class="reports__list" id="reportsList"></div>
+          <p class="status" id="reportsStatus" role="status"></p>
+          <nav class="reports__pager" id="reportsPager" aria-label="Пагинация"></nav>
         </section>
       </section>
     </main>
