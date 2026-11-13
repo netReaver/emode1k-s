@@ -112,6 +112,54 @@ export async function deleteArticle(id) {
   if (error) throw error;
 }
 
+export async function fetchRelatedArticles(nodeId) {
+  const { data: links, error: linksError } = await client
+    .from('article_links')
+    .select('article_id')
+    .eq('node_id', nodeId);
+
+  if (linksError) throw linksError;
+
+  const ids = (links || []).map((link) => link.article_id);
+  if (!ids.length) return [];
+
+  const { data, error } = await client
+    .from('articles')
+    .select('id,title,content,updated_at')
+    .in('id', ids)
+    .order('updated_at', { ascending: false });
+
+  if (error) throw error;
+  return (data || []).map(toArticle);
+}
+
+export async function fetchArticleLinks(articleId) {
+  const { data, error } = await client
+    .from('article_links')
+    .select('node_id')
+    .eq('article_id', articleId);
+
+  if (error) throw error;
+  return (data || []).map((link) => link.node_id);
+}
+
+export async function setArticleLinks(articleId, nodeIds) {
+  const { error: deleteError } = await client
+    .from('article_links')
+    .delete()
+    .eq('article_id', articleId);
+
+  if (deleteError) throw deleteError;
+
+  if (!nodeIds.length) return;
+
+  const { error } = await client
+    .from('article_links')
+    .insert(nodeIds.map((nodeId) => ({ article_id: articleId, node_id: nodeId })));
+
+  if (error) throw error;
+}
+
 export function isAdminSession(session) {
   const email = session?.user?.email;
   return Boolean(email) && email.toLowerCase() === ADMIN_EMAIL.toLowerCase();

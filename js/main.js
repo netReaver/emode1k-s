@@ -1,6 +1,6 @@
 import { ROOT_ID } from './config.js';
 import * as api from './api.js';
-import { byId, debounce, on, show, text } from './dom.js';
+import { byId, debounce, element, on, show, text } from './dom.js';
 import { GraphView } from './graph.js';
 import { createAdmin } from './admin.js';
 import { createRouter } from './pages.js';
@@ -8,10 +8,60 @@ import { bootLoader } from './loader.js';
 
 const loader = bootLoader();
 
+const formatDate = (value) => {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleDateString('ru-RU', { day: '2-digit', month: 'long', year: 'numeric' });
+};
+
+const excerptOf = (content, length = 160) => {
+  const text = String(content || '').replace(/\s+/g, ' ').trim();
+  return text.length > length ? `${text.slice(0, length).trimEnd()}…` : text;
+};
+
 function showNode(node) {
   text(byId('detailsTitle'), node.label);
   text(byId('details'), node.info || 'Описание не добавлено.');
   show(byId('adminNodeActions'), admin.isAdmin() && node.id !== ROOT_ID);
+  loadRelated(node.id);
+}
+
+async function loadRelated(nodeId) {
+  const list = byId('relatedList');
+  list.replaceChildren(element('p', 'related__empty', 'Загружаю статьи…'));
+
+  try {
+    const articles = await api.fetchRelatedArticles(nodeId);
+    list.replaceChildren();
+
+    if (!articles.length) {
+      list.append(element('p', 'related__empty', 'Пока нет связанных статей.'));
+      return;
+    }
+
+    for (const article of articles) {
+      const item = element('article', 'related__item');
+      item.tabIndex = 0;
+      const open = () => router.go('articles');
+      item.addEventListener('click', open);
+      item.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          open();
+        }
+      });
+
+      const title = element('h4', 'related__item-title', article.title);
+      const date = element('time', 'related__item-date', formatDate(article.updatedAt));
+      const excerpt = element('p', 'related__item-text', excerptOf(article.content));
+
+      item.append(title, date, excerpt);
+      list.append(item);
+    }
+  } catch (error) {
+    list.replaceChildren(element('p', 'related__empty', `Ошибка загрузки: ${error.message}`));
+  }
 }
 
 const graph = new GraphView({

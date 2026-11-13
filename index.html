@@ -133,6 +133,10 @@
           <section class="card">
             <h2 class="card__title" id="detailsTitle">Узел</h2>
             <div class="prose" id="details">Загрузка дерева…</div>
+            <section class="related" id="relatedSection" aria-labelledby="relatedTitle">
+              <h3 class="related__title" id="relatedTitle">Связанные статьи</h3>
+              <div class="related__list" id="relatedList"></div>
+            </section>
             <div class="actions hidden" id="adminNodeActions">
               <button class="btn" id="editNodeButton" type="button">Изменить</button>
               <button class="btn btn--danger" id="deleteNodeButton" type="button">Удалить ветку</button>
@@ -163,6 +167,10 @@
           <form class="form" id="articleForm">
             <input id="articleTitle" maxlength="150" placeholder="Заголовок" required>
             <textarea id="articleContent" maxlength="20000" placeholder="Текст" required></textarea>
+            <label class="field">
+              <span>Связанные узлы</span>
+              <select id="articleNodes" multiple size="4"></select>
+            </label>
             <div class="actions">
               <button class="btn btn--primary" id="saveArticleButton" type="submit">Опубликовать</button>
               <button class="btn hidden" id="cancelArticleButton" type="button">Отмена</button>

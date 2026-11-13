@@ -757,6 +757,64 @@ body.admin-mode .grid {
   line-height: 1.72;
 }
 
+/* ---------- related articles ---------- */
+.related {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.related__title {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.related__list { display: grid; gap: 8px; }
+
+.related__item {
+  padding: 12px 14px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-sm);
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.related__item:hover,
+.related__item:focus-visible {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.related__item-title { margin: 0 0 2px; font-size: 15px; }
+
+.related__item-date {
+  color: var(--ash);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+.related__item-text {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.related__empty {
+  margin: 0;
+  padding: 14px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-sm);
+  color: var(--ash);
+  font-size: 13px;
+  text-align: center;
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -787,6 +845,8 @@ body.admin-mode .grid {
 .form select:focus { border-color: var(--accent); outline: none; }
 
 .form textarea { min-height: 118px; resize: vertical; }
+
+.form select[multiple] { height: auto; min-height: 96px; }
 
 .field { display: grid; gap: 6px; }
 
