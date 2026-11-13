@@ -54,7 +54,7 @@ export async function fetchSettings() {
   if (error) throw error;
 
   return data || {
-    accent_color: '#e5484d',
+    accent_color: '#ffffff',
     theme: 'standard',
     page_scale: 100,
     brightness: 100,

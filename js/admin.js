@@ -358,10 +358,6 @@ export function createAdmin({ graph, reloadTree, navigate }) {
       document.documentElement.style.setProperty('--brightness', Number(event.target.value) / 100);
     });
 
-    on(byId('colorSelect'), 'input', (event) => {
-      document.documentElement.style.setProperty('--accent', event.target.value);
-    });
-
     on(byId('themeSelect'), 'change', (event) => {
       document.body.classList.toggle('theme-gothic', event.target.value === 'gothic');
     });

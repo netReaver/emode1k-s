@@ -1,6 +1,6 @@
 import { SPARKS } from './config.js';
 
-const PALETTE = ['#ffd9a0', '#ffb26b', '#ff8a4a', '#e5484d', '#d9d9df'];
+const PALETTE = ['#ffffff', '#f0f6fc', '#e6edf3', '#c9d1d9', '#8b949e'];
 
 const randomBetween = (min, max) => min + Math.random() * (max - min);
 
@@ -28,9 +28,9 @@ export class SparkField {
 
     const ctx = sprite.getContext('2d');
     const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-    gradient.addColorStop(0, 'rgba(255, 214, 160, 0.85)');
-    gradient.addColorStop(0.4, 'rgba(255, 140, 70, 0.28)');
-    gradient.addColorStop(1, 'rgba(255, 120, 60, 0)');
+    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+    gradient.addColorStop(0.4, 'rgba(255, 255, 255, 0.3)');
+    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, 64, 64);

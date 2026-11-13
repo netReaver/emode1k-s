@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#08080a">
+  <meta name="theme-color" content="#0d1117">
   <meta name="description" content="Интерактивная карта проектов emode1k">
   <title>emode1k</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2308080a'/%3E%3Crect x='5' y='14' width='19' height='5' fill='%23e6e3de'/%3E%3Crect x='24' y='14' width='4' height='5' fill='%23b86642'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230d1117'/%3E%3Crect x='5' y='14' width='19' height='5' fill='%23c9d1d9'/%3E%3Crect x='24' y='14' width='4' height='5' fill='%23ffffff'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./css/site.css">
   <link rel="stylesheet" href="./css/graph.css">
 </head>
@@ -15,15 +15,15 @@
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
       <linearGradient id="paperGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#f4f1ea"/>
-        <stop offset="0.55" stop-color="#d9d4c8"/>
-        <stop offset="1" stop-color="#b6b0a2"/>
+        <stop offset="0" stop-color="#e6edf3"/>
+        <stop offset="0.55" stop-color="#c9d1d9"/>
+        <stop offset="1" stop-color="#6e7681"/>
       </linearGradient>
       <radialGradient id="emberGrad" cx="0.5" cy="0.5" r="0.5">
-        <stop offset="0" stop-color="#ffe0b0"/>
-        <stop offset="0.4" stop-color="#ff8a3c"/>
-        <stop offset="0.75" stop-color="#c23c22"/>
-        <stop offset="1" stop-color="#c23c22" stop-opacity="0"/>
+        <stop offset="0" stop-color="#ffffff"/>
+        <stop offset="0.4" stop-color="#ffffff"/>
+        <stop offset="0.75" stop-color="#ffffff" stop-opacity="0.35"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
       </radialGradient>
     </defs>
   </svg>
@@ -69,12 +69,12 @@
               <path class="smoke-line smoke-line--4" d="M28.5 11C25 8 32 6.5 28.5 2.5"/>
               <circle class="ember-bit" cx="25" cy="11" r="0.9"/>
               <rect x="4" y="14" width="29" height="6" rx="1" fill="url(#paperGrad)"/>
-              <path d="M4 15.6h29M4 18.4h29" stroke="#a39c8c" stroke-width="0.4"/>
-              <path d="M30 14v6" stroke="#9a6a44" stroke-width="0.55"/>
-              <rect x="33" y="14" width="7" height="6" fill="#a85b38"/>
-              <path d="M33 15.5h7" stroke="#8a4428" stroke-width="0.5"/>
+              <path d="M4 15.6h29M4 18.4h29" stroke="#8b949e" stroke-width="0.4"/>
+              <path d="M30 14v6" stroke="#6e7681" stroke-width="0.55"/>
+              <rect x="33" y="14" width="7" height="6" fill="#30363d"/>
+              <path d="M33 15.5h7" stroke="#21262d" stroke-width="0.5"/>
               <circle cx="31.2" cy="17" r="3.6" fill="url(#emberGrad)"/>
-              <circle class="ember-core" cx="31.2" cy="17" r="1.15" fill="#ffd9a0"/>
+              <circle class="ember-core" cx="31.2" cy="17" r="1.15" fill="#ffffff"/>
             </svg>
           </span>
           <span class="logo__text"><b>E</b>mode1k</span>
@@ -191,41 +191,6 @@
           <p class="notice hidden" id="settingsGate">Оформление меняет администратор. Здесь можно только посмотреть.</p>
           <form class="form" id="settingsForm">
             <label class="field">
-              <span>Акцент</span>
-              <select id="colorSelect">
-                <option value="#e5484d">Красный</option>
-                <option value="#e53935">Тёмно-красный</option>
-                <option value="#f44336">Алый</option>
-                <option value="#ff5722">Оранжево-красный</option>
-                <option value="#ff9800">Оранжевый</option>
-                <option value="#ffc107">Янтарный</option>
-                <option value="#ffeb3b">Жёлтый</option>
-                <option value="#cddc39">Лаймовый</option>
-                <option value="#8bc34a">Салатовый</option>
-                <option value="#4caf50">Зелёный</option>
-                <option value="#009688">Бирюзовый</option>
-                <option value="#00bcd4">Циан</option>
-                <option value="#03a9f4">Голубой</option>
-                <option value="#2196f3">Синий</option>
-                <option value="#3f51b5">Индиго</option>
-                <option value="#673ab7">Фиолетовый</option>
-                <option value="#9c27b0">Пурпурный</option>
-                <option value="#e91e63">Розовый</option>
-                <option value="#795548">Коричневый</option>
-                <option value="#9e9e9e">Серый</option>
-                <option value="#ffffff">Белый</option>
-                <option value="#d4af37">Золотой</option>
-                <option value="#00a86b">Изумрудный</option>
-                <option value="#7cfc00">Лайм</option>
-                <option value="#ff00ff">Фуксия</option>
-                <option value="#40e0d0">Бирюза</option>
-                <option value="#6495ed">Васильковый</option>
-                <option value="#dc143c">Малиновый</option>
-                <option value="#ff7f50">Коралловый</option>
-              </select>
-            </label>
-
-            <label class="field">
               <span>Тема</span>
               <select id="themeSelect">
                 <option value="standard">Стандартная</option>
@@ -327,11 +292,11 @@
         <path class="smoke-line smoke-line--2" d="M31 11C27 7 35 5 31 1"/>
         <path class="smoke-line smoke-line--3" d="M36 11C32 7 40 5 36 1"/>
         <rect x="4" y="14" width="29" height="6" rx="1" fill="url(#paperGrad)"/>
-        <path d="M4 15.6h29M4 18.4h29" stroke="#a39c8c" stroke-width="0.4"/>
-        <path d="M30 14v6" stroke="#9a6a44" stroke-width="0.55"/>
-        <rect x="33" y="14" width="7" height="6" fill="#a85b38"/>
+        <path d="M4 15.6h29M4 18.4h29" stroke="#8b949e" stroke-width="0.4"/>
+        <path d="M30 14v6" stroke="#6e7681" stroke-width="0.55"/>
+        <rect x="33" y="14" width="7" height="6" fill="#30363d"/>
         <circle cx="31.2" cy="17" r="3.6" fill="url(#emberGrad)"/>
-        <circle class="ember-core" cx="31.2" cy="17" r="1.15" fill="#ffd9a0"/>
+        <circle class="ember-core" cx="31.2" cy="17" r="1.15" fill="#ffffff"/>
       </svg>
     </button>
   </div>
